@@ -1,0 +1,4 @@
+/**
+ * @license active-angular-resource
+ * MIT license
+ */

@@ -1,0 +1,14 @@
+[
+    {
+        "title": "Model usage",
+        "file": "model-usage.md"
+    },
+    {
+        "title": "Extendability",
+        "file": "extendability.md"
+    },
+    {
+        "title": "Default API format examples",
+        "file": "api-format.md"
+    }
+]
