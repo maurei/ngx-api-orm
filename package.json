@@ -15,7 +15,7 @@
         "pack:lib": "npm run build &&  mv $(npm pack ./dist) package.tgz",
         "publish:lib": "npm run build && npm publish ./dist",
         "publish:lib:next": "npm run build && npm publish --tag next ./dist",
-        "compodoc": "compodoc --disableInternal -p tsconfig.json -s --includes guides --includesName \"Usage guides\" --theme material --hideGenerator --output ./docs/documentation"
+        "compodoc": "compodoc --disableInternal -p tsconfig.json -s --includes guides --includesName \"Usage guides\" --theme material --hideGenerator --output ./docs/"
     },
     "author": "Maurits Moeys",
     "repository": {
