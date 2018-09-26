@@ -3,11 +3,11 @@
   
 This guide works through the basics of defining your models. We will consider an example of three models: `Employee`, `Task` and `Team`. Each `Employee` belongs to one `Team`, and an `Employee` may have multiple `Task`s.
 
- You probably also will need to check the [default API format](/additional-documentation/default-api-format.html) that is assumed for these examples.
+ You probably also will need to check the [default API format](/additional-documentation/default-api-format-examples.html) that is assumed for these examples.
 
 ## Declaring models
 ### Standard declarations
-The most straight forward way to implement the three models is as below. This example works for [this default response example](/additional-documentation/default-api-format.html).
+The most straight forward way to implement the three models is as below.
 ```ts
 @ResourceModel()
 export class Employee extends Resource {
@@ -56,7 +56,7 @@ A few things to keep in mind:
 
 
 ### Optional configuration
-Perhaps your model isn't perfectly matching your API response. Some easy fixes can be done in the model. The following model below works with [this  default response example with property mismatches](/additional-documentation/default-api-format.html).
+Perhaps your model isn't perfectly matching your API response. Some easy fixes can be done in the model. The following model below works with [this  default response example with property mismatches](/additional-documentation/default-api-format-examples.html).
 ```ts
 @ResourceModel()
 export class Employee extends Resource {
@@ -206,7 +206,9 @@ await employee.team.sync(); // effectively the same as .set(null)
 * The instance inside the `ToOneRelation` container can be access as `.instance`.
 * Clearing a relationship does not delete the related instance. I.e. `Team.collection()` is invariant under the above operations.
 *  "Lazy setting" is supported with `.sync`.
+
 These are some operations with to-many relations involved.
+
 ```ts
 /* to-many relations */
 employee.team.length // defined, a number.
@@ -215,7 +217,6 @@ await employee.tasks.add( assignment )
 employee.tasks.includes(assignment) // true
 await employee.tasks.remove( oldAssignment)
 employee.tasks.includes(oldAssignment) // false
-
 /* WARNING: NOT YET IMPLEMENTED */
 employee.tasks.pop(); // this is coming in the next release!
 employee.tasks.push( ..assignments ); // this is coming in the next release!
@@ -224,4 +225,4 @@ await employee.tasks.sync(); // this is coming in the next release!
 *  "Lazy setting" is **NOT** yet supported.
 
 #### Extendability
-If you need to know or change to which HTTP verbs  the actions `add, remove, delete, update, save, fetch` are linked, now would be a good time to check out the [extendability guide](https://maurei.github.io/ngx-api-orm).
+If you need to know or change to which HTTP verbs  the actions `add, remove, delete, update, save, fetch` are linked, now would be a good time to check out the [extendability guide](/additional-documentation/extendability.html).

@@ -473,10 +473,10 @@
 
 <h1 id="model-usage-guide">Model usage guide</h1>
 <p>This guide works through the basics of defining your models. We will consider an example of three models: <code>Employee</code>, <code>Task</code> and <code>Team</code>. Each <code>Employee</code> belongs to one <code>Team</code>, and an <code>Employee</code> may have multiple <code>Task</code>s.</p>
-<p> You probably also will need to check the <a href="/additional-documentation/default-api-format.html">default API format</a> that is assumed for these examples.</p>
+<p> You probably also will need to check the <a href="/additional-documentation/default-api-format-examples.html">default API format</a> that is assumed for these examples.</p>
 <h2 id="declaring-models">Declaring models</h2>
 <h3 id="standard-declarations">Standard declarations</h3>
-<p>The most straight forward way to implement the three models is as below. This example works for <a href="/additional-documentation/default-api-format.html">this default response example</a>.</p>
+<p>The most straight forward way to implement the three models is as below.</p>
 <pre class="line-numbers"><code class="language-ts">&#64;ResourceModel()
 export class Employee extends Resource {
     &#64;ResourceField()
@@ -522,7 +522,7 @@ export class Team extends Resource {
 <li>Relationship fields must be of type <code>ToOneRelation&lt;THost, TRelated&gt;</code> or <code>ToManyRelation&lt;THost, TRelated&gt;</code>.</li>
 </ul>
 <h3 id="optional-configuration">Optional configuration</h3>
-<p>Perhaps your model isn&#39;t perfectly matching your API response. Some easy fixes can be done in the model. The following model below works with <a href="/additional-documentation/default-api-format.html">this  default response example with property mismatches</a>.</p>
+<p>Perhaps your model isn&#39;t perfectly matching your API response. Some easy fixes can be done in the model. The following model below works with <a href="/additional-documentation/default-api-format-examples.html">this  default response example with property mismatches</a>.</p>
 <pre class="line-numbers"><code class="language-ts">&#64;ResourceModel()
 export class Employee extends Resource {
     &#64;ResourceField()
@@ -658,27 +658,24 @@ employee.team.instance = null;
 await employee.team.sync(); // effectively the same as .set(null)</code></pre><ul>
 <li>The instance inside the <code>ToOneRelation</code> container can be access as <code>.instance</code>.</li>
 <li>Clearing a relationship does not delete the related instance. I.e. <code>Team.collection()</code> is invariant under the above operations.</li>
-<li>&quot;Lazy setting&quot; is supported with <code>.sync</code>.
-These are some operations with to-many relations involved.
-<code>`</code>ts
-/<em> to-many relations </em>/
+<li>&quot;Lazy setting&quot; is supported with <code>.sync</code>.</li>
+</ul>
+<p>These are some operations with to-many relations involved.</p>
+<pre class="line-numbers"><code class="language-ts">/* to-many relations */
 employee.team.length // defined, a number.
 const team = employee.team[2] // accessing one of related instances of class Task
 await employee.tasks.add( assignment )
 employee.tasks.includes(assignment) // true
 await employee.tasks.remove( oldAssignment)
-employee.tasks.includes(oldAssignment) // false</li>
-</ul>
-<p>/<em> WARNING: NOT YET IMPLEMENTED </em>/
+employee.tasks.includes(oldAssignment) // false
+/* WARNING: NOT YET IMPLEMENTED */
 employee.tasks.pop(); // this is coming in the next release!
 employee.tasks.push( ..assignments ); // this is coming in the next release!
-await employee.tasks.sync(); // this is coming in the next release!
-<code>`</code></p>
-<ul>
+await employee.tasks.sync(); // this is coming in the next release!</code></pre><ul>
 <li>&quot;Lazy setting&quot; is <strong>NOT</strong> yet supported.</li>
 </ul>
 <h4 id="extendability">Extendability</h4>
-<p>If you need to know or change to which HTTP verbs  the actions <code>add, remove, delete, update, save, fetch</code> are linked, now would be a good time to check out the <a href="https://maurei.github.io/ngx-api-orm">extendability guide</a>.</p>
+<p>If you need to know or change to which HTTP verbs  the actions <code>add, remove, delete, update, save, fetch</code> are linked, now would be a good time to check out the <a href="/additional-documentation/extendability.html">extendability guide</a>.</p>
 
                    </div><div class="search-results">
     <div class="has-results">

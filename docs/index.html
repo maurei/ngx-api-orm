@@ -519,7 +519,7 @@ await someGuy.team.set( Team.find(20)); //* update the to-one relationship */
 
 /* DELETE /employees/{id}/team */
 await someGuy.team.remove(); //* clear the to-one relationship */
-someGuy.team.instance === null  /* Will be true */</code></pre><p>For more detailed information on the available methods and how to use them, see the <a href="https://maurei.github.io/ngx-api-orm">model usage guide</a>.</p>
+someGuy.team.instance === null  /* Will be true */</code></pre><p>For more detailed information on the available methods and how to use them, see the <a href="/additional-documentation/model-usage.html">model usage guide</a>.</p>
 <h2 id="getting-started">Getting Started</h2>
 <h3 id="install-the-library">Install the library</h3>
 <p>Using npm:</p>
@@ -541,9 +541,9 @@ import { Resource, JsonApiDotOrg } from &#39;&#64;ngx-api-orm/core&#39;;
   bootstrap: [ ... ]
 })
 export class SomeModule {}</code></pre><h3 id="write-some-models">Write some models</h3>
-<p>See the <a href="https://maurei.github.io/ngx-api-orm">model usage guide</a> for detailed instructions on how to use the <code>Resource</code> classes and decorators.</p>
+<p>See the <a href="/additional-documentation/model-usage.html">model usage guide</a> for detailed instructions on how to use the <code>Resource</code> classes and decorators.</p>
 <h3 id="extend-the-functionality-where-needed">Extend the functionality where needed</h3>
-<p>If the <code>ngx-api-orm</code> default format or the JsonApi.org format is not what you&#39;re getting from your API, see the <a href="https://maurei.github.io/ngx-api-orm">extendability guide</a>. This library leverages the power of Angular&#39;s dependency injection, making it super easy to override certain default features.</p>
+<p>If the <code>ngx-api-orm</code> default format or the JsonApi.org format is not what you&#39;re getting from your API, see the <a href="/additional-documentation/extendability.html">extendability guide</a>. This library leverages the power of Angular&#39;s dependency injection, making it super easy to override certain default features.</p>
 <h3 id="check-out-the-api-docs-to-learn-more">Check out the API docs to learn more</h3>
 <p><a href="https://maurei.github.io/ngx-api-orm/documentation">They&#39;re right here</a>.</p>
 

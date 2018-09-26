@@ -76,7 +76,7 @@ await someGuy.team.remove(); //* clear the to-one relationship */
 someGuy.team.instance === null  /* Will be true */
 ```
 
-For more detailed information on the available methods and how to use them, see the [model usage guide](https://maurei.github.io/ngx-api-orm).
+For more detailed information on the available methods and how to use them, see the [model usage guide](/additional-documentation/model-usage.html).
 
 ## Getting Started
 
@@ -108,10 +108,10 @@ export class SomeModule {}
 ```
 
 ### Write some models
-See the [model usage guide](https://maurei.github.io/ngx-api-orm) for detailed instructions on how to use the `Resource` classes and decorators.
+See the [model usage guide](/additional-documentation/model-usage.html) for detailed instructions on how to use the `Resource` classes and decorators.
 
 ### Extend the functionality where needed
-If the `ngx-api-orm` default format or the JsonApi.org format is not what you're getting from your API, see the [extendability guide](https://maurei.github.io/ngx-api-orm). This library leverages the power of Angular's dependency injection, making it super easy to override certain default features.
+If the `ngx-api-orm` default format or the JsonApi.org format is not what you're getting from your API, see the [extendability guide](/additional-documentation/extendability.html). This library leverages the power of Angular's dependency injection, making it super easy to override certain default features.
 
 ### Check out the API docs to learn more
 [They're right here](https://maurei.github.io/ngx-api-orm/documentation).
