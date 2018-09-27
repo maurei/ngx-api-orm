@@ -33,20 +33,6 @@ class ResourceModule {
 		};
 	}
 }
-@Model()
-export class Employee extends Resource {
-	// @Field()
-	// public id: string;
-	// @Field()
-	// public code: string;
-	// @Field()
-	// public firstName: string;
-	// @Field()
-	// public lastName: string;
-}
-
-const x = Employee.fetch();
-
 
 export {
 	ResourceModule,
