@@ -2,7 +2,7 @@ import { NgModule, ModuleWithProviders, Injector, Provider } from '@angular/core
 // import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { Resource } from './resource.core';
-import { ResourceField, ResourceToMany, ResourceToOne, ResourceModel } from './resource.decorators';
+import { Field, ToMany, ToOne, Model } from './resource.decorators';
 import { ToManyRelation } from './relations/to-many';
 import { ToOneRelation } from './relations/to-one';
 import { InjectorContainer, ResourceModuleConfiguration, ResourceModuleConfigurationWithProviders } from './utils';
@@ -33,14 +33,28 @@ class ResourceModule {
 		};
 	}
 }
+@Model()
+export class Employee extends Resource {
+	// @Field()
+	// public id: string;
+	// @Field()
+	// public code: string;
+	// @Field()
+	// public firstName: string;
+	// @Field()
+	// public lastName: string;
+}
+
+const x = Employee.fetch();
+
 
 export {
 	ResourceModule,
 	Resource,
-	ResourceField,
-	ResourceToOne,
-	ResourceToMany,
-	ResourceModel,
+	Field,
+	ToOne,
+	ToMany,
+	Model,
 	ToManyRelation,
 	ToOneRelation,
 	AbstractAdapters,

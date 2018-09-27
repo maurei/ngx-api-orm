@@ -195,7 +195,7 @@
                         <a href="interfaces/JsonApiResponse.html" data-type="entity-link">JsonApiResponse</a>
                     </li>
                     <li class="link">
-                        <a href="interfaces/ResourceModelOptions.html" data-type="entity-link">ResourceModelOptions</a>
+                        <a href="interfaces/ModelOptions.html" data-type="entity-link">ModelOptions</a>
                     </li>
             </ul>
         </li>
@@ -414,7 +414,7 @@
                         <a href="interfaces/JsonApiResponse.html" data-type="entity-link">JsonApiResponse</a>
                     </li>
                     <li class="link">
-                        <a href="interfaces/ResourceModelOptions.html" data-type="entity-link">ResourceModelOptions</a>
+                        <a href="interfaces/ModelOptions.html" data-type="entity-link">ModelOptions</a>
                     </li>
             </ul>
         </li>
@@ -468,7 +468,7 @@
 
 <ol class="breadcrumb">
   <li>Interfaces</li>
-  <li>ResourceModelOptions</li>
+  <li>ModelOptions</li>
 </ol>
 
 <ul class="nav nav-tabs" role="tablist">
@@ -495,7 +495,7 @@
                 <h3>Description</h3>
             </p>
             <p class="comment">
-                <p>Options object that can be passed to the <a href="../miscellaneous/functions.html#ResourceModel">ResourceModel</a> when decorating your model. Currently it is only possible to configure <code>name</code>, which is used in
+                <p>Options object that can be passed to the <a href="../miscellaneous/functions.html#Model">Model</a> when decorating your model. Currently it is only possible to configure <code>name</code>, which is used in
 generating the urls for requests.</p>
 <p>If you have a custom <code>uglify.config.js</code> file in which <code>mangle</code> is set to false, you do not need to use this.</p>
 <p>If you don&#39;t, then Angular&#39;s AOT will obfuscate <code>constructor.name</code>, and this library will not be able to construct URL according to the name of your model.
@@ -583,7 +583,7 @@ import { RelationType, RelationConfiguration } from &#x27;./relations/relation-c
 import { toDash, initMetaData, METAKEYS } from &#x27;./utils&#x27;;
 
 /**
- * Options object that can be passed to the {@link ResourceModel} when decorating your model. Currently it is only possible to configure &#x60;name&#x60;, which is used in
+ * Options object that can be passed to the {@link Model} when decorating your model. Currently it is only possible to configure &#x60;name&#x60;, which is used in
  * generating the urls for requests.
  *
  * If you have a custom &#x60;uglify.config.js&#x60; file in which &#x60;mangle&#x60; is set to false, you do not need to use this.
@@ -595,38 +595,38 @@ import { toDash, initMetaData, METAKEYS } from &#x27;./utils&#x27;;
  *
  * @example
  * // uglify.config.js with mangle &#x3D; false
- * @ResourceModel() // will produce calls to .../my-dummy-models/...
+ * @Model() // will produce calls to .../my-dummy-models/...
  * class MyDummyModel extends Resource {}
  *
  * // without mangle &#x3D; false
- * @ResourceModel() // will not work!
+ * @Model() // will not work!
  * class MyDummyModel extends Resource {}
  *
  * // without mangle &#x3D; false
- * @ResourceModel({name: &#x27;MyDummyModel&#x27;}) // will produce calls to .../my-dummy-models/...
+ * @Model({name: &#x27;MyDummyModel&#x27;}) // will produce calls to .../my-dummy-models/...
  * class MyDummyModel extends Resource {}
  *
  * // without mangle &#x3D; false
- * @ResourceModel({name: &#x27;MyAlternativeName&#x27;}) // will produce calls to .../my-alternative-name/...
+ * @Model({name: &#x27;MyAlternativeName&#x27;}) // will produce calls to .../my-alternative-name/...
  * class MyDummyModel extends Resource {}
  *
  * // without mangle &#x3D; false
- * @ResourceModel({name: &#x27;my-alternative-name&#x27;}) // will produce calls to .../my-alternative-name/...
+ * @Model({name: &#x27;my-alternative-name&#x27;}) // will produce calls to .../my-alternative-name/...
  * class MyDummyModel extends Resource {}
  */
-export interface ResourceModelOptions {
+export interface ModelOptions {
 	name?: string;
 }
 /**
  * Add this class decorator to your model to turn it into a &#x60;Resource&#x60; model, which means that it is considered as an endpoint on your API.
  *
- * See {@link ResourceModelOptions} on how to configure the name used in URLs.
+ * See {@link ModelOptions} on how to configure the name used in URLs.
  *
  * This decorator is responsible for setting metadata, which is used internally, on the constructor of your class.
  *
- * @param  ResourceModelOptions&#x3D;{} options
+ * @param  ModelOptions&#x3D;{} options
  */
-export function ResourceModel(options?: ResourceModelOptions) {
+export function Model(options?: ModelOptions) {
 	return &lt;T extends Resource&gt;(ctor: any) &#x3D;&gt; {
 		ctor &#x3D; Injectable({ providedIn: &#x27;root&#x27; })(ctor);
 		initMetaData(ctor);
@@ -645,9 +645,9 @@ export function ResourceModel(options?: ResourceModelOptions) {
  * Use this field decorator to parse the corresponding field from a json response by your API.
  * @param string mapFrom? An identifier to map keys coming from an incoming json response to keys in your model.
  *  For example: the api response has a key &#x60;commentText: &#x27;nice article!&#x60; but the key in the model is &#x60;commentContent&#x60;.
- * Then the decorator should be used as &#x60;ResourceField(&#x27;commentText&#x27;).
+ * Then the decorator should be used as &#x60;Field(&#x27;commentText&#x27;).
  */
-export function ResourceField(mapFrom?: string) {
+export function Field(mapFrom?: string) {
 	return &lt;T extends Resource&gt;(target: any, key: string) &#x3D;&gt; {
 		const ctor &#x3D; target.constructor;
 		initMetaData(ctor);
@@ -661,9 +661,9 @@ export function ResourceField(mapFrom?: string) {
  * @param Function RelatedResource The constructor function of the model that is targeted for the To-Many relation.
  * @param string mapFrom? An identifier to map keys coming from an incoming json response to keys in your model.
  *  For example: the api response has a key &#x60;commentText: &#x27;nice article!&#x60; but the key in the model is &#x60;commentContent&#x60;.
- * Then the decorator should be used as &#x60;ResourceField(&#x27;commentText&#x27;).
+ * Then the decorator should be used as &#x60;Field(&#x27;commentText&#x27;).
  */
-export const ResourceToOne &#x3D; function&lt;TRelated extends Resource&gt;(RelatedResource: any, mapFrom?: string) {
+export const ToOne &#x3D; function&lt;TRelated extends Resource&gt;(RelatedResource: any, mapFrom?: string) {
 	return (target: any, key: string) &#x3D;&gt; {
 		const ctor &#x3D; target.constructor;
 		initMetaData(ctor);
@@ -678,9 +678,9 @@ export const ResourceToOne &#x3D; function&lt;TRelated extends Resource&gt;(Rela
  * @param Function RelatedResource The constructor function of the model that is targeted for the To-Many relation.
  * @param string mapFrom? An identifier to map keys coming from an incoming json response to keys in your model.
  *  For example: the api response has a key &#x60;commentText: &#x27;nice article!&#x60; but the key in the model is &#x60;commentContent&#x60;.
- * Then the decorator should be used as &#x60;ResourceField(&#x27;commentText&#x27;).
+ * Then the decorator should be used as &#x60;Field(&#x27;commentText&#x27;).
  */
-export const ResourceToMany &#x3D; function &lt;TRelated extends Resource&gt;(RelatedResource: any, mapFrom?: string) {
+export const ToMany &#x3D; function &lt;TRelated extends Resource&gt;(RelatedResource: any, mapFrom?: string) {
 	return (target: any, key: string) &#x3D;&gt; {
 		const ctor &#x3D; target.constructor;
 		initMetaData(ctor);
@@ -722,7 +722,7 @@ export const ResourceToMany &#x3D; function &lt;TRelated extends Resource&gt;(Re
 
         <script>
             var COMPODOC_CURRENT_PAGE_DEPTH = 1;
-            var COMPODOC_CURRENT_PAGE_URL = 'ResourceModelOptions.html';
+            var COMPODOC_CURRENT_PAGE_URL = 'ModelOptions.html';
         </script>
 
        <script src="../js/search/search.js"></script>

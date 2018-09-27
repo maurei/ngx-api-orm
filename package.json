@@ -1,13 +1,13 @@
 {
     "name": "@ngx-api-orm/core",
-    "version": "0.0.1-beta.0.1",
+    "version": "0.0.1-beta1",
     "main": "./bundles/ngx-api-orm-core.umd.js",
     "module": "./fesm5/ngx-api-orm-core.js",
     "es2015": "./fesm2015/ngx-api-orm-core.js",
     "esm5": "./esm5/ngx-api-orm-core.js",
     "esm2015": "./esm2015/ngx-api-orm-core.js",
     "fesm5": "./fesm5/ngx-api-orm-core.js",
-    "typings": "./ngx-api-orm-core.d.ts",    
+    "typings": "./ngx-api-orm-core.d.ts",
     "scripts": {
         "build": "node build.js",
         "test": "karma start",

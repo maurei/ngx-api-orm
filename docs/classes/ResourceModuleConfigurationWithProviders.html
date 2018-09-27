@@ -119,6 +119,9 @@
                     id="xs-classes-links"
                 >
                     <li class="link">
+                        <a href="classes/Employee.html" data-type="entity-link">Employee</a>
+                    </li>
+                    <li class="link">
                         <a href="classes/RawInstance.html" data-type="entity-link">RawInstance</a>
                     </li>
                     <li class="link">
@@ -171,6 +174,9 @@
                         <a href="interfaces/HttpClientOptions.html" data-type="entity-link">HttpClientOptions</a>
                     </li>
                     <li class="link">
+                        <a href="interfaces/Instantiable.html" data-type="entity-link">Instantiable</a>
+                    </li>
+                    <li class="link">
                         <a href="interfaces/JsonApiAttributes.html" data-type="entity-link">JsonApiAttributes</a>
                     </li>
                     <li class="link">
@@ -195,7 +201,10 @@
                         <a href="interfaces/JsonApiResponse.html" data-type="entity-link">JsonApiResponse</a>
                     </li>
                     <li class="link">
-                        <a href="interfaces/ResourceModelOptions.html" data-type="entity-link">ResourceModelOptions</a>
+                        <a href="interfaces/ModelOptions.html" data-type="entity-link">ModelOptions</a>
+                    </li>
+                    <li class="link">
+                        <a href="interfaces/ResourceType.html" data-type="entity-link">ResourceType</a>
                     </li>
             </ul>
         </li>
@@ -338,6 +347,9 @@
                     id="classes-links"
 >
                     <li class="link">
+                        <a href="classes/Employee.html" data-type="entity-link">Employee</a>
+                    </li>
+                    <li class="link">
                         <a href="classes/RawInstance.html" data-type="entity-link">RawInstance</a>
                     </li>
                     <li class="link">
@@ -390,6 +402,9 @@
                         <a href="interfaces/HttpClientOptions.html" data-type="entity-link">HttpClientOptions</a>
                     </li>
                     <li class="link">
+                        <a href="interfaces/Instantiable.html" data-type="entity-link">Instantiable</a>
+                    </li>
+                    <li class="link">
                         <a href="interfaces/JsonApiAttributes.html" data-type="entity-link">JsonApiAttributes</a>
                     </li>
                     <li class="link">
@@ -414,7 +429,10 @@
                         <a href="interfaces/JsonApiResponse.html" data-type="entity-link">JsonApiResponse</a>
                     </li>
                     <li class="link">
-                        <a href="interfaces/ResourceModelOptions.html" data-type="entity-link">ResourceModelOptions</a>
+                        <a href="interfaces/ModelOptions.html" data-type="entity-link">ModelOptions</a>
+                    </li>
+                    <li class="link">
+                        <a href="interfaces/ResourceType.html" data-type="entity-link">ResourceType</a>
                     </li>
             </ul>
         </li>
@@ -744,7 +762,6 @@ export class ResourceModuleConfigurationWithProviders extends ResourceModuleConf
 	requestHandlersProviders?: Provider[];
 }
 
-/** @internal */
 export interface Instantiable&lt;T&gt; {
 	new (...args: any[]): T;
 }
@@ -752,7 +769,7 @@ export interface Instantiable&lt;T&gt; {
 export type Omit&lt;T, K extends keyof T&gt; &#x3D; Pick&lt;T, Exclude&lt;keyof T, K&gt;&gt;;
 export type RawInstanceTemplate&lt;T extends Resource&gt; &#x3D; Omit&lt;T, keyof Resource&gt;;
 
-/** @internal */
+
 export interface ResourceType&lt;T&gt; extends Instantiable&lt;T&gt; {
 	_instances: T[];
 	collection&lt;U extends Resource&gt;(this: ResourceType&lt;U&gt;): U[];
@@ -762,17 +779,6 @@ export interface ResourceType&lt;T&gt; extends Instantiable&lt;T&gt; {
 	factory&lt;U extends Resource&gt;(this: ResourceType&lt;U&gt;, rawInstance: Array&lt;{}&gt;): Array&lt;U&gt;;
 	factory&lt;U extends Resource&gt;(this: ResourceType&lt;U&gt;, rawInstance: {}): U;
 }
-
-// /** @internal */
-// export interface ResourceType&lt;T&gt; extends Instantiable&lt;T&gt; {
-// 	// _instances: T[];
-// 	collection&lt;U extends Resource&gt;(this: ResourceType&lt;U&gt;): U[];
-// 	fetch&lt;U extends T&gt;(this: ResourceType&lt;U&gt;): Promise&lt;U[]&gt;;
-// 	// find&lt;U extends T&gt;(this: ResourceType&lt;U&gt;, id: number): U | undefined;
-// 	// template(): any;
-// 	// factory&lt;U extends T&gt;(this: ResourceType&lt;U&gt;, rawInstance: Array&lt;{}&gt;): Array&lt;U&gt;;
-// 	// factory&lt;U extends T&gt;(this: ResourceType&lt;U&gt;, rawInstance: {}): U;
-// }
 
 export interface HttpClientOptions {
 	url?: string;

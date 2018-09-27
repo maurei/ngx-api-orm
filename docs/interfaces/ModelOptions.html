@@ -472,7 +472,7 @@
 </nav>
                </div>
                <!-- START CONTENT -->
-               <div class="content additional-page">
+               <div class="content interface">
                    <div class="content-data">
 
 
@@ -484,128 +484,236 @@
 
 
 
+<ol class="breadcrumb">
+  <li>Interfaces</li>
+  <li>ModelOptions</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+    <li class="active">
+        <a href="#info" id="info-tab" role="tab" data-toggle="tab" data-link="info">Info</a>
+    </li>
 
 
-
-
-
-<h1 id="extendability-guide">Extendability guide</h1>
-<h3 id="this-page-is-still-under-construction-">this page is still under construction.</h3>
-<p>Some things that can be customized are:</p>
-<ul>
-<li><strong>The outgoing request</strong>, which consists of two things:<ul>
-<li>the request itself: the <code>HTTP</code> method,  <code>url</code>, etc</li>
-<li>construction of the request <code>body</code>.</li>
+    <li>
+        <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+    </li>
 </ul>
-</li>
-<li><strong>The incoming request</strong><ul>
-<li>parsing the JSON before feeding it to the models for instantiation.</li>
-</ul>
-</li>
-</ul>
-<p>Generally, this customization can be done:</p>
-<ul>
-<li><strong>Globally</strong>: for all your models at once</li>
-<li><strong>Regionally</strong>: as specified per model</li>
-<li><strong>Locally</strong>: different for actions within the same model.</li>
-</ul>
-<p>First, before providing us with examples, some parts of the  structure will be explained that is related to it.</p>
-<h2 id="adapters-and-builders">Adapters and Builders</h2>
-<pre class="line-numbers"><code class="language-mermaid">graph TD
-IR[Incoming request]
-OR[Outgoing request]
-RI[Resource]
-AI[Adapter#parseResponse]
-BO[Builder#action]
-AO[Adapter#action]
 
-subgraph Incoming requests
-IR --&gt; AI
-AI --&gt;|Resource#Factory| RI
-end
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/resource/resource.decorators.ts</code>
+        </p>
 
-subgraph  Outgoing requests
-RO[Resource] --&gt; AO
-AO --&gt; BO
-BO --&gt; OR
-end</code></pre><table class="table table-bordered compodoc-table">
-<thead>
-<tr>
-<th>Callee</th>
-<th>Pipeline</th>
-<th>Outgoing request:  Adapter method involved</th>
-<th>Outgoing request: Builder method involved</th>
-<th>HTTP Verb used</th>
-<th>Incoming response:  Adapter method involved</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Resource class</td>
-<td>fetch</td>
-<td>none</td>
-<td>SimpleBuilder#fetch</td>
-<td>GET</td>
-<td>SimpleAdapter#parseResponse</td>
-</tr>
-<tr>
-<td>Resource instance</td>
-<td>save</td>
-<td>none</td>
-<td>SimpleBuilder#save</td>
-<td>POST</td>
-<td>SimpleAdapter#parseResponse</td>
-</tr>
-<tr>
-<td>Resource instance</td>
-<td>update</td>
-<td>SimpleAdapter#fetch</td>
-<td>SimpleBuilder#update</td>
-<td>PATCH</td>
-<td>none</td>
-</tr>
-<tr>
-<td>Resource instance</td>
-<td>delete</td>
-<td>none</td>
-<td>SimpleBuilder#delete</td>
-<td>DELETE</td>
-<td>none</td>
-</tr>
-<tr>
-<td>ToOneRelation instance</td>
-<td>set</td>
-<td>ToOneAdapter#set</td>
-<td>ToOneBuilder#set</td>
-<td>PATCH</td>
-<td>none</td>
-</tr>
-<tr>
-<td>ToOneRelation instance</td>
-<td>remove</td>
-<td>ToOneAdapter#remove</td>
-<td>ToOneBuilder#remove</td>
-<td>DELETE</td>
-<td>none</td>
-</tr>
-<tr>
-<td>ToManyRelation instance</td>
-<td>add</td>
-<td>ToManyAdapter#add</td>
-<td>ToManyBuilder#add</td>
-<td>PATCH</td>
-<td>none</td>
-</tr>
-<tr>
-<td>ToManyRelation instance</td>
-<td>remove</td>
-<td>ToManyAdapter#remove</td>
-<td>ToManyBuilder#remove</td>
-<td>DELETE</td>
-<td>none</td>
-</tr>
-</tbody>
-</table>
+            <p class="comment">
+                <h3>Description</h3>
+            </p>
+            <p class="comment">
+                <p>Options object that can be passed to the <a href="../miscellaneous/functions.html#Model">Model</a> when decorating your model. Currently it is only possible to configure <code>name</code>, which is used in
+generating the urls for requests.</p>
+<p>If you have a custom <code>uglify.config.js</code> file in which <code>mangle</code> is set to false, you do not need to use this.</p>
+<p>If you don&#39;t, then Angular&#39;s AOT will obfuscate <code>constructor.name</code>, and this library will not be able to construct URL according to the name of your model.
+To prevent this from happening, you can pass <code>name</code> in the decorator options.</p>
+<p>Alternatively, you can use <code>name</code> to provide for a custom representation in the url.</p>
+
+            </p>
+
+
+        <section>
+            <h3 id="index">Index</h3>
+            <table class="table table-sm table-bordered index-table">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Properties</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                            <span class="modifier">Optional</span>
+                                        <a href="#name">name</a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+
+
+            <section>
+                <h3 id="inputs">Properties</h3>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="name"></a>
+                                        <span class="name"><b>name</b><a href="#name"><span class="fa fa-link"></span></a></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>name:     <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>    <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Optional</i>
+                                        </td>
+                                    </tr>
+
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">src/resource/resource.decorators.ts:40</a></div>
+                                        </td>
+                                    </tr>
+
+                        </tbody>
+                    </table>
+            </section>
+    </div>
+
+
+    <div class="tab-pane fade tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import &#x27;reflect-metadata&#x27;;
+import { Injectable } from &#x27;@angular/core&#x27;;
+import { Resource } from &#x27;./resource.core&#x27;;
+import { RelationType, RelationConfiguration } from &#x27;./relations/relation-configuration&#x27;;
+import { toDash, initMetaData, METAKEYS } from &#x27;./utils&#x27;;
+
+/**
+ * Options object that can be passed to the {@link Model} when decorating your model. Currently it is only possible to configure &#x60;name&#x60;, which is used in
+ * generating the urls for requests.
+ *
+ * If you have a custom &#x60;uglify.config.js&#x60; file in which &#x60;mangle&#x60; is set to false, you do not need to use this.
+ *
+ * If you don&#x27;t, then Angular&#x27;s AOT will obfuscate &#x60;constructor.name&#x60;, and this library will not be able to construct URL according to the name of your model.
+ * To prevent this from happening, you can pass &#x60;name&#x60; in the decorator options.
+ *
+ * Alternatively, you can use &#x60;name&#x60; to provide for a custom representation in the url.
+ *
+ * @example
+ * // uglify.config.js with mangle &#x3D; false
+ * @Model() // will produce calls to .../my-dummy-models/...
+ * class MyDummyModel extends Resource {}
+ *
+ * // without mangle &#x3D; false
+ * @Model() // will not work!
+ * class MyDummyModel extends Resource {}
+ *
+ * // without mangle &#x3D; false
+ * @Model({name: &#x27;MyDummyModel&#x27;}) // will produce calls to .../my-dummy-models/...
+ * class MyDummyModel extends Resource {}
+ *
+ * // without mangle &#x3D; false
+ * @Model({name: &#x27;MyAlternativeName&#x27;}) // will produce calls to .../my-alternative-name/...
+ * class MyDummyModel extends Resource {}
+ *
+ * // without mangle &#x3D; false
+ * @Model({name: &#x27;my-alternative-name&#x27;}) // will produce calls to .../my-alternative-name/...
+ * class MyDummyModel extends Resource {}
+ */
+export interface ModelOptions {
+	name?: string;
+}
+/**
+ * Add this class decorator to your model to turn it into a &#x60;Resource&#x60; model, which means that it is considered as an endpoint on your API.
+ *
+ * See {@link ModelOptions} on how to configure the name used in URLs.
+ *
+ * This decorator is responsible for setting metadata, which is used internally, on the constructor of your class.
+ *
+ * @param  ModelOptions&#x3D;{} options
+ */
+export function Model(options?: ModelOptions) {
+	return &lt;T extends Resource&gt;(ctor: any) &#x3D;&gt; {
+		ctor &#x3D; Injectable({ providedIn: &#x27;root&#x27; })(ctor);
+		initMetaData(ctor);
+		const resourceName &#x3D; options &amp;&amp; options.name ? (options.name.includes(&#x27;-&#x27;) ? options.name : toDash(options.name)) : toDash(ctor.name);
+		Reflect.defineMetadata(METAKEYS.NAME, resourceName, ctor);
+
+		const fields &#x3D; Reflect.getMetadata(METAKEYS.FIELDS, ctor);
+		const attributes &#x3D; Reflect.getMetadata(METAKEYS.ATTRIBUTES, ctor);
+		Reflect.defineMetadata(METAKEYS.FIELDS, fields.concat(attributes), ctor);
+
+		return ctor;
+	};
+}
+
+/**
+ * Use this field decorator to parse the corresponding field from a json response by your API.
+ * @param string mapFrom? An identifier to map keys coming from an incoming json response to keys in your model.
+ *  For example: the api response has a key &#x60;commentText: &#x27;nice article!&#x60; but the key in the model is &#x60;commentContent&#x60;.
+ * Then the decorator should be used as &#x60;Field(&#x27;commentText&#x27;).
+ */
+export function Field(mapFrom?: string) {
+	return &lt;T extends Resource&gt;(target: any, key: string) &#x3D;&gt; {
+		const ctor &#x3D; target.constructor;
+		initMetaData(ctor);
+		Reflect.defineMetadata(METAKEYS.MAP, mapFrom, ctor, key);
+		Reflect.getMetadata(METAKEYS.ATTRIBUTES, ctor).push(key);
+	};
+}
+
+/**
+ * Use this field decorator to parse the corresponding field from a json response by your API and to identify the key as a To-One relationship.
+ * @param Function RelatedResource The constructor function of the model that is targeted for the To-Many relation.
+ * @param string mapFrom? An identifier to map keys coming from an incoming json response to keys in your model.
+ *  For example: the api response has a key &#x60;commentText: &#x27;nice article!&#x60; but the key in the model is &#x60;commentContent&#x60;.
+ * Then the decorator should be used as &#x60;Field(&#x27;commentText&#x27;).
+ */
+export const ToOne &#x3D; function&lt;TRelated extends Resource&gt;(RelatedResource: any, mapFrom?: string) {
+	return (target: any, key: string) &#x3D;&gt; {
+		const ctor &#x3D; target.constructor;
+		initMetaData(ctor);
+		Reflect.defineMetadata(METAKEYS.MAP, mapFrom, ctor, key);
+		Reflect.getMetadata(METAKEYS.FIELDS, ctor).push(key);
+		Reflect.getMetadata(METAKEYS.RELATIONS, ctor)[key] &#x3D; new RelationConfiguration(ctor, RelatedResource, key, RelationType.ToOne);
+	};
+};
+
+/**
+ * Use this field decorator to parse the corresponding field from a json response by your API and to identify the key as a To-Many relationship.
+ * @param Function RelatedResource The constructor function of the model that is targeted for the To-Many relation.
+ * @param string mapFrom? An identifier to map keys coming from an incoming json response to keys in your model.
+ *  For example: the api response has a key &#x60;commentText: &#x27;nice article!&#x60; but the key in the model is &#x60;commentContent&#x60;.
+ * Then the decorator should be used as &#x60;Field(&#x27;commentText&#x27;).
+ */
+export const ToMany &#x3D; function &lt;TRelated extends Resource&gt;(RelatedResource: any, mapFrom?: string) {
+	return (target: any, key: string) &#x3D;&gt; {
+		const ctor &#x3D; target.constructor;
+		initMetaData(ctor);
+		Reflect.defineMetadata(METAKEYS.MAP, mapFrom, ctor, key);
+		Reflect.getMetadata(METAKEYS.FIELDS, ctor).push(key);
+		Reflect.getMetadata(METAKEYS.RELATIONS, ctor)[key] &#x3D; new RelationConfiguration(ctor, RelatedResource, key, RelationType.ToMany);
+	};
+};
+</code></pre>
+    </div>
+</div>
+
+
+
+
 
                    </div><div class="search-results">
     <div class="has-results">
@@ -632,7 +740,7 @@ end</code></pre><table class="table table-bordered compodoc-table">
 
         <script>
             var COMPODOC_CURRENT_PAGE_DEPTH = 1;
-            var COMPODOC_CURRENT_PAGE_URL = 'extendability.html';
+            var COMPODOC_CURRENT_PAGE_URL = 'ModelOptions.html';
         </script>
 
        <script src="../js/search/search.js"></script>

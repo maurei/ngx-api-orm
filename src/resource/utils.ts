@@ -109,7 +109,6 @@ export class ResourceModuleConfigurationWithProviders extends ResourceModuleConf
 	requestHandlersProviders?: Provider[];
 }
 
-/** @internal */
 export interface Instantiable<T> {
 	new (...args: any[]): T;
 }
@@ -117,7 +116,7 @@ export interface Instantiable<T> {
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export type RawInstanceTemplate<T extends Resource> = Omit<T, keyof Resource>;
 
-/** @internal */
+
 export interface ResourceType<T> extends Instantiable<T> {
 	_instances: T[];
 	collection<U extends Resource>(this: ResourceType<U>): U[];
@@ -127,17 +126,6 @@ export interface ResourceType<T> extends Instantiable<T> {
 	factory<U extends Resource>(this: ResourceType<U>, rawInstance: Array<{}>): Array<U>;
 	factory<U extends Resource>(this: ResourceType<U>, rawInstance: {}): U;
 }
-
-// /** @internal */
-// export interface ResourceType<T> extends Instantiable<T> {
-// 	// _instances: T[];
-// 	collection<U extends Resource>(this: ResourceType<U>): U[];
-// 	fetch<U extends T>(this: ResourceType<U>): Promise<U[]>;
-// 	// find<U extends T>(this: ResourceType<U>, id: number): U | undefined;
-// 	// template(): any;
-// 	// factory<U extends T>(this: ResourceType<U>, rawInstance: Array<{}>): Array<U>;
-// 	// factory<U extends T>(this: ResourceType<U>, rawInstance: {}): U;
-// }
 
 export interface HttpClientOptions {
 	url?: string;

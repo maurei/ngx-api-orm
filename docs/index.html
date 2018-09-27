@@ -119,6 +119,9 @@
                     id="xs-classes-links"
                 >
                     <li class="link">
+                        <a href="classes/Employee.html" data-type="entity-link">Employee</a>
+                    </li>
+                    <li class="link">
                         <a href="classes/RawInstance.html" data-type="entity-link">RawInstance</a>
                     </li>
                     <li class="link">
@@ -171,6 +174,9 @@
                         <a href="interfaces/HttpClientOptions.html" data-type="entity-link">HttpClientOptions</a>
                     </li>
                     <li class="link">
+                        <a href="interfaces/Instantiable.html" data-type="entity-link">Instantiable</a>
+                    </li>
+                    <li class="link">
                         <a href="interfaces/JsonApiAttributes.html" data-type="entity-link">JsonApiAttributes</a>
                     </li>
                     <li class="link">
@@ -195,7 +201,10 @@
                         <a href="interfaces/JsonApiResponse.html" data-type="entity-link">JsonApiResponse</a>
                     </li>
                     <li class="link">
-                        <a href="interfaces/ResourceModelOptions.html" data-type="entity-link">ResourceModelOptions</a>
+                        <a href="interfaces/ModelOptions.html" data-type="entity-link">ModelOptions</a>
+                    </li>
+                    <li class="link">
+                        <a href="interfaces/ResourceType.html" data-type="entity-link">ResourceType</a>
                     </li>
             </ul>
         </li>
@@ -338,6 +347,9 @@
                     id="classes-links"
 >
                     <li class="link">
+                        <a href="classes/Employee.html" data-type="entity-link">Employee</a>
+                    </li>
+                    <li class="link">
                         <a href="classes/RawInstance.html" data-type="entity-link">RawInstance</a>
                     </li>
                     <li class="link">
@@ -390,6 +402,9 @@
                         <a href="interfaces/HttpClientOptions.html" data-type="entity-link">HttpClientOptions</a>
                     </li>
                     <li class="link">
+                        <a href="interfaces/Instantiable.html" data-type="entity-link">Instantiable</a>
+                    </li>
+                    <li class="link">
                         <a href="interfaces/JsonApiAttributes.html" data-type="entity-link">JsonApiAttributes</a>
                     </li>
                     <li class="link">
@@ -414,7 +429,10 @@
                         <a href="interfaces/JsonApiResponse.html" data-type="entity-link">JsonApiResponse</a>
                     </li>
                     <li class="link">
-                        <a href="interfaces/ResourceModelOptions.html" data-type="entity-link">ResourceModelOptions</a>
+                        <a href="interfaces/ModelOptions.html" data-type="entity-link">ModelOptions</a>
+                    </li>
+                    <li class="link">
+                        <a href="interfaces/ResourceType.html" data-type="entity-link">ResourceType</a>
                     </li>
             </ul>
         </li>
@@ -462,17 +480,17 @@
 <p>A rest api orm for Angular. Tested with Angular 6.1.x. Can be use used seamlessly with JsonApi.org or easibly be adjusted to work with your own format. </p>
 <p>It aims to remove as much boilerplate code as possible while allowing for easy extendability. It will empower your models with CRUD functionality and also manages to-one and to-many relationships.</p>
 <p>Your models will look something like</p>
-<pre class="line-numbers"><code class="language-js">&#64;ResourceModel()
+<pre class="line-numbers"><code class="language-js">&#64;Model()
 export class Employee extends Resource {
-  &#64;ResourceField()
+  &#64;Field()
   public id: number;
-  &#64;ResourceField()
+  &#64;Field()
   public firstName: string;
-  &#64;ResourceField()
+  &#64;Field()
     public lastName: string;
-    &#64;ResourceToOne(Team)
+    &#64;ToOne(Team)
     public team: ToOneRelation&lt;Employee, Task&gt;;
-    &#64;ResourceToMany(Task): 
+    &#64;ToMany(Task): 
     public tasks: ToManyRelation&lt;Employee, Task&gt;;
 
     public mumble(): void {
@@ -480,19 +498,19 @@ export class Employee extends Resource {
     }
 }
 
-&#64;ResourceModel()
+&#64;Model()
 export class Task extends Resource {
-  &#64;ResourceField()
+  &#64;Field()
   public id: number;
-  &#64;ResourceField()
+  &#64;Field()
   public title: string;
 }
 
-&#64;ResourceModel()
+&#64;Model()
 export class Team extends Resource {
-  &#64;ResourceField()
+  &#64;Field()
   public id: number;
-  &#64;ResourceField()
+  &#64;Field()
   public teamName: string;
 }</code></pre><p>Then, some common usage will look like</p>
 <pre class="line-numbers"><code class="language-js">
@@ -519,20 +537,20 @@ await someGuy.team.set( Team.find(20)); //* update the to-one relationship */
 
 /* DELETE /employees/{id}/team */
 await someGuy.team.remove(); //* clear the to-one relationship */
-someGuy.team.instance === null  /* Will be true */</code></pre><p>For more detailed information on the available methods and how to use them, see the <a href="/additional-documentation/model-usage.html">model usage guide</a>.</p>
+someGuy.team.instance === null  /* Will be true */</code></pre><p>For more detailed information on the available methods and how to use them, see the <a href="additional-documentation/model-usage.html">model usage guide</a>.</p>
 <h2 id="getting-started">Getting Started</h2>
 <h3 id="install-the-library">Install the library</h3>
 <p>Using npm:</p>
 <pre class="line-numbers"><code class="language-console">npm install --save-dev &#64;ngx-api-orm/core</code></pre><h3 id="import-the-library-in-your-module">Import the library in your module</h3>
 <pre class="line-numbers"><code class="language-js">import { HttpClientModule } from &#39;&#64;angular/common/http&#39;;
-import { Resource, JsonApiDotOrg } from &#39;&#64;ngx-api-orm/core&#39;;
+import { ResourceModule, JsonApiDotOrg } from &#39;&#64;ngx-api-orm/core&#39;;
 
 
 &#64;NgModule({
   declarations: [ ... ],
   imports: [ ... ,
     ResourceModule.forRoot({ 
-            rootPath: &#39;https://example.com/api/v1&#39;
+            rootPath: &#39;https://example.com/api/v1&#39;,
             requestHandlersProviders: JsonApiDotOrg /* omit this line if you&#39;re not using a JsonApi.org formatted API. */
         }),
     HttpClientModule, /* this one is required */
@@ -541,9 +559,9 @@ import { Resource, JsonApiDotOrg } from &#39;&#64;ngx-api-orm/core&#39;;
   bootstrap: [ ... ]
 })
 export class SomeModule {}</code></pre><h3 id="write-some-models">Write some models</h3>
-<p>See the <a href="/additional-documentation/model-usage.html">model usage guide</a> for detailed instructions on how to use the <code>Resource</code> classes and decorators.</p>
+<p>See the <a href="https://maurei.github.io/ngx-api-orm/additional-documentation/model-usage.html">model usage guide</a> for detailed instructions on how to use the <code>Resource</code> classes and decorators.</p>
 <h3 id="extend-the-functionality-where-needed">Extend the functionality where needed</h3>
-<p>If the <code>ngx-api-orm</code> default format or the JsonApi.org format is not what you&#39;re getting from your API, see the <a href="/additional-documentation/extendability.html">extendability guide</a>. This library leverages the power of Angular&#39;s dependency injection, making it super easy to override certain default features.</p>
+<p>If the <code>ngx-api-orm</code> default format or the JsonApi.org format is not what you&#39;re getting from your API, see the <a href="/https://maurei.github.io/ngx-api-orm/additional-documentation/extendability.html">extendability guide</a>. This library leverages the power of Angular&#39;s dependency injection, making it super easy to override certain default features.</p>
 <h3 id="check-out-the-api-docs-to-learn-more">Check out the API docs to learn more</h3>
 <p><a href="https://maurei.github.io/ngx-api-orm/documentation">They&#39;re right here</a>.</p>
 

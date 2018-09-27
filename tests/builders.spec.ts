@@ -3,7 +3,7 @@ import { HttpParams } from '@angular/common/http';
 import { Abstract } from '../src/resource/request-handlers/abstract/builders';
 import { ToManyBuilder, ToOneBuilder, SimpleBuilder } from '../src/resource/request-handlers/default/builders';
 import { JsonApiBuilders } from '../src/resource/request-handlers/jsonapidotorg/builders';
-import { ResourceModel, ResourceField, ResourceToMany, ResourceToOne } from '../src/resource/resource.decorators';
+import { Model, Field, ToMany, ToOne } from '../src/resource/resource.decorators';
 import { ResourceType } from '../src/resource/utils';
 import { Resource } from '../src/resource/resource.core';
 import { ResourceModule } from '../src/resource/resource.module';
@@ -12,25 +12,25 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { JsonApiDotOrg } from '../src/resource/request-handlers/jsonapidotorg/providers';
 
 function getModels() {
-	@ResourceModel()
+	@Model()
 	class RelatedMany extends Resource {}
 
-	@ResourceModel()
+	@Model()
 	class RelatedOne extends Resource {}
 
-	@ResourceModel()
+	@Model()
 	class Host extends Resource {
-		@ResourceField()
+		@Field()
 		public id: number;
-		@ResourceField('fullName')
+		@Field('fullName')
 		public name: any;
-		@ResourceField()
+		@Field()
 		public some: any;
-		@ResourceField()
+		@Field()
 		public field: any;
-		@ResourceToOne(RelatedOne)
+		@ToOne(RelatedOne)
 		public relatedInstance: any;
-		@ResourceToMany(RelatedMany)
+		@ToMany(RelatedMany)
 		public relatedInstances: any;
 
 		public notIncluded: any;

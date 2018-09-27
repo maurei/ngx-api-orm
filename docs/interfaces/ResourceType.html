@@ -472,7 +472,7 @@
 </nav>
                </div>
                <!-- START CONTENT -->
-               <div class="content class">
+               <div class="content interface">
                    <div class="content-data">
 
 
@@ -483,9 +483,10 @@
 
 
 
+
 <ol class="breadcrumb">
-  <li>Classes</li>
-  <li>ToOneBuilder</li>
+  <li>Interfaces</li>
+  <li>ResourceType</li>
 </ol>
 
 <ul class="nav nav-tabs" role="tablist">
@@ -505,111 +506,67 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>src/resource/request-handlers/abstract/builders.ts</code>
+            <code>src/resource/utils.ts</code>
         </p>
 
 
+            <p class="comment">
+                <h3>Extends</h3>
+            </p>
+            <p class="comment">
+                    <code><a href="../interfaces/Instantiable.html" target="_self" >Instantiable</a></code>
+            </p>
 
-
-
-            <section>
-    <h3 id="index">Index</h3>
-    <table class="table table-sm table-bordered index-table">
-        <tbody>
-
-                <tr>
-                    <td class="col-md-4">
-                        <h6><b>Methods</b></h6>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <ul class="index-list">
-                            <li>
-                                    <span class="modifier">Public</span>
-                                <a href="#add">add</a>
-                            </li>
-                            <li>
-                                    <span class="modifier">Protected</span>
-                                <a href="#buildUrl">buildUrl</a>
-                            </li>
-                            <li>
-                                    <span class="modifier">Public</span>
-                                <a href="#remove">remove</a>
-                            </li>
-                        </ul>
-                    </td>
-                </tr>
-
-
-
-
-
-        </tbody>
-    </table>
-</section>
-
-            <section>
-    <h3 id="constructor">Constructor</h3>
-        <table class="table table-sm table-bordered">
-            <tbody>
-                <tr>
-                    <td class="col-md-4">
-<code>constructor(_http: <a href="https://angular.io/api/common/http/HttpClient" target="_blank">HttpClient</a>, config: <a href="../classes/Resource.html">ResourceModuleConfiguration</a>)</code>
-                    </td>
-                </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">src/resource/request-handlers/abstract/builders.ts:34</a></div>
-                            </td>
-                        </tr>
-
-                <tr>
-                    <td class="col-md-4">
-                            <div>
-                                    <b>Parameters :</b>
-                                    <table class="params">
-                                        <thead>
-                                            <tr>
-                                                <td>Name</td>
-                                                    <td>Type</td>
-                                                <td>Optional</td>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                                <tr>
-                                                    <td>_http</td>
-                                                  
-                                                        <td>
-                                                                    <code><a href="https://angular.io/api/common/http/HttpClient" target="_blank" >HttpClient</a></code>
-                                                        </td>
-                                                  
-                                                    <td>
-                                                            no
-                                                    </td>
-                                                    
-                                                </tr>
-                                                <tr>
-                                                    <td>config</td>
-                                                  
-                                                        <td>
-                                                                    <code><a href="../classes/Resource.html" target="_self" >ResourceModuleConfiguration</a></code>
-                                                        </td>
-                                                  
-                                                    <td>
-                                                            no
-                                                    </td>
-                                                    
-                                                </tr>
-                                        </tbody>
-                                    </table>
-                            </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-</section>
-
+        <section>
+            <h3 id="index">Index</h3>
+            <table class="table table-sm table-bordered index-table">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Properties</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                        <a href="#_instances">_instances</a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Methods</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                    <a href="#collection">collection</a>
+                                </li>
+                                <li>
+                                    <a href="#factory">factory</a>
+                                </li>
+                                <li>
+                                    <a href="#factory">factory</a>
+                                </li>
+                                <li>
+                                    <a href="#fetch">fetch</a>
+                                </li>
+                                <li>
+                                    <a href="#find">find</a>
+                                </li>
+                                <li>
+                                    <a href="#template">template</a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
 
             <section>
     
@@ -620,27 +577,25 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-                        <a name="add"></a>
+                        <a name="collection"></a>
                         <span class="name">
                             <b>
-                                <span class="modifier">Public</span>
-                            add
+                            collection
                             </b>
-                            <a href="#add"><span class="fa fa-link"></span></a>
+                            <a href="#collection"><span class="fa fa-link"></span></a>
                         </span>
                     </td>
                 </tr>
                 <tr>
                     <td class="col-md-4">
-                            <span class="modifier-icon fa fa-reset"></span>
-                        <code>add(targetName: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, relatedName: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, body: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, relatedInstance: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, options: <a href="../interfaces/HttpClientOptions.html">HttpClientOptions</a>)</code>
+<code>collection(this: <a href="../interfaces/ResourceType.html">ResourceType<U></a>)</code>
                     </td>
                 </tr>
 
 
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">src/resource/request-handlers/abstract/builders.ts:40</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="122" class="link-to-prism">src/resource/utils.ts:122</a></div>
                             </td>
                         </tr>
 
@@ -659,57 +614,9 @@
                                         </thead>
                                         <tbody>
                                                 <tr>
-                                                        <td>targetName</td>
+                                                        <td>this</td>
                                                         <td>
-                                                                    <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                                        </td>
-                                                    
-                                                    <td>
-                                                            no
-                                                    </td>
-                                                    
-
-                                                </tr>
-                                                <tr>
-                                                        <td>relatedName</td>
-                                                        <td>
-                                                                    <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                                        </td>
-                                                    
-                                                    <td>
-                                                            no
-                                                    </td>
-                                                    
-
-                                                </tr>
-                                                <tr>
-                                                        <td>body</td>
-                                                        <td>
-                                                                    <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
-                                                        </td>
-                                                    
-                                                    <td>
-                                                            no
-                                                    </td>
-                                                    
-
-                                                </tr>
-                                                <tr>
-                                                        <td>relatedInstance</td>
-                                                        <td>
-                                                                    <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
-                                                        </td>
-                                                    
-                                                    <td>
-                                                            no
-                                                    </td>
-                                                    
-
-                                                </tr>
-                                                <tr>
-                                                        <td>options</td>
-                                                        <td>
-                                                                    <code><a href="../interfaces/HttpClientOptions.html" target="_self" >HttpClientOptions</a></code>
+                                                                    <code><a href="../interfaces/ResourceType.html" target="_self" >ResourceType&lt;U&gt;</a></code>
                                                         </td>
                                                     
                                                     <td>
@@ -724,7 +631,7 @@
                             <div>
                             </div>
                             <div class="io-description">
-                                <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+                                <b>Returns : </b>    <code>[]</code>
 
                             </div>
                                 <div class="io-description">
@@ -738,27 +645,25 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-                        <a name="buildUrl"></a>
+                        <a name="factory"></a>
                         <span class="name">
                             <b>
-                                <span class="modifier">Protected</span>
-                            buildUrl
+                            factory
                             </b>
-                            <a href="#buildUrl"><span class="fa fa-link"></span></a>
+                            <a href="#factory"><span class="fa fa-link"></span></a>
                         </span>
                     </td>
                 </tr>
                 <tr>
                     <td class="col-md-4">
-                            <span class="modifier-icon fa fa-reset"></span>
-                        <code>buildUrl(targetName: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, relatedName: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, relatedInstance: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+<code>factory(this: <a href="../interfaces/ResourceType.html">ResourceType<U></a>, rawInstance: Array<literal type>)</code>
                     </td>
                 </tr>
 
 
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">src/resource/request-handlers/abstract/builders.ts:36</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="126" class="link-to-prism">src/resource/utils.ts:126</a></div>
                             </td>
                         </tr>
 
@@ -777,9 +682,9 @@
                                         </thead>
                                         <tbody>
                                                 <tr>
-                                                        <td>targetName</td>
+                                                        <td>this</td>
                                                         <td>
-                                                                    <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                                    <code><a href="../interfaces/ResourceType.html" target="_self" >ResourceType&lt;U&gt;</a></code>
                                                         </td>
                                                     
                                                     <td>
@@ -789,21 +694,9 @@
 
                                                 </tr>
                                                 <tr>
-                                                        <td>relatedName</td>
+                                                        <td>rawInstance</td>
                                                         <td>
-                                                                    <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                                        </td>
-                                                    
-                                                    <td>
-                                                            no
-                                                    </td>
-                                                    
-
-                                                </tr>
-                                                <tr>
-                                                        <td>relatedInstance</td>
-                                                        <td>
-                                                                    <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                                                    <code>Array&lt;literal type&gt;</code>
                                                         </td>
                                                     
                                                     <td>
@@ -818,7 +711,7 @@
                             <div>
                             </div>
                             <div class="io-description">
-                                <b>Returns : </b>    <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                <b>Returns : </b>    <code>Array&lt;U&gt;</code>
 
                             </div>
                                 <div class="io-description">
@@ -832,27 +725,25 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-                        <a name="remove"></a>
+                        <a name="factory"></a>
                         <span class="name">
                             <b>
-                                <span class="modifier">Public</span>
-                            remove
+                            factory
                             </b>
-                            <a href="#remove"><span class="fa fa-link"></span></a>
+                            <a href="#factory"><span class="fa fa-link"></span></a>
                         </span>
                     </td>
                 </tr>
                 <tr>
                     <td class="col-md-4">
-                            <span class="modifier-icon fa fa-reset"></span>
-                        <code>remove(targetName: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, relatedName: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, body: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, relatedInstance: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, options: <a href="../interfaces/HttpClientOptions.html">HttpClientOptions</a>)</code>
+<code>factory(this: <a href="../interfaces/ResourceType.html">ResourceType<U></a>, rawInstance: literal type)</code>
                     </td>
                 </tr>
 
 
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="45" class="link-to-prism">src/resource/request-handlers/abstract/builders.ts:45</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="127" class="link-to-prism">src/resource/utils.ts:127</a></div>
                             </td>
                         </tr>
 
@@ -871,9 +762,9 @@
                                         </thead>
                                         <tbody>
                                                 <tr>
-                                                        <td>targetName</td>
+                                                        <td>this</td>
                                                         <td>
-                                                                    <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                                    <code><a href="../interfaces/ResourceType.html" target="_self" >ResourceType&lt;U&gt;</a></code>
                                                         </td>
                                                     
                                                     <td>
@@ -883,45 +774,9 @@
 
                                                 </tr>
                                                 <tr>
-                                                        <td>relatedName</td>
+                                                        <td>rawInstance</td>
                                                         <td>
-                                                                    <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                                        </td>
-                                                    
-                                                    <td>
-                                                            no
-                                                    </td>
-                                                    
-
-                                                </tr>
-                                                <tr>
-                                                        <td>body</td>
-                                                        <td>
-                                                                    <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
-                                                        </td>
-                                                    
-                                                    <td>
-                                                            no
-                                                    </td>
-                                                    
-
-                                                </tr>
-                                                <tr>
-                                                        <td>relatedInstance</td>
-                                                        <td>
-                                                                    <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
-                                                        </td>
-                                                    
-                                                    <td>
-                                                            no
-                                                    </td>
-                                                    
-
-                                                </tr>
-                                                <tr>
-                                                        <td>options</td>
-                                                        <td>
-                                                                    <code><a href="../interfaces/HttpClientOptions.html" target="_self" >HttpClientOptions</a></code>
+                                                                    <code>literal type</code>
                                                         </td>
                                                     
                                                     <td>
@@ -936,7 +791,223 @@
                             <div>
                             </div>
                             <div class="io-description">
-                                <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+                                <b>Returns : </b>    <code>U</code>
+
+                            </div>
+                                <div class="io-description">
+                                    
+                                </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="fetch"></a>
+                        <span class="name">
+                            <b>
+                            fetch
+                            </b>
+                            <a href="#fetch"><span class="fa fa-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+<code>fetch(this: <a href="../interfaces/ResourceType.html">ResourceType<U></a>)</code>
+                    </td>
+                </tr>
+
+
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="123" class="link-to-prism">src/resource/utils.ts:123</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+
+                            <div class="io-description">
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>this</td>
+                                                        <td>
+                                                                    <code><a href="../interfaces/ResourceType.html" target="_self" >ResourceType&lt;U&gt;</a></code>
+                                                        </td>
+                                                    
+                                                    <td>
+                                                            no
+                                                    </td>
+                                                    
+
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                            <div>
+                            </div>
+                            <div class="io-description">
+                                <b>Returns : </b>    <code>Promise&lt;[]&gt;</code>
+
+                            </div>
+                                <div class="io-description">
+                                    
+                                </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="find"></a>
+                        <span class="name">
+                            <b>
+                            find
+                            </b>
+                            <a href="#find"><span class="fa fa-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+<code>find(this: <a href="../interfaces/ResourceType.html">ResourceType<U></a>, id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                    </td>
+                </tr>
+
+
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="124" class="link-to-prism">src/resource/utils.ts:124</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+
+                            <div class="io-description">
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>this</td>
+                                                        <td>
+                                                                    <code><a href="../interfaces/ResourceType.html" target="_self" >ResourceType&lt;U&gt;</a></code>
+                                                        </td>
+                                                    
+                                                    <td>
+                                                            no
+                                                    </td>
+                                                    
+
+                                                </tr>
+                                                <tr>
+                                                        <td>id</td>
+                                                        <td>
+                                                                    <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                                        </td>
+                                                    
+                                                    <td>
+                                                            no
+                                                    </td>
+                                                    
+
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                            <div>
+                            </div>
+                            <div class="io-description">
+                                <b>Returns : </b>    <code>U | undefined</code>
+
+                            </div>
+                                <div class="io-description">
+                                    
+                                </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="template"></a>
+                        <span class="name">
+                            <b>
+                            template
+                            </b>
+                            <a href="#template"><span class="fa fa-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+<code>template(this: <a href="../interfaces/ResourceType.html">ResourceType<U></a>)</code>
+                    </td>
+                </tr>
+
+
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="125" class="link-to-prism">src/resource/utils.ts:125</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+
+                            <div class="io-description">
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>this</td>
+                                                        <td>
+                                                                    <code><a href="../interfaces/ResourceType.html" target="_self" >ResourceType&lt;U&gt;</a></code>
+                                                        </td>
+                                                    
+                                                    <td>
+                                                            no
+                                                    </td>
+                                                    
+
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                            <div>
+                            </div>
+                            <div class="io-description">
+                                <b>Returns : </b>    <code><a href="../classes/RawInstance.html" target="_self" >RawInstanceTemplate&lt;U&gt;</a></code>
 
                             </div>
                                 <div class="io-description">
@@ -949,87 +1020,201 @@
 </section>
 
 
+            <section>
+                <h3 id="inputs">Properties</h3>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="_instances"></a>
+                                        <span class="name"><b>_instances</b><a href="#_instances"><span class="fa fa-link"></span></a></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>_instances:     <code>T[]</code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>    <code>T[]</code>
+
+                                        </td>
+                                    </tr>
 
 
 
 
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <div class="io-line">Defined in <a href="" data-line="121" class="link-to-prism">src/resource/utils.ts:121</a></div>
+                                        </td>
+                                    </tr>
+
+                        </tbody>
+                    </table>
+            </section>
     </div>
 
 
     <div class="tab-pane fade tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { toPlural, ResourceModuleConfiguration, HttpClientOptions } from &#x27;../../utils&#x27;;
-import { HttpClient } from &#x27;@angular/common/http&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injector, Provider } from &#x27;@angular/core&#x27;;
+import { HttpHeaders, HttpParams } from &#x27;@angular/common/http&#x27;;
+import { Resource } from &#x27;./resource.core&#x27;;
+import { RelationConfiguration, RelationType } from &#x27;./relations/relation-configuration&#x27;;
+import { ToManyBuilder, ToOneBuilder, SimpleBuilder } from &#x27;./request-handlers/default/builders&#x27;;
+import { ToManyAdapter, ToOneAdapter, SimpleAdapter } from &#x27;./request-handlers/default/adapters&#x27;;
 
-export namespace Abstract {
-	export abstract class SimpleBuilder {
-		constructor(protected readonly _http: HttpClient, protected readonly config: ResourceModuleConfiguration) {}
-		protected buildUrl(targetName: string, targetInstance?: any): string {
-			let path &#x3D; (this.config.rootPath ? this.config.rootPath : &#x27;&#x27;) + &#x60;/${toPlural(targetName)}/$targetId&#x60;;
-			path &#x3D; path.replace(&#x27;/$targetId&#x27;, targetInstance ? &#x60;/${targetInstance.id}&#x60; : &#x27;&#x27;);
-			return path;
-		}
+export function toDash(name: string): string {
+	const split &#x3D; name.split(&#x27;&#x27;);
+	split[0] &#x3D; split[0].toLowerCase();
+	const splitJoin &#x3D; split.join(&#x27;&#x27;);
+	return splitJoin.replace(/([A-Z])/g, $1 &#x3D;&gt; {
+		return &#x27;-&#x27; + $1.toLowerCase();
+	});
+}
 
-		public fetch(targetName: string, options: HttpClientOptions): Promise&lt;Object&gt; {
-			const path &#x3D; options.url || this.buildUrl(targetName);
-			const req &#x3D; this._http.get(path, options).toPromise();
-			return &lt;Promise&lt;Object[]&gt;&gt;req;
-		}
-		public save(targetName: string, body: any, options: HttpClientOptions): Promise&lt;Object&gt; {
-			const path &#x3D; options.url || this.buildUrl(targetName);
-			const req &#x3D; this._http.post(path, body, options).toPromise();
-			return &lt;Promise&lt;Object&gt;&gt;req;
-		}
-		public update(targetName: string, body: any, options: HttpClientOptions): Promise&lt;any&gt; {
-			const path &#x3D; options.url || this.buildUrl(targetName, body);
-			const req &#x3D; this._http.patch(path, body, options).toPromise();
-			return req.then(() &#x3D;&gt; Promise.resolve());
-		}
-		public delete(targetName: string, instance: any, options: HttpClientOptions): Promise&lt;any&gt; {
-			const path &#x3D; options.url || this.buildUrl(targetName, instance);
-			const req &#x3D; this._http.delete(path, options).toPromise();
-			return req.then(() &#x3D;&gt; Promise.resolve());
-		}
+export function toPluralDash(name: string) {
+	return toPlural(toDash(name));
+}
+
+export function toPlural(name: string) {
+	return name + &#x27;s&#x27;;
+}
+
+/** @internal */
+export let InjectorContainer: { [instance: string]: Injector | undefined } &#x3D; { instance: undefined };
+
+/** @internal */
+export function getDependencyInjectionEntries(token: any): RequestHandlers {
+	if (InjectorContainer.instance !&#x3D;&#x3D; undefined) {
+		const injector &#x3D; InjectorContainer.instance;
+		const injectedInstance &#x3D; injector.get(token);
+		return [
+			injectedInstance[&#x27;_adapter&#x27;],
+			injectedInstance[&#x27;_builder&#x27;],
+			injectedInstance[&#x27;_toOneAdapter&#x27;],
+			injectedInstance[&#x27;_toOneBuilder&#x27;],
+			injectedInstance[&#x27;_toManyAdapter&#x27;],
+			injectedInstance[&#x27;_toManyBuilder&#x27;]
+		];
 	}
-	export abstract class ToOneBuilder {
-		constructor(protected readonly _http: HttpClient, protected readonly config: ResourceModuleConfiguration) {}
-		protected buildUrl(targetName: string, relatedName: string, relatedInstance: any): string {
-			const path &#x3D; (this.config.rootPath ? this.config.rootPath : &#x27;&#x27;) + &#x60;/${toPlural(relatedName)}/${relatedInstance.id}/${targetName}&#x60;;
-			return path;
-		}
-		public add(targetName: string, relatedName: string, body: any, relatedInstance: any, options: HttpClientOptions): Promise&lt;void&gt; {
-			const path &#x3D; options.url || this.buildUrl(targetName, relatedName, relatedInstance);
-			const req &#x3D; this._http.patch(path, body, options).toPromise();
-			return req.then(() &#x3D;&gt; Promise.resolve());
-		}
-		public remove(targetName: string, relatedName: string, body: any, relatedInstance: any, options: HttpClientOptions): Promise&lt;void&gt; {
-			const path &#x3D; options.url || this.buildUrl(targetName, relatedName, relatedInstance);
-			const req &#x3D; this._http.delete(path, options).toPromise();
-			return req.then(() &#x3D;&gt; Promise.resolve());
-		}
+	return [] as any;
+}
+
+/** @internal */
+export function initMetaData(ctor: any) {
+	if (!Reflect.hasOwnMetadata(METAKEYS.FIELDS, ctor)) {
+		Reflect.defineMetadata(METAKEYS.FIELDS, [], ctor);
 	}
-	export abstract class ToManyBuilder {
-		constructor(protected readonly _http: HttpClient, protected readonly config: ResourceModuleConfiguration) {}
-		protected buildUrl(targetName: string, relatedName: string, relatedInstance: any): string {
-			const path &#x3D;
-				(this.config.rootPath ? this.config.rootPath : &#x27;&#x27;) + &#x60;/${toPlural(relatedName)}/${relatedInstance.id}/${toPlural(targetName)}&#x60;;
-			return path;
-		}
-		public add(targetName: string, relatedName: string, body: any, relatedInstance: any, options: HttpClientOptions): Promise&lt;void&gt; {
-			const path &#x3D; options.url || this.buildUrl(targetName, relatedName, relatedInstance);
-			const req &#x3D; this._http.post(path, body, options).toPromise();
-			return req.then(() &#x3D;&gt; Promise.resolve());
-		}
-		public remove(targetName: string, relatedName: string, body: any, relatedInstance: any, options: HttpClientOptions): Promise&lt;void&gt; {
-			const path &#x3D; options.url || this.buildUrl(targetName, relatedName, relatedInstance);
-			const req &#x3D; this._http.delete(path, options).toPromise();
-			return req.then(() &#x3D;&gt; Promise.resolve());
-		}
+	if (!Reflect.hasOwnMetadata(METAKEYS.ATTRIBUTES, ctor)) {
+		Reflect.defineMetadata(METAKEYS.ATTRIBUTES, [], ctor);
+	}
+	if (!Reflect.hasOwnMetadata(METAKEYS.RELATIONS, ctor)) {
+		Reflect.defineMetadata(METAKEYS.RELATIONS, {}, ctor);
+	}
+	if (!Reflect.hasOwnMetadata(METAKEYS.INSTANCES, ctor)) {
+		Reflect.defineMetadata(METAKEYS.INSTANCES, [], ctor);
 	}
 }
+
+/** @internal */
+export function updateInterceptProxyFactory(targetInstance: Resource) {
+	const attributes &#x3D; Reflect.getMetadata(METAKEYS.ATTRIBUTES, targetInstance.constructor);
+	return new Proxy(targetInstance, {
+		set(instance: any, key: string, value: any, proxy: any): boolean {
+			if (attributes.indexOf(key) &gt; -1) {
+				const updatedFields &#x3D; Reflect.getMetadata(METAKEYS.UPDATED, instance);
+				const map &#x3D; Reflect.getMetadata(METAKEYS.MAP, instance, key);
+				updatedFields[map || key] &#x3D; instance[key];
+			}
+			instance[key] &#x3D; value;
+			return true;
+		}
+	});
+}
+
+/** @internal */
+export function readOnlyArrayProxyFactory(targetArray: Array&lt;any&gt;) {
+	const forbiddenMethods &#x3D; [&#x27;push&#x27;, &#x27;pop&#x27;, &#x27;shift&#x27;, &#x27;unshift&#x27;];
+	return new Proxy(targetArray, {
+		get(instance: any, key: string, proxy: any): boolean {
+			if (forbiddenMethods.indexOf(key) &gt; -1) {
+				throw Error(&#x60;Operation ${key} not allowed on this readonly array!&#x60;);
+			}
+			return instance[key];
+		}
+	});
+}
+
+export const METAKEYS &#x3D; {
+	FIELDS: &#x27;orm:fields&#x27;,
+	ATTRIBUTES: &#x27;orm:attributes&#x27;,
+	RELATIONS: &#x27;orm:relations&#x27;,
+	MAP: &#x27;orm:map&#x27;,
+	UPDATED: &#x27;orm:updated&#x27;,
+	INSTANCES: &#x27;orm:instances&#x27;,
+	NAME: &#x27;orm:name&#x27;
+};
+
+/** @internal */
+export class ResourceModuleConfiguration {
+	rootPath?: string;
+}
+
+export class ResourceModuleConfigurationWithProviders extends ResourceModuleConfiguration {
+	/** Sets the API root of your app. */
+	rootPath?: string;
+	/** Allows to conveniently register a collection of request handlers. See the guide on extendability on how to use this. Can be set to {@link JsonApiDotOrg}. */
+	requestHandlersProviders?: Provider[];
+}
+
+export interface Instantiable&lt;T&gt; {
+	new (...args: any[]): T;
+}
+
+export type Omit&lt;T, K extends keyof T&gt; &#x3D; Pick&lt;T, Exclude&lt;keyof T, K&gt;&gt;;
+export type RawInstanceTemplate&lt;T extends Resource&gt; &#x3D; Omit&lt;T, keyof Resource&gt;;
+
+
+export interface ResourceType&lt;T&gt; extends Instantiable&lt;T&gt; {
+	_instances: T[];
+	collection&lt;U extends Resource&gt;(this: ResourceType&lt;U&gt;): U[];
+	fetch&lt;U extends Resource&gt;(this: ResourceType&lt;U&gt;): Promise&lt;U[]&gt;;
+	find&lt;U extends Resource&gt;(this: ResourceType&lt;U&gt;, id: number): U | undefined;
+	template&lt;U extends Resource&gt;(this: ResourceType&lt;U&gt;): RawInstanceTemplate&lt;U&gt;;
+	factory&lt;U extends Resource&gt;(this: ResourceType&lt;U&gt;, rawInstance: Array&lt;{}&gt;): Array&lt;U&gt;;
+	factory&lt;U extends Resource&gt;(this: ResourceType&lt;U&gt;, rawInstance: {}): U;
+}
+
+export interface HttpClientOptions {
+	url?: string;
+	body?: any;
+	headers?: HttpHeaders | { [header: string]: string | string[] };
+	observe?: &#x27;body&#x27;;
+	params?: HttpParams | { [param: string]: string | string[] };
+	responseType?: &#x27;json&#x27;;
+	reportProgress?: boolean;
+	withCredentials?: boolean;
+}
+/** @internal */
+export type RequestHandlers &#x3D; [SimpleAdapter, SimpleBuilder, ToOneAdapter, ToOneBuilder, ToManyAdapter, ToManyBuilder];
+
+/** @internal */
+export type UnresolvedRequestHandlers &#x3D; [
+	SimpleAdapter | undefined,
+	SimpleBuilder | undefined,
+	ToOneAdapter | undefined,
+	ToOneBuilder | undefined,
+	ToManyAdapter | undefined,
+	ToManyBuilder | undefined
+];
 </code></pre>
     </div>
 </div>
-
 
 
 
@@ -1060,7 +1245,7 @@ export namespace Abstract {
 
         <script>
             var COMPODOC_CURRENT_PAGE_DEPTH = 1;
-            var COMPODOC_CURRENT_PAGE_URL = 'ToOneBuilder.html';
+            var COMPODOC_CURRENT_PAGE_URL = 'ResourceType.html';
         </script>
 
        <script src="../js/search/search.js"></script>

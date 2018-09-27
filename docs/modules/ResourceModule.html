@@ -119,6 +119,9 @@
                     id="xs-classes-links"
                 >
                     <li class="link">
+                        <a href="classes/Employee.html" data-type="entity-link">Employee</a>
+                    </li>
+                    <li class="link">
                         <a href="classes/RawInstance.html" data-type="entity-link">RawInstance</a>
                     </li>
                     <li class="link">
@@ -171,6 +174,9 @@
                         <a href="interfaces/HttpClientOptions.html" data-type="entity-link">HttpClientOptions</a>
                     </li>
                     <li class="link">
+                        <a href="interfaces/Instantiable.html" data-type="entity-link">Instantiable</a>
+                    </li>
+                    <li class="link">
                         <a href="interfaces/JsonApiAttributes.html" data-type="entity-link">JsonApiAttributes</a>
                     </li>
                     <li class="link">
@@ -195,7 +201,10 @@
                         <a href="interfaces/JsonApiResponse.html" data-type="entity-link">JsonApiResponse</a>
                     </li>
                     <li class="link">
-                        <a href="interfaces/ResourceModelOptions.html" data-type="entity-link">ResourceModelOptions</a>
+                        <a href="interfaces/ModelOptions.html" data-type="entity-link">ModelOptions</a>
+                    </li>
+                    <li class="link">
+                        <a href="interfaces/ResourceType.html" data-type="entity-link">ResourceType</a>
                     </li>
             </ul>
         </li>
@@ -338,6 +347,9 @@
                     id="classes-links"
 >
                     <li class="link">
+                        <a href="classes/Employee.html" data-type="entity-link">Employee</a>
+                    </li>
+                    <li class="link">
                         <a href="classes/RawInstance.html" data-type="entity-link">RawInstance</a>
                     </li>
                     <li class="link">
@@ -390,6 +402,9 @@
                         <a href="interfaces/HttpClientOptions.html" data-type="entity-link">HttpClientOptions</a>
                     </li>
                     <li class="link">
+                        <a href="interfaces/Instantiable.html" data-type="entity-link">Instantiable</a>
+                    </li>
+                    <li class="link">
                         <a href="interfaces/JsonApiAttributes.html" data-type="entity-link">JsonApiAttributes</a>
                     </li>
                     <li class="link">
@@ -414,7 +429,10 @@
                         <a href="interfaces/JsonApiResponse.html" data-type="entity-link">JsonApiResponse</a>
                     </li>
                     <li class="link">
-                        <a href="interfaces/ResourceModelOptions.html" data-type="entity-link">ResourceModelOptions</a>
+                        <a href="interfaces/ModelOptions.html" data-type="entity-link">ModelOptions</a>
+                    </li>
+                    <li class="link">
+                        <a href="interfaces/ResourceType.html" data-type="entity-link">ResourceType</a>
                     </li>
             </ul>
         </li>
@@ -501,7 +519,7 @@
 // import { BrowserModule } from &#x27;@angular/platform-browser&#x27;;
 import { HttpClientModule } from &#x27;@angular/common/http&#x27;;
 import { Resource } from &#x27;./resource.core&#x27;;
-import { ResourceField, ResourceToMany, ResourceToOne, ResourceModel } from &#x27;./resource.decorators&#x27;;
+import { Field, ToMany, ToOne, Model } from &#x27;./resource.decorators&#x27;;
 import { ToManyRelation } from &#x27;./relations/to-many&#x27;;
 import { ToOneRelation } from &#x27;./relations/to-one&#x27;;
 import { InjectorContainer, ResourceModuleConfiguration, ResourceModuleConfigurationWithProviders } from &#x27;./utils&#x27;;
@@ -532,14 +550,28 @@ class ResourceModule {
 		};
 	}
 }
+@Model()
+export class Employee extends Resource {
+	// @Field()
+	// public id: string;
+	// @Field()
+	// public code: string;
+	// @Field()
+	// public firstName: string;
+	// @Field()
+	// public lastName: string;
+}
+
+const x &#x3D; Employee.fetch();
+
 
 export {
 	ResourceModule,
 	Resource,
-	ResourceField,
-	ResourceToOne,
-	ResourceToMany,
-	ResourceModel,
+	Field,
+	ToOne,
+	ToMany,
+	Model,
 	ToManyRelation,
 	ToOneRelation,
 	AbstractAdapters,

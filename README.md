@@ -9,17 +9,17 @@ It aims to remove as much boilerplate code as possible while allowing for easy e
 Your models will look something like
 
 ```js
-@ResourceModel()
+@Model()
 export class Employee extends Resource {
-  @ResourceField()
+  @Field()
   public id: number;
-  @ResourceField()
+  @Field()
   public firstName: string;
-  @ResourceField()
+  @Field()
 	public lastName: string;
-	@ResourceToOne(Team)
+	@ToOne(Team)
 	public team: ToOneRelation<Employee, Task>;
-	@ResourceToMany(Task): 
+	@ToMany(Task): 
 	public tasks: ToManyRelation<Employee, Task>;
 
 	public mumble(): void {
@@ -27,19 +27,19 @@ export class Employee extends Resource {
 	}
 }
 
-@ResourceModel()
+@Model()
 export class Task extends Resource {
-  @ResourceField()
+  @Field()
   public id: number;
-  @ResourceField()
+  @Field()
   public title: string;
 }
 
-@ResourceModel()
+@Model()
 export class Team extends Resource {
-  @ResourceField()
+  @Field()
   public id: number;
-  @ResourceField()
+  @Field()
   public teamName: string;
 }
 ```
@@ -76,7 +76,8 @@ await someGuy.team.remove(); //* clear the to-one relationship */
 someGuy.team.instance === null  /* Will be true */
 ```
 
-For more detailed information on the available methods and how to use them, see the [model usage guide](/additional-documentation/model-usage.html).
+For more detailed information on the available methods and how to use them, see the [model usage guide](additional-documentation/model-usage.html).
+
 
 ## Getting Started
 
@@ -89,14 +90,14 @@ npm install --save-dev @ngx-api-orm/core
 ### Import the library in your module
 ```js
 import { HttpClientModule } from '@angular/common/http';
-import { Resource, JsonApiDotOrg } from '@ngx-api-orm/core';
+import { ResourceModule, JsonApiDotOrg } from '@ngx-api-orm/core';
 
 
 @NgModule({
   declarations: [ ... ],
   imports: [ ... ,
     ResourceModule.forRoot({ 
-			rootPath: 'https://example.com/api/v1'
+			rootPath: 'https://example.com/api/v1',
 			requestHandlersProviders: JsonApiDotOrg /* omit this line if you're not using a JsonApi.org formatted API. */
 		}),
     HttpClientModule, /* this one is required */
@@ -108,10 +109,10 @@ export class SomeModule {}
 ```
 
 ### Write some models
-See the [model usage guide](/additional-documentation/model-usage.html) for detailed instructions on how to use the `Resource` classes and decorators.
+See the [model usage guide](https://maurei.github.io/ngx-api-orm/additional-documentation/model-usage.html) for detailed instructions on how to use the `Resource` classes and decorators.
 
 ### Extend the functionality where needed
-If the `ngx-api-orm` default format or the JsonApi.org format is not what you're getting from your API, see the [extendability guide](/additional-documentation/extendability.html). This library leverages the power of Angular's dependency injection, making it super easy to override certain default features.
+If the `ngx-api-orm` default format or the JsonApi.org format is not what you're getting from your API, see the [extendability guide](/https://maurei.github.io/ngx-api-orm/additional-documentation/extendability.html). This library leverages the power of Angular's dependency injection, making it super easy to override certain default features.
 
 ### Check out the API docs to learn more
 [They're right here](https://maurei.github.io/ngx-api-orm/documentation).

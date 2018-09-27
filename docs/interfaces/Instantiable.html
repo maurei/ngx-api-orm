@@ -472,7 +472,7 @@
 </nav>
                </div>
                <!-- START CONTENT -->
-               <div class="content additional-page">
+               <div class="content interface">
                    <div class="content-data">
 
 
@@ -484,128 +484,198 @@
 
 
 
+<ol class="breadcrumb">
+  <li>Interfaces</li>
+  <li>Instantiable</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+    <li class="active">
+        <a href="#info" id="info-tab" role="tab" data-toggle="tab" data-link="info">Info</a>
+    </li>
 
 
-
-
-
-<h1 id="extendability-guide">Extendability guide</h1>
-<h3 id="this-page-is-still-under-construction-">this page is still under construction.</h3>
-<p>Some things that can be customized are:</p>
-<ul>
-<li><strong>The outgoing request</strong>, which consists of two things:<ul>
-<li>the request itself: the <code>HTTP</code> method,  <code>url</code>, etc</li>
-<li>construction of the request <code>body</code>.</li>
+    <li>
+        <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+    </li>
 </ul>
-</li>
-<li><strong>The incoming request</strong><ul>
-<li>parsing the JSON before feeding it to the models for instantiation.</li>
-</ul>
-</li>
-</ul>
-<p>Generally, this customization can be done:</p>
-<ul>
-<li><strong>Globally</strong>: for all your models at once</li>
-<li><strong>Regionally</strong>: as specified per model</li>
-<li><strong>Locally</strong>: different for actions within the same model.</li>
-</ul>
-<p>First, before providing us with examples, some parts of the  structure will be explained that is related to it.</p>
-<h2 id="adapters-and-builders">Adapters and Builders</h2>
-<pre class="line-numbers"><code class="language-mermaid">graph TD
-IR[Incoming request]
-OR[Outgoing request]
-RI[Resource]
-AI[Adapter#parseResponse]
-BO[Builder#action]
-AO[Adapter#action]
 
-subgraph Incoming requests
-IR --&gt; AI
-AI --&gt;|Resource#Factory| RI
-end
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/resource/utils.ts</code>
+        </p>
 
-subgraph  Outgoing requests
-RO[Resource] --&gt; AO
-AO --&gt; BO
-BO --&gt; OR
-end</code></pre><table class="table table-bordered compodoc-table">
-<thead>
-<tr>
-<th>Callee</th>
-<th>Pipeline</th>
-<th>Outgoing request:  Adapter method involved</th>
-<th>Outgoing request: Builder method involved</th>
-<th>HTTP Verb used</th>
-<th>Incoming response:  Adapter method involved</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Resource class</td>
-<td>fetch</td>
-<td>none</td>
-<td>SimpleBuilder#fetch</td>
-<td>GET</td>
-<td>SimpleAdapter#parseResponse</td>
-</tr>
-<tr>
-<td>Resource instance</td>
-<td>save</td>
-<td>none</td>
-<td>SimpleBuilder#save</td>
-<td>POST</td>
-<td>SimpleAdapter#parseResponse</td>
-</tr>
-<tr>
-<td>Resource instance</td>
-<td>update</td>
-<td>SimpleAdapter#fetch</td>
-<td>SimpleBuilder#update</td>
-<td>PATCH</td>
-<td>none</td>
-</tr>
-<tr>
-<td>Resource instance</td>
-<td>delete</td>
-<td>none</td>
-<td>SimpleBuilder#delete</td>
-<td>DELETE</td>
-<td>none</td>
-</tr>
-<tr>
-<td>ToOneRelation instance</td>
-<td>set</td>
-<td>ToOneAdapter#set</td>
-<td>ToOneBuilder#set</td>
-<td>PATCH</td>
-<td>none</td>
-</tr>
-<tr>
-<td>ToOneRelation instance</td>
-<td>remove</td>
-<td>ToOneAdapter#remove</td>
-<td>ToOneBuilder#remove</td>
-<td>DELETE</td>
-<td>none</td>
-</tr>
-<tr>
-<td>ToManyRelation instance</td>
-<td>add</td>
-<td>ToManyAdapter#add</td>
-<td>ToManyBuilder#add</td>
-<td>PATCH</td>
-<td>none</td>
-</tr>
-<tr>
-<td>ToManyRelation instance</td>
-<td>remove</td>
-<td>ToManyAdapter#remove</td>
-<td>ToManyBuilder#remove</td>
-<td>DELETE</td>
-<td>none</td>
-</tr>
-</tbody>
-</table>
+
+
+
+
+
+    </div>
+
+
+    <div class="tab-pane fade tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injector, Provider } from &#x27;@angular/core&#x27;;
+import { HttpHeaders, HttpParams } from &#x27;@angular/common/http&#x27;;
+import { Resource } from &#x27;./resource.core&#x27;;
+import { RelationConfiguration, RelationType } from &#x27;./relations/relation-configuration&#x27;;
+import { ToManyBuilder, ToOneBuilder, SimpleBuilder } from &#x27;./request-handlers/default/builders&#x27;;
+import { ToManyAdapter, ToOneAdapter, SimpleAdapter } from &#x27;./request-handlers/default/adapters&#x27;;
+
+export function toDash(name: string): string {
+	const split &#x3D; name.split(&#x27;&#x27;);
+	split[0] &#x3D; split[0].toLowerCase();
+	const splitJoin &#x3D; split.join(&#x27;&#x27;);
+	return splitJoin.replace(/([A-Z])/g, $1 &#x3D;&gt; {
+		return &#x27;-&#x27; + $1.toLowerCase();
+	});
+}
+
+export function toPluralDash(name: string) {
+	return toPlural(toDash(name));
+}
+
+export function toPlural(name: string) {
+	return name + &#x27;s&#x27;;
+}
+
+/** @internal */
+export let InjectorContainer: { [instance: string]: Injector | undefined } &#x3D; { instance: undefined };
+
+/** @internal */
+export function getDependencyInjectionEntries(token: any): RequestHandlers {
+	if (InjectorContainer.instance !&#x3D;&#x3D; undefined) {
+		const injector &#x3D; InjectorContainer.instance;
+		const injectedInstance &#x3D; injector.get(token);
+		return [
+			injectedInstance[&#x27;_adapter&#x27;],
+			injectedInstance[&#x27;_builder&#x27;],
+			injectedInstance[&#x27;_toOneAdapter&#x27;],
+			injectedInstance[&#x27;_toOneBuilder&#x27;],
+			injectedInstance[&#x27;_toManyAdapter&#x27;],
+			injectedInstance[&#x27;_toManyBuilder&#x27;]
+		];
+	}
+	return [] as any;
+}
+
+/** @internal */
+export function initMetaData(ctor: any) {
+	if (!Reflect.hasOwnMetadata(METAKEYS.FIELDS, ctor)) {
+		Reflect.defineMetadata(METAKEYS.FIELDS, [], ctor);
+	}
+	if (!Reflect.hasOwnMetadata(METAKEYS.ATTRIBUTES, ctor)) {
+		Reflect.defineMetadata(METAKEYS.ATTRIBUTES, [], ctor);
+	}
+	if (!Reflect.hasOwnMetadata(METAKEYS.RELATIONS, ctor)) {
+		Reflect.defineMetadata(METAKEYS.RELATIONS, {}, ctor);
+	}
+	if (!Reflect.hasOwnMetadata(METAKEYS.INSTANCES, ctor)) {
+		Reflect.defineMetadata(METAKEYS.INSTANCES, [], ctor);
+	}
+}
+
+/** @internal */
+export function updateInterceptProxyFactory(targetInstance: Resource) {
+	const attributes &#x3D; Reflect.getMetadata(METAKEYS.ATTRIBUTES, targetInstance.constructor);
+	return new Proxy(targetInstance, {
+		set(instance: any, key: string, value: any, proxy: any): boolean {
+			if (attributes.indexOf(key) &gt; -1) {
+				const updatedFields &#x3D; Reflect.getMetadata(METAKEYS.UPDATED, instance);
+				const map &#x3D; Reflect.getMetadata(METAKEYS.MAP, instance, key);
+				updatedFields[map || key] &#x3D; instance[key];
+			}
+			instance[key] &#x3D; value;
+			return true;
+		}
+	});
+}
+
+/** @internal */
+export function readOnlyArrayProxyFactory(targetArray: Array&lt;any&gt;) {
+	const forbiddenMethods &#x3D; [&#x27;push&#x27;, &#x27;pop&#x27;, &#x27;shift&#x27;, &#x27;unshift&#x27;];
+	return new Proxy(targetArray, {
+		get(instance: any, key: string, proxy: any): boolean {
+			if (forbiddenMethods.indexOf(key) &gt; -1) {
+				throw Error(&#x60;Operation ${key} not allowed on this readonly array!&#x60;);
+			}
+			return instance[key];
+		}
+	});
+}
+
+export const METAKEYS &#x3D; {
+	FIELDS: &#x27;orm:fields&#x27;,
+	ATTRIBUTES: &#x27;orm:attributes&#x27;,
+	RELATIONS: &#x27;orm:relations&#x27;,
+	MAP: &#x27;orm:map&#x27;,
+	UPDATED: &#x27;orm:updated&#x27;,
+	INSTANCES: &#x27;orm:instances&#x27;,
+	NAME: &#x27;orm:name&#x27;
+};
+
+/** @internal */
+export class ResourceModuleConfiguration {
+	rootPath?: string;
+}
+
+export class ResourceModuleConfigurationWithProviders extends ResourceModuleConfiguration {
+	/** Sets the API root of your app. */
+	rootPath?: string;
+	/** Allows to conveniently register a collection of request handlers. See the guide on extendability on how to use this. Can be set to {@link JsonApiDotOrg}. */
+	requestHandlersProviders?: Provider[];
+}
+
+export interface Instantiable&lt;T&gt; {
+	new (...args: any[]): T;
+}
+
+export type Omit&lt;T, K extends keyof T&gt; &#x3D; Pick&lt;T, Exclude&lt;keyof T, K&gt;&gt;;
+export type RawInstanceTemplate&lt;T extends Resource&gt; &#x3D; Omit&lt;T, keyof Resource&gt;;
+
+
+export interface ResourceType&lt;T&gt; extends Instantiable&lt;T&gt; {
+	_instances: T[];
+	collection&lt;U extends Resource&gt;(this: ResourceType&lt;U&gt;): U[];
+	fetch&lt;U extends Resource&gt;(this: ResourceType&lt;U&gt;): Promise&lt;U[]&gt;;
+	find&lt;U extends Resource&gt;(this: ResourceType&lt;U&gt;, id: number): U | undefined;
+	template&lt;U extends Resource&gt;(this: ResourceType&lt;U&gt;): RawInstanceTemplate&lt;U&gt;;
+	factory&lt;U extends Resource&gt;(this: ResourceType&lt;U&gt;, rawInstance: Array&lt;{}&gt;): Array&lt;U&gt;;
+	factory&lt;U extends Resource&gt;(this: ResourceType&lt;U&gt;, rawInstance: {}): U;
+}
+
+export interface HttpClientOptions {
+	url?: string;
+	body?: any;
+	headers?: HttpHeaders | { [header: string]: string | string[] };
+	observe?: &#x27;body&#x27;;
+	params?: HttpParams | { [param: string]: string | string[] };
+	responseType?: &#x27;json&#x27;;
+	reportProgress?: boolean;
+	withCredentials?: boolean;
+}
+/** @internal */
+export type RequestHandlers &#x3D; [SimpleAdapter, SimpleBuilder, ToOneAdapter, ToOneBuilder, ToManyAdapter, ToManyBuilder];
+
+/** @internal */
+export type UnresolvedRequestHandlers &#x3D; [
+	SimpleAdapter | undefined,
+	SimpleBuilder | undefined,
+	ToOneAdapter | undefined,
+	ToOneBuilder | undefined,
+	ToManyAdapter | undefined,
+	ToManyBuilder | undefined
+];
+</code></pre>
+    </div>
+</div>
+
+
+
+
 
                    </div><div class="search-results">
     <div class="has-results">
@@ -632,7 +702,7 @@ end</code></pre><table class="table table-bordered compodoc-table">
 
         <script>
             var COMPODOC_CURRENT_PAGE_DEPTH = 1;
-            var COMPODOC_CURRENT_PAGE_URL = 'extendability.html';
+            var COMPODOC_CURRENT_PAGE_URL = 'Instantiable.html';
         </script>
 
        <script src="../js/search/search.js"></script>

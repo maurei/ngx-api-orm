@@ -195,7 +195,7 @@
                         <a href="interfaces/JsonApiResponse.html" data-type="entity-link">JsonApiResponse</a>
                     </li>
                     <li class="link">
-                        <a href="interfaces/ResourceModelOptions.html" data-type="entity-link">ResourceModelOptions</a>
+                        <a href="interfaces/ModelOptions.html" data-type="entity-link">ModelOptions</a>
                     </li>
             </ul>
         </li>
@@ -414,7 +414,7 @@
                         <a href="interfaces/JsonApiResponse.html" data-type="entity-link">JsonApiResponse</a>
                     </li>
                     <li class="link">
-                        <a href="interfaces/ResourceModelOptions.html" data-type="entity-link">ResourceModelOptions</a>
+                        <a href="interfaces/ModelOptions.html" data-type="entity-link">ModelOptions</a>
                     </li>
             </ul>
         </li>
@@ -462,17 +462,17 @@
 <p>A rest api orm for Angular. Tested with Angular 6.1.x. Can be use used seamlessly with JsonApi.org or easibly be adjusted to work with your own format. </p>
 <p>It aims to remove as much boilerplate code as possible while allowing for easy extendability. It will empower your models with CRUD functionality and also manages to-one and to-many relationships.</p>
 <p>Your models will look something like</p>
-<pre class="line-numbers"><code class="language-js">&#64;ResourceModel()
+<pre class="line-numbers"><code class="language-js">&#64;Model()
 export class Employee extends Resource {
-  &#64;ResourceField()
+  &#64;Field()
   public id: number;
-  &#64;ResourceField()
+  &#64;Field()
   public firstName: string;
-  &#64;ResourceField()
+  &#64;Field()
     public lastName: string;
-    &#64;ResourceToOne(Team)
+    &#64;ToOne(Team)
     public team: ToOneRelation&lt;Employee, Task&gt;;
-    &#64;ResourceToMany(Task): 
+    &#64;ToMany(Task): 
     public tasks: ToManyRelation&lt;Employee, Task&gt;;
 
     public mumble(): void {
@@ -480,19 +480,19 @@ export class Employee extends Resource {
     }
 }
 
-&#64;ResourceModel()
+&#64;Model()
 export class Task extends Resource {
-  &#64;ResourceField()
+  &#64;Field()
   public id: number;
-  &#64;ResourceField()
+  &#64;Field()
   public title: string;
 }
 
-&#64;ResourceModel()
+&#64;Model()
 export class Team extends Resource {
-  &#64;ResourceField()
+  &#64;Field()
   public id: number;
-  &#64;ResourceField()
+  &#64;Field()
   public teamName: string;
 }</code></pre><p>Then, some common usage will look like</p>
 <pre class="line-numbers"><code class="language-js">

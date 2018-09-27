@@ -119,6 +119,9 @@
                     id="xs-classes-links"
                 >
                     <li class="link">
+                        <a href="classes/Employee.html" data-type="entity-link">Employee</a>
+                    </li>
+                    <li class="link">
                         <a href="classes/RawInstance.html" data-type="entity-link">RawInstance</a>
                     </li>
                     <li class="link">
@@ -171,6 +174,9 @@
                         <a href="interfaces/HttpClientOptions.html" data-type="entity-link">HttpClientOptions</a>
                     </li>
                     <li class="link">
+                        <a href="interfaces/Instantiable.html" data-type="entity-link">Instantiable</a>
+                    </li>
+                    <li class="link">
                         <a href="interfaces/JsonApiAttributes.html" data-type="entity-link">JsonApiAttributes</a>
                     </li>
                     <li class="link">
@@ -195,7 +201,10 @@
                         <a href="interfaces/JsonApiResponse.html" data-type="entity-link">JsonApiResponse</a>
                     </li>
                     <li class="link">
-                        <a href="interfaces/ResourceModelOptions.html" data-type="entity-link">ResourceModelOptions</a>
+                        <a href="interfaces/ModelOptions.html" data-type="entity-link">ModelOptions</a>
+                    </li>
+                    <li class="link">
+                        <a href="interfaces/ResourceType.html" data-type="entity-link">ResourceType</a>
                     </li>
             </ul>
         </li>
@@ -338,6 +347,9 @@
                     id="classes-links"
 >
                     <li class="link">
+                        <a href="classes/Employee.html" data-type="entity-link">Employee</a>
+                    </li>
+                    <li class="link">
                         <a href="classes/RawInstance.html" data-type="entity-link">RawInstance</a>
                     </li>
                     <li class="link">
@@ -390,6 +402,9 @@
                         <a href="interfaces/HttpClientOptions.html" data-type="entity-link">HttpClientOptions</a>
                     </li>
                     <li class="link">
+                        <a href="interfaces/Instantiable.html" data-type="entity-link">Instantiable</a>
+                    </li>
+                    <li class="link">
                         <a href="interfaces/JsonApiAttributes.html" data-type="entity-link">JsonApiAttributes</a>
                     </li>
                     <li class="link">
@@ -414,7 +429,10 @@
                         <a href="interfaces/JsonApiResponse.html" data-type="entity-link">JsonApiResponse</a>
                     </li>
                     <li class="link">
-                        <a href="interfaces/ResourceModelOptions.html" data-type="entity-link">ResourceModelOptions</a>
+                        <a href="interfaces/ModelOptions.html" data-type="entity-link">ModelOptions</a>
+                    </li>
+                    <li class="link">
+                        <a href="interfaces/ResourceType.html" data-type="entity-link">ResourceType</a>
                     </li>
             </ul>
         </li>
@@ -1070,7 +1088,7 @@ export namespace Abstract {
 	export abstract class SimpleBuilder {
 		constructor(protected readonly _http: HttpClient, protected readonly config: ResourceModuleConfiguration) {}
 		protected buildUrl(targetName: string, targetInstance?: any): string {
-			let path &#x3D; this.config.rootPath || &#x27;&#x27; + &#x60;/${toPlural(targetName)}/$targetId&#x60;;
+			let path &#x3D; (this.config.rootPath ? this.config.rootPath : &#x27;&#x27;) + &#x60;/${toPlural(targetName)}/$targetId&#x60;;
 			path &#x3D; path.replace(&#x27;/$targetId&#x27;, targetInstance ? &#x60;/${targetInstance.id}&#x60; : &#x27;&#x27;);
 			return path;
 		}
@@ -1099,7 +1117,7 @@ export namespace Abstract {
 	export abstract class ToOneBuilder {
 		constructor(protected readonly _http: HttpClient, protected readonly config: ResourceModuleConfiguration) {}
 		protected buildUrl(targetName: string, relatedName: string, relatedInstance: any): string {
-			const path &#x3D; this.config.rootPath || &#x27;&#x27; + &#x60;/${toPlural(relatedName)}/${relatedInstance.id}/${targetName}&#x60;;
+			const path &#x3D; (this.config.rootPath ? this.config.rootPath : &#x27;&#x27;) + &#x60;/${toPlural(relatedName)}/${relatedInstance.id}/${targetName}&#x60;;
 			return path;
 		}
 		public add(targetName: string, relatedName: string, body: any, relatedInstance: any, options: HttpClientOptions): Promise&lt;void&gt; {
@@ -1116,7 +1134,8 @@ export namespace Abstract {
 	export abstract class ToManyBuilder {
 		constructor(protected readonly _http: HttpClient, protected readonly config: ResourceModuleConfiguration) {}
 		protected buildUrl(targetName: string, relatedName: string, relatedInstance: any): string {
-			const path &#x3D; this.config.rootPath || &#x27;&#x27; + &#x60;/${toPlural(relatedName)}/${relatedInstance.id}/${toPlural(targetName)}&#x60;;
+			const path &#x3D;
+				(this.config.rootPath ? this.config.rootPath : &#x27;&#x27;) + &#x60;/${toPlural(relatedName)}/${relatedInstance.id}/${toPlural(targetName)}&#x60;;
 			return path;
 		}
 		public add(targetName: string, relatedName: string, body: any, relatedInstance: any, options: HttpClientOptions): Promise&lt;void&gt; {

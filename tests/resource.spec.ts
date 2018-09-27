@@ -2,7 +2,7 @@ import { Resource } from '../src/resource/resource.core';
 import { ToManyRelation } from 'src/resource/relations/to-many';
 import { ToOneRelation } from 'src/resource/relations/to-one';
 import { RelationConfiguration } from 'src/resource/relations/relation-configuration';
-import { ResourceModel, ResourceField, ResourceToMany, ResourceToOne } from '../src/resource/resource.decorators';
+import { Model, Field, ToMany, ToOne } from '../src/resource/resource.decorators';
 import { ResourceType } from '../src/resource/utils';
 
 const completeHostWithId = {
@@ -68,37 +68,37 @@ const nestedTemplate = [
 ];
 
 function getModels() {
-	@ResourceModel()
+	@Model()
 	class RelatedMany extends Resource {
-		@ResourceField()
+		@Field()
 		public id: number;
-		@ResourceField('test')
+		@Field('test')
 		public experiment: any;
-		@ResourceField()
+		@Field()
 		public field: any;
 	}
 
-	@ResourceModel()
+	@Model()
 	class RelatedOne extends Resource {
-		@ResourceField()
+		@Field()
 		public id: number;
-		@ResourceField()
+		@Field()
 		public field: any;
 	}
 
-	@ResourceModel()
+	@Model()
 	class Host extends Resource {
-		@ResourceField()
+		@Field()
 		public id: number;
-		@ResourceField('fullName')
+		@Field('fullName')
 		public name: any;
-		@ResourceField()
+		@Field()
 		public some: any;
-		@ResourceField()
+		@Field()
 		public field: any;
-		@ResourceToOne(RelatedOne)
+		@ToOne(RelatedOne)
 		public relatedInstance: any;
-		@ResourceToMany(RelatedMany)
+		@ToMany(RelatedMany)
 		public relatedInstances: any;
 
 		public notIncluded: any;

@@ -119,6 +119,9 @@
                     id="xs-classes-links"
                 >
                     <li class="link">
+                        <a href="classes/Employee.html" data-type="entity-link">Employee</a>
+                    </li>
+                    <li class="link">
                         <a href="classes/RawInstance.html" data-type="entity-link">RawInstance</a>
                     </li>
                     <li class="link">
@@ -171,6 +174,9 @@
                         <a href="interfaces/HttpClientOptions.html" data-type="entity-link">HttpClientOptions</a>
                     </li>
                     <li class="link">
+                        <a href="interfaces/Instantiable.html" data-type="entity-link">Instantiable</a>
+                    </li>
+                    <li class="link">
                         <a href="interfaces/JsonApiAttributes.html" data-type="entity-link">JsonApiAttributes</a>
                     </li>
                     <li class="link">
@@ -195,7 +201,10 @@
                         <a href="interfaces/JsonApiResponse.html" data-type="entity-link">JsonApiResponse</a>
                     </li>
                     <li class="link">
-                        <a href="interfaces/ResourceModelOptions.html" data-type="entity-link">ResourceModelOptions</a>
+                        <a href="interfaces/ModelOptions.html" data-type="entity-link">ModelOptions</a>
+                    </li>
+                    <li class="link">
+                        <a href="interfaces/ResourceType.html" data-type="entity-link">ResourceType</a>
                     </li>
             </ul>
         </li>
@@ -338,6 +347,9 @@
                     id="classes-links"
 >
                     <li class="link">
+                        <a href="classes/Employee.html" data-type="entity-link">Employee</a>
+                    </li>
+                    <li class="link">
                         <a href="classes/RawInstance.html" data-type="entity-link">RawInstance</a>
                     </li>
                     <li class="link">
@@ -390,6 +402,9 @@
                         <a href="interfaces/HttpClientOptions.html" data-type="entity-link">HttpClientOptions</a>
                     </li>
                     <li class="link">
+                        <a href="interfaces/Instantiable.html" data-type="entity-link">Instantiable</a>
+                    </li>
+                    <li class="link">
                         <a href="interfaces/JsonApiAttributes.html" data-type="entity-link">JsonApiAttributes</a>
                     </li>
                     <li class="link">
@@ -414,7 +429,10 @@
                         <a href="interfaces/JsonApiResponse.html" data-type="entity-link">JsonApiResponse</a>
                     </li>
                     <li class="link">
-                        <a href="interfaces/ResourceModelOptions.html" data-type="entity-link">ResourceModelOptions</a>
+                        <a href="interfaces/ModelOptions.html" data-type="entity-link">ModelOptions</a>
+                    </li>
+                    <li class="link">
+                        <a href="interfaces/ResourceType.html" data-type="entity-link">ResourceType</a>
                     </li>
             </ul>
         </li>
@@ -477,33 +495,35 @@
 <h2 id="declaring-models">Declaring models</h2>
 <h3 id="standard-declarations">Standard declarations</h3>
 <p>The most straight forward way to implement the three models is as below.</p>
-<pre class="line-numbers"><code class="language-ts">&#64;ResourceModel()
+<pre class="line-numbers"><code class="language-ts">import { Model, Field, ToOne, ToMany, Resource } from &#39;&#64;ngx-api-orm/core&#39;;
+
+&#64;Model()
 export class Employee extends Resource {
-    &#64;ResourceField()
+    &#64;Field()
     public id: number;
-    &#64;ResourceField()
+    &#64;Field()
     public firstName: string;
-    &#64;ResourceField()
+    &#64;Field()
     public lastName: string;
-    &#64;ResourceToOne(Team)
+    &#64;ToOne(Team)
     public team: ToOneRelation&lt;Employee, Task&gt;;
-    &#64;ResourceToMany(Task):
+    &#64;ToMany(Task):
     public tasks: ToManyRelation&lt;Employee, Task&gt;;
 }
 
-&#64;ResourceModel()
+&#64;Model()
 export class Task extends Resource {
-    &#64;ResourceField()
+    &#64;Field()
     public id: number;
-    &#64;ResourceField()
+    &#64;Field()
     public title: string;
 }
 
-&#64;ResourceModel()
+&#64;Model()
 export class Team extends Resource {
-    &#64;ResourceField()
+    &#64;Field()
     public id: number;
-    &#64;ResourceField()
+    &#64;Field()
     public teamName: string;
 }</code></pre><p>For such models, the following methods will available:</p>
 <ul>
@@ -516,46 +536,46 @@ export class Team extends Resource {
 <p>A few things to keep in mind:</p>
 <ul>
 <li>Models must extend <code>Resource</code>.</li>
-<li>Use the <code>@ResourceField()</code> decorator to link a field to a plain property in the API response.</li>
-<li>the <code>id</code> field is required and also requires <code>@ResourceField()</code>. It can be a <code>string</code> or <code>number</code>.</li>
-<li>Use <code>@ResourceToOne(TRelated)</code> and  <code>@ResourceToMany(TRelated)</code> to mark fields as to-one and to-many relationships respectively.</li>
+<li>Use the <code>@Field()</code> decorator to link a field to a plain property in the API response.</li>
+<li>the <code>id</code> field is required and also requires <code>@Field()</code>. It can be a <code>string</code> or <code>number</code>.</li>
+<li>Use <code>@ToOne(TRelated)</code> and  <code>@ToMany(TRelated)</code> to mark fields as to-one and to-many relationships respectively.</li>
 <li>Relationship fields must be of type <code>ToOneRelation&lt;THost, TRelated&gt;</code> or <code>ToManyRelation&lt;THost, TRelated&gt;</code>.</li>
 </ul>
 <h3 id="optional-configuration">Optional configuration</h3>
 <p>Perhaps your model isn&#39;t perfectly matching your API response. Some easy fixes can be done in the model. The following model below works with <a href="/additional-documentation/default-api-format-examples.html">this  default response example with property mismatches</a>.</p>
-<pre class="line-numbers"><code class="language-ts">&#64;ResourceModel()
+<pre class="line-numbers"><code class="language-ts">&#64;Model()
 export class Employee extends Resource {
-    &#64;ResourceField()
+    &#64;Field()
     public id: number;
-    &#64;ResourceField(&#39;givenName&#39;)
+    &#64;Field(&#39;givenName&#39;)
     public firstName: string;
-    &#64;ResourceField(&#39;familyName&#39;)
+    &#64;Field(&#39;familyName&#39;)
     public lastName: string;
-    &#64;ResourceToOne(Team)
+    &#64;ToOne(Team)
     public team: ToOneRelation&lt;Employee, Task&gt;;
-    &#64;ResourceToMany(Task, &#39;assignments&#39;):
+    &#64;ToMany(Task, &#39;assignments&#39;):
     public workItems: ToManyRelation&lt;Employee, Task&gt;;
 }
 
-&#64;ResourceModel({name: &#39;WorkItem&#39;}) /* Putting &#39;work-items&#39; has the same effect&#39;. */
+&#64;Model({name: &#39;WorkItem&#39;}) /* Putting &#39;work-items&#39; has the same effect&#39;. */
 export class Task extends Resource {
-    &#64;ResourceField()
+    &#64;Field()
     public id: number;
-    &#64;ResourceField()
+    &#64;Field()
     public title: string;
 }
 
-&#64;ResourceModel()
+&#64;Model()
 export class Team extends Resource {
-    &#64;ResourceField()
+    &#64;Field()
     public id: number;
-    &#64;ResourceField()
+    &#64;Field()
     public teamName: string;
 }</code></pre><p>A few things to notice:</p>
 <ul>
-<li><code>@ResourceField(&#39;givenName&#39;) public firstName: string;</code>will link <code>employee.firstName</code> to <code>employee.givenName</code>  when parsing the API response.</li>
-<li>Similarly,     <code>@ResourceToMany(Task, &#39;assignments&#39;): public workItems</code> will look for a <code>assignments</code> property in the API response and treat it as the contents for, in this case, the to-many relationship with <code>Task</code>.</li>
-<li><code>@ResourceModel({name: &#39;WorkItem&#39;})</code> matches the local<code>Task</code> model to a <code>WorkItem</code> resource in the API. This results in for example:<ul>
+<li><code>@Field(&#39;givenName&#39;) public firstName: string;</code>will link <code>employee.firstName</code> to <code>employee.givenName</code>  when parsing the API response.</li>
+<li>Similarly,     <code>@ToMany(Task, &#39;assignments&#39;): public workItems</code> will look for a <code>assignments</code> property in the API response and treat it as the contents for, in this case, the to-many relationship with <code>Task</code>.</li>
+<li><code>@Model({name: &#39;WorkItem&#39;})</code> matches the local<code>Task</code> model to a <code>WorkItem</code> resource in the API. This results in for example:<ul>
 <li><code>Task.fetch()</code>  using the url <code>/work-items/</code>.</li>
 <li><code>employeeWithId2.tasks.add( ... )</code> using the url <code>/employees/2/work-items</code>.</li>
 <li>Note the &quot;s&quot; in <code>work-itemS</code>. If this were a to-one relation, the url would have singular, i.e. <code>work-item</code>. </li>
@@ -564,9 +584,9 @@ export class Team extends Resource {
 </ul>
 <h2 id="adding-business-logic-to-your-models">Adding business logic to your models</h2>
 <p>You can add business logic to your class declarations.</p>
-<pre class="line-numbers"><code class="language-ts">&#64;ResourceModel()
+<pre class="line-numbers"><code class="language-ts">&#64;Model()
 export class Employee extends Resource {
-    &#64;ResourceField()
+    &#64;Field()
     public id: number;
     ...
     ...
@@ -612,7 +632,7 @@ localInstance.lastName = &#39;Williams&#39;;
 const error = new Employee({firstName: &#39;John&#39;, lastName: &#39;Williams&#39;})</code></pre><ul>
 <li>In the first example, a plain object with the public properties of Employee is retrieved. An instance can then be instantiated from this template.</li>
 <li>In the second example, no template is given. Internally, the constructor will call the static template function to set the properties of the object.</li>
-<li>The last example will not work because some properties are missing: <code>team</code> and <code>tasks</code>. When passing along a object template, it is required that all fields (the ones that are decorated with <code>ResourceModel</code>,  <code>ResourceToOne</code> and <code>ResourceToMany</code>  are present.</li>
+<li>The last example will not work because some properties are missing: <code>team</code> and <code>tasks</code>. When passing along a object template, it is required that all fields (the ones that are decorated with <code>Model</code>,  <code>ToOne</code> and <code>ToMany</code>  are present.</li>
 </ul>
 <p>The local instance can now be saved.</p>
 <pre class="line-numbers"><code class="language-ts">localInstance.id === undefined // true

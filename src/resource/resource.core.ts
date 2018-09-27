@@ -109,7 +109,7 @@ export class Resource {
 	/**
 	 * Do not override the constructor unless you're know what you're doing. If you think you need it, be sure the check out the source code to see make sure your implementation is not messing with anything internally.
 	 *
-	 * @param RawInstance rawInstance A template from which a new instance of your model will be instantiate. If this parameter is omitted, the model will create an instance from the models metadata. If the parameter is included, it **MUST** minimally include all the keys as decorated with {@link ResourceField}, {@link ResourceToOne}, {@link ResourceToMany} in the model definition with. The type `RawInstance` is just a dummy type that is required to make it work with Angular's dependency injection.
+	 * @param RawInstance rawInstance A template from which a new instance of your model will be instantiate. If this parameter is omitted, the model will create an instance from the models metadata. If the parameter is included, it **MUST** minimally include all the keys as decorated with {@link Field}, {@link ToOne}, {@link ToMany} in the model definition with. The type `RawInstance` is just a dummy type that is required to make it work with Angular's dependency injection.
 	 * @param SimpleAdapter simpleAdapter The request content adapter for Simple resource requests.
 	 * @param SimpleBuilder simpleBuilder The request builder for Simple resource requests.
 	 * @param ToOneAdapter toOneAdapter The request content adapter for ToOne relationship requests

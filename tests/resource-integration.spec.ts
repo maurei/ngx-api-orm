@@ -1,43 +1,43 @@
 import { Resource } from '../src/resource/resource.core';
 import { ResourceModule } from '../src/resource/resource.module';
 import { ResourceType } from '../src/resource/utils';
-import { ResourceModel, ResourceField, ResourceToOne, ResourceToMany } from '../src/resource/resource.decorators';
+import { Model, Field, ToOne, ToMany } from '../src/resource/resource.decorators';
 import { TestBed, getTestBed, async } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { HttpClient } from '@angular/common/http';
 
 function getModels() {
-	@ResourceModel()
+	@Model()
 	class RelatedMany extends Resource {
-		@ResourceField()
+		@Field()
 		public id: number;
-		@ResourceField('test')
+		@Field('test')
 		public experiment: any;
-		@ResourceField()
+		@Field()
 		public field: any;
 	}
 
-	@ResourceModel()
+	@Model()
 	class RelatedOne extends Resource {
-		@ResourceField()
+		@Field()
 		public id: number;
-		@ResourceField()
+		@Field()
 		public field: any;
 	}
 
-	@ResourceModel()
+	@Model()
 	class Host extends Resource {
-		@ResourceField()
+		@Field()
 		public id: number;
-		@ResourceField('fullName')
+		@Field('fullName')
 		public name: any;
-		@ResourceField()
+		@Field()
 		public some: any;
-		@ResourceField()
+		@Field()
 		public field: any;
-		@ResourceToOne(RelatedOne)
+		@ToOne(RelatedOne)
 		public relatedInstance: any;
-		@ResourceToMany(RelatedMany)
+		@ToMany(RelatedMany)
 		public relatedInstances: any;
 
 		public notIncluded: any;

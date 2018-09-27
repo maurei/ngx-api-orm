@@ -4,42 +4,42 @@ import { ToManyAdapter, ToOneAdapter, SimpleAdapter } from '../src/resource/requ
 import { JsonApiAdapters } from '../src/resource/request-handlers/jsonapidotorg/adapters';
 import { flatSingle, flatCollection, nestedSingle, nestedCollection } from './json-api-examples';
 import { JsonApiResource } from '../src/resource/request-handlers/jsonapidotorg/declarations';
-import { ResourceModel, ResourceField, ResourceToMany, ResourceToOne } from '../src/resource/resource.decorators';
+import { Model, Field, ToMany, ToOne } from '../src/resource/resource.decorators';
 import { ResourceType, METAKEYS } from '../src/resource/utils';
 import { Resource } from '../src/resource/resource.core';
 
 function getModels() {
-	@ResourceModel()
+	@Model()
 	class RelatedMany extends Resource {
-		@ResourceField()
+		@Field()
 		public id: number;
-		@ResourceField('test')
+		@Field('test')
 		public experiment: any;
-		@ResourceField()
+		@Field()
 		public field: any;
 	}
 
-	@ResourceModel()
+	@Model()
 	class RelatedOne extends Resource {
-		@ResourceField()
+		@Field()
 		public id: number;
-		@ResourceField()
+		@Field()
 		public field: any;
 	}
 
-	@ResourceModel()
+	@Model()
 	class Host extends Resource {
-		@ResourceField()
+		@Field()
 		public id: number;
-		@ResourceField('fullName')
+		@Field('fullName')
 		public name: any;
-		@ResourceField()
+		@Field()
 		public some: any;
-		@ResourceField()
+		@Field()
 		public field: any;
-		@ResourceToOne(RelatedOne)
+		@ToOne(RelatedOne)
 		public relatedInstance: any;
-		@ResourceToMany(RelatedMany)
+		@ToMany(RelatedMany)
 		public relatedInstances: any;
 
 		public notIncluded: any;

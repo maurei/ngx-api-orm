@@ -1,11 +1,11 @@
-import { ResourceModel, ResourceField, ResourceToMany, ResourceToOne } from '../src/resource/resource.decorators';
+import { Model, Field, ToMany, ToOne } from '../src/resource/resource.decorators';
 import { Resource } from '../src/resource/resource.core';
 import { METAKEYS } from '../src/resource/utils';
 import { RelationConfiguration } from '../src/resource/relations/relation-configuration';
 import { RelationType } from '../src/resource/relations/relation-configuration';
 
 function modelWithResourceDecorator(name?: string): typeof Resource {
-	@ResourceModel(name ? { name: name } : undefined)
+	@Model(name ? { name: name } : undefined)
 	class MyDummyResource {}
 	return <any>MyDummyResource;
 }
@@ -13,11 +13,11 @@ function modelWithResourceDecorator(name?: string): typeof Resource {
 function modelWithFieldDecorators(): typeof Resource {
 	class MyDummyResource {
 		public myTestField0: any;
-		@ResourceField('test-mapping-field')
+		@Field('test-mapping-field')
 		public myTestField1: any;
-		@ResourceField()
+		@Field()
 		public myTestField2: any;
-		@ResourceField()
+		@Field()
 		public myTestField3: any;
 	}
 	return <any>MyDummyResource;
@@ -27,9 +27,9 @@ function modelWithOneToManyDecorators(): typeof Resource {
 	class Related {}
 	class AnotherRelated {}
 	class Host {
-		@ResourceToMany(Related)
+		@ToMany(Related)
 		public relatedInstance: any;
-		@ResourceToMany(AnotherRelated, 'someKey')
+		@ToMany(AnotherRelated, 'someKey')
 		public anotherRelated: any;
 	}
 	return <any>Host;
@@ -39,18 +39,18 @@ function modelWithOneToOneDecorators(): typeof Resource {
 	class Related {}
 	class AnotherRelated {}
 	class Host {
-		@ResourceToOne(Related)
+		@ToOne(Related)
 		public relatedInstance: any;
-		@ResourceToOne(AnotherRelated, 'someKey')
+		@ToOne(AnotherRelated, 'someKey')
 		public anotherRelated: any;
 	}
 	return <any>Host;
 }
 describe('Decorators: metaproperties fields, relations, list, resourceName, requestBuilder', () => {
-	describe('ResourceModel', () => {
+	describe('Model', () => {
 		it('is defined', () => {
-			expect(ResourceModel).toBeDefined();
-			expect(ResourceModel().constructor.name).toBe('Function');
+			expect(Model).toBeDefined();
+			expect(Model().constructor.name).toBe('Function');
 		});
 		it('sets metadata correctly', () => {
 			const ctor = modelWithResourceDecorator();
@@ -69,10 +69,10 @@ describe('Decorators: metaproperties fields, relations, list, resourceName, requ
 			expect(Reflect.getMetadata(METAKEYS.NAME, anotherCtor)).toBe('yet-another-different-class-name');
 		});
 	});
-	describe('ResourceField', () => {
+	describe('Field', () => {
 		it('is defined', () => {
-			expect(ResourceField).toBeDefined();
-			expect(ResourceField().constructor.name).toBe('Function');
+			expect(Field).toBeDefined();
+			expect(Field().constructor.name).toBe('Function');
 		});
 		it('sets metadata correctly', () => {
 			const ctor = modelWithFieldDecorators();
@@ -83,10 +83,10 @@ describe('Decorators: metaproperties fields, relations, list, resourceName, requ
 			expect(Reflect.getMetadata(METAKEYS.MAP, ctor, 'myTestField2')).toBeUndefined();
 		});
 	});
-	describe('ResourceToOne', () => {
+	describe('ToOne', () => {
 		it('is defined', () => {
-			expect(ResourceToOne).toBeDefined();
-			expect(ResourceToOne({}).constructor.name).toBe('Function');
+			expect(ToOne).toBeDefined();
+			expect(ToOne({}).constructor.name).toBe('Function');
 		});
 		it('sets metadata correctly', () => {
 			const host = modelWithOneToOneDecorators();
@@ -110,10 +110,10 @@ describe('Decorators: metaproperties fields, relations, list, resourceName, requ
 			expect(config.type).toBe(RelationType.ToOne);
 		});
 	});
-	describe('ResourceToMany', () => {
+	describe('ToMany', () => {
 		it('is defined', () => {
-			expect(ResourceToMany).toBeDefined();
-			expect(ResourceToMany({}).constructor.name).toBe('Function');
+			expect(ToMany).toBeDefined();
+			expect(ToMany({}).constructor.name).toBe('Function');
 		});
 		it('sets metadata correctly', () => {
 			const host = modelWithOneToManyDecorators();

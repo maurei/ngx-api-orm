@@ -5,7 +5,7 @@ import { RelationType, RelationConfiguration } from './relations/relation-config
 import { toDash, initMetaData, METAKEYS } from './utils';
 
 /**
- * Options object that can be passed to the {@link ResourceModel} when decorating your model. Currently it is only possible to configure `name`, which is used in
+ * Options object that can be passed to the {@link Model} when decorating your model. Currently it is only possible to configure `name`, which is used in
  * generating the urls for requests.
  *
  * If you have a custom `uglify.config.js` file in which `mangle` is set to false, you do not need to use this.
@@ -17,38 +17,38 @@ import { toDash, initMetaData, METAKEYS } from './utils';
  *
  * @example
  * // uglify.config.js with mangle = false
- * @ResourceModel() // will produce calls to .../my-dummy-models/...
+ * @Model() // will produce calls to .../my-dummy-models/...
  * class MyDummyModel extends Resource {}
  *
  * // without mangle = false
- * @ResourceModel() // will not work!
+ * @Model() // will not work!
  * class MyDummyModel extends Resource {}
  *
  * // without mangle = false
- * @ResourceModel({name: 'MyDummyModel'}) // will produce calls to .../my-dummy-models/...
+ * @Model({name: 'MyDummyModel'}) // will produce calls to .../my-dummy-models/...
  * class MyDummyModel extends Resource {}
  *
  * // without mangle = false
- * @ResourceModel({name: 'MyAlternativeName'}) // will produce calls to .../my-alternative-name/...
+ * @Model({name: 'MyAlternativeName'}) // will produce calls to .../my-alternative-name/...
  * class MyDummyModel extends Resource {}
  *
  * // without mangle = false
- * @ResourceModel({name: 'my-alternative-name'}) // will produce calls to .../my-alternative-name/...
+ * @Model({name: 'my-alternative-name'}) // will produce calls to .../my-alternative-name/...
  * class MyDummyModel extends Resource {}
  */
-export interface ResourceModelOptions {
+export interface ModelOptions {
 	name?: string;
 }
 /**
  * Add this class decorator to your model to turn it into a `Resource` model, which means that it is considered as an endpoint on your API.
  *
- * See {@link ResourceModelOptions} on how to configure the name used in URLs.
+ * See {@link ModelOptions} on how to configure the name used in URLs.
  *
  * This decorator is responsible for setting metadata, which is used internally, on the constructor of your class.
  *
- * @param  ResourceModelOptions={} options
+ * @param  ModelOptions={} options
  */
-export function ResourceModel(options?: ResourceModelOptions) {
+export function Model(options?: ModelOptions) {
 	return <T extends Resource>(ctor: any) => {
 		ctor = Injectable({ providedIn: 'root' })(ctor);
 		initMetaData(ctor);
@@ -67,9 +67,9 @@ export function ResourceModel(options?: ResourceModelOptions) {
  * Use this field decorator to parse the corresponding field from a json response by your API.
  * @param string mapFrom? An identifier to map keys coming from an incoming json response to keys in your model.
  *  For example: the api response has a key `commentText: 'nice article!` but the key in the model is `commentContent`.
- * Then the decorator should be used as `ResourceField('commentText').
+ * Then the decorator should be used as `Field('commentText').
  */
-export function ResourceField(mapFrom?: string) {
+export function Field(mapFrom?: string) {
 	return <T extends Resource>(target: any, key: string) => {
 		const ctor = target.constructor;
 		initMetaData(ctor);
@@ -83,9 +83,9 @@ export function ResourceField(mapFrom?: string) {
  * @param Function RelatedResource The constructor function of the model that is targeted for the To-Many relation.
  * @param string mapFrom? An identifier to map keys coming from an incoming json response to keys in your model.
  *  For example: the api response has a key `commentText: 'nice article!` but the key in the model is `commentContent`.
- * Then the decorator should be used as `ResourceField('commentText').
+ * Then the decorator should be used as `Field('commentText').
  */
-export const ResourceToOne = function<TRelated extends Resource>(RelatedResource: any, mapFrom?: string) {
+export const ToOne = function<TRelated extends Resource>(RelatedResource: any, mapFrom?: string) {
 	return (target: any, key: string) => {
 		const ctor = target.constructor;
 		initMetaData(ctor);
@@ -100,9 +100,9 @@ export const ResourceToOne = function<TRelated extends Resource>(RelatedResource
  * @param Function RelatedResource The constructor function of the model that is targeted for the To-Many relation.
  * @param string mapFrom? An identifier to map keys coming from an incoming json response to keys in your model.
  *  For example: the api response has a key `commentText: 'nice article!` but the key in the model is `commentContent`.
- * Then the decorator should be used as `ResourceField('commentText').
+ * Then the decorator should be used as `Field('commentText').
  */
-export const ResourceToMany = function <TRelated extends Resource>(RelatedResource: any, mapFrom?: string) {
+export const ToMany = function <TRelated extends Resource>(RelatedResource: any, mapFrom?: string) {
 	return (target: any, key: string) => {
 		const ctor = target.constructor;
 		initMetaData(ctor);

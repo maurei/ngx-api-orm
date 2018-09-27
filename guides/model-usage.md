@@ -9,33 +9,35 @@ This guide works through the basics of defining your models. We will consider an
 ### Standard declarations
 The most straight forward way to implement the three models is as below.
 ```ts
-@ResourceModel()
+import { Model, Field, ToOne, ToMany, Resource } from '@ngx-api-orm/core';
+
+@Model()
 export class Employee extends Resource {
-	@ResourceField()
+	@Field()
 	public id: number;
-	@ResourceField()
+	@Field()
 	public firstName: string;
-	@ResourceField()
+	@Field()
 	public lastName: string;
-	@ResourceToOne(Team)
+	@ToOne(Team)
 	public team: ToOneRelation<Employee, Task>;
-	@ResourceToMany(Task):
+	@ToMany(Task):
 	public tasks: ToManyRelation<Employee, Task>;
 }
 
-@ResourceModel()
+@Model()
 export class Task extends Resource {
-	@ResourceField()
+	@Field()
 	public id: number;
-	@ResourceField()
+	@Field()
 	public title: string;
 }
 
-@ResourceModel()
+@Model()
 export class Team extends Resource {
-	@ResourceField()
+	@Field()
 	public id: number;
-	@ResourceField()
+	@Field()
 	public teamName: string;
 }
 ```
@@ -49,49 +51,49 @@ See the [API docs](/classes/Resource.html) for detailed specifications of these 
 
 A few things to keep in mind:
 * Models must extend `Resource`.
-* Use the `@ResourceField()` decorator to link a field to a plain property in the API response.
-* the `id` field is required and also requires `@ResourceField()`. It can be a `string` or `number`.
-* Use `@ResourceToOne(TRelated)` and  `@ResourceToMany(TRelated)` to mark fields as to-one and to-many relationships respectively.
+* Use the `@Field()` decorator to link a field to a plain property in the API response.
+* the `id` field is required and also requires `@Field()`. It can be a `string` or `number`.
+* Use `@ToOne(TRelated)` and  `@ToMany(TRelated)` to mark fields as to-one and to-many relationships respectively.
 * Relationship fields must be of type `ToOneRelation<THost, TRelated>` or `ToManyRelation<THost, TRelated>`.
 
 
 ### Optional configuration
 Perhaps your model isn't perfectly matching your API response. Some easy fixes can be done in the model. The following model below works with [this  default response example with property mismatches](/additional-documentation/default-api-format-examples.html).
 ```ts
-@ResourceModel()
+@Model()
 export class Employee extends Resource {
-	@ResourceField()
+	@Field()
 	public id: number;
-	@ResourceField('givenName')
+	@Field('givenName')
 	public firstName: string;
-	@ResourceField('familyName')
+	@Field('familyName')
 	public lastName: string;
-	@ResourceToOne(Team)
+	@ToOne(Team)
 	public team: ToOneRelation<Employee, Task>;
-	@ResourceToMany(Task, 'assignments'):
+	@ToMany(Task, 'assignments'):
 	public workItems: ToManyRelation<Employee, Task>;
 }
 
-@ResourceModel({name: 'WorkItem'}) /* Putting 'work-items' has the same effect'. */
+@Model({name: 'WorkItem'}) /* Putting 'work-items' has the same effect'. */
 export class Task extends Resource {
-	@ResourceField()
+	@Field()
 	public id: number;
-	@ResourceField()
+	@Field()
 	public title: string;
 }
 
-@ResourceModel()
+@Model()
 export class Team extends Resource {
-	@ResourceField()
+	@Field()
 	public id: number;
-	@ResourceField()
+	@Field()
 	public teamName: string;
 }
 ```
 A few things to notice:
-* `@ResourceField('givenName') public firstName: string;`will link `employee.firstName` to `employee.givenName`  when parsing the API response.
-* Similarly, 	`@ResourceToMany(Task, 'assignments'): public workItems` will look for a `assignments` property in the API response and treat it as the contents for, in this case, the to-many relationship with `Task`.
-* `@ResourceModel({name: 'WorkItem'}) ` matches the local`Task` model to a `WorkItem` resource in the API. This results in for example:
+* `@Field('givenName') public firstName: string;`will link `employee.firstName` to `employee.givenName`  when parsing the API response.
+* Similarly, 	`@ToMany(Task, 'assignments'): public workItems` will look for a `assignments` property in the API response and treat it as the contents for, in this case, the to-many relationship with `Task`.
+* `@Model({name: 'WorkItem'}) ` matches the local`Task` model to a `WorkItem` resource in the API. This results in for example:
 	* `Task.fetch()`  using the url `/work-items/`.
 	*  `employeeWithId2.tasks.add( ... ) ` using the url `/employees/2/work-items `.
 	* Note the "s" in `work-itemS`. If this were a to-one relation, the url would have singular, i.e. `work-item`. 
@@ -100,9 +102,9 @@ A few things to notice:
 
 You can add business logic to your class declarations.
 ```ts
-@ResourceModel()
+@Model()
 export class Employee extends Resource {
-	@ResourceField()
+	@Field()
 	public id: number;
 	...
 	...
@@ -152,7 +154,7 @@ const error = new Employee({firstName: 'John', lastName: 'Williams'})
 ```
 * In the first example, a plain object with the public properties of Employee is retrieved. An instance can then be instantiated from this template.
 * In the second example, no template is given. Internally, the constructor will call the static template function to set the properties of the object.
-* The last example will not work because some properties are missing: `team` and `tasks`. When passing along a object template, it is required that all fields (the ones that are decorated with `ResourceModel`,  `ResourceToOne` and `ResourceToMany`  are present.
+* The last example will not work because some properties are missing: `team` and `tasks`. When passing along a object template, it is required that all fields (the ones that are decorated with `Model`,  `ToOne` and `ToMany`  are present.
 
 The local instance can now be saved.
 ```ts
