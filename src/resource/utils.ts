@@ -64,7 +64,7 @@ export function updateInterceptProxyFactory(targetInstance: Resource) {
 	return new Proxy(targetInstance, {
 		set(instance: any, key: string, value: any, proxy: any): boolean {
 			if (attributes.indexOf(key) > -1) {
-				const updatedFields = Reflect.getMetadata(METAKEYS.UPDATED, instance);
+				const updatedFields = Reflect.getMetadata(METAKEYS.UPDATED, proxy);
 				const map = Reflect.getMetadata(METAKEYS.MAP, instance, key);
 				updatedFields[map || key] = instance[key];
 			}
@@ -115,7 +115,6 @@ export interface Instantiable<T> {
 
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export type RawInstanceTemplate<T extends Resource> = Omit<T, keyof Resource>;
-
 
 export interface ResourceType<T> extends Instantiable<T> {
 	_instances: T[];

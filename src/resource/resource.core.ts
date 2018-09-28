@@ -55,7 +55,6 @@ export class Resource {
 		return this._instances;
 	}
 
-
 	/**
 	 * Instantiate multiple instances from a collection of templates.
 	 * @param  Array<{}> input
@@ -155,8 +154,8 @@ export class Resource {
 		this._populateFields(_rawInstance);
 		this._populateRelations();
 		this.onInit(_rawInstance);
-		Reflect.defineMetadata(METAKEYS.UPDATED, {}, this);
 		const proxyInstance = updateInterceptProxyFactory(this);
+		Reflect.defineMetadata(METAKEYS.UPDATED, {}, proxyInstance);
 		this._metaAdd(proxyInstance);
 		return proxyInstance;
 	}
@@ -188,7 +187,7 @@ export class Resource {
 	 */
 	public async update(options: HttpClientOptions = {}): Promise<void> {
 		const name = Reflect.getMetadata(METAKEYS.NAME, this.constructor);
-		const affectedKeys = Reflect.getMetadata(METAKEYS.UPDATED, this.constructor);
+		const affectedKeys = Reflect.getMetadata(METAKEYS.UPDATED, this);
 		const body = this._adapter.update(this, affectedKeys);
 		await this._builder.update(name, body, options);
 	}

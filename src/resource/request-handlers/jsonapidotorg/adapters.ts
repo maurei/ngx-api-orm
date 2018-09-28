@@ -43,8 +43,8 @@ export namespace JsonApiAdapters {
 			if (affectedFields) {
 				Object.keys(affectedFields).forEach(f => {
 					if (f !== 'id') {
-						const map = Reflect.getMetadata(METAKEYS.MAP, instance, f);
-						data.attributes![map || f] = raw[f];
+						const map = Reflect.getMetadata(METAKEYS.MAP, instance.constructor, f);
+						data.attributes![map || f] = raw[map || f];
 						delete affectedFields[f];
 					}
 				});

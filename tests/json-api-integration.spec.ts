@@ -378,11 +378,33 @@ describe('JsonApi request handler integration', () => {
 				expect(toManyCtor.collection().length).toBe(4);
 			});
 		});
+		fit('patching a resource (only affected fields)', async () => {
+			hostCtor.factory(nestedTemplate);
+			const target = hostCtor.collection()[0];
+			target.name = 'patched';
+			const patchPromise = target.update();
+			const mockreq = httpMock.expectOne(`/hosts/${target.id}`);
+			expect(mockreq.request.method).toBe('PATCH');
+			console.log(mockreq.request.body);
+			const body = {
+				data: {
+					id: target.id.toString(),
+					type: 'host',
+					attributes: { fullName: 'patched' }
+				}
+			};
+			console.log(mockreq.request.body);
+			expect(mockreq.request.body).toEqual(body);
+			mockreq.flush(null);
+			patchPromise.then(() => {
+				expect(target.field).toBe('patched');
+			});
+		});
 		it('patching a nested resource', async () => {
 			hostCtor.factory(nestedTemplate);
 			const related = hostCtor.collection()[0].relatedInstance.instance;
 			related.field = 'patched';
-			const putPromise = related.update();
+			const patchPromise = related.update();
 			const mockreq = httpMock.expectOne(`/related-ones/${related.id}`);
 			expect(mockreq.request.method).toBe('PATCH');
 
@@ -395,7 +417,7 @@ describe('JsonApi request handler integration', () => {
 			};
 			expect(mockreq.request.body).toEqual(body);
 			mockreq.flush(null);
-			putPromise.then(() => {
+			patchPromise.then(() => {
 				expect(related.field).toBe('patched');
 			});
 		});
