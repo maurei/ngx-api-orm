@@ -247,11 +247,9 @@ describe('Resource class integration', () => {
 			hostCtor.factory(nestedTemplate);
 			const related = hostCtor.collection()[0].relatedInstance.instance;
 			related.field = 'patched';
-			console.log('wtf');
 			const putPromise = related.update();
 			const mockreq = httpMock.expectOne(`/related-ones/${related.id}`);
 			expect(mockreq.request.method).toBe('PATCH');
-			console.log(mockreq.request.body);
 			expect(mockreq.request.body).toEqual({id: related.id, field: 'patched'});
 			mockreq.flush(null);
 			putPromise.then(() => {

@@ -378,14 +378,13 @@ describe('JsonApi request handler integration', () => {
 				expect(toManyCtor.collection().length).toBe(4);
 			});
 		});
-		fit('patching a resource (only affected fields)', async () => {
+		it('patching a resource (only affected fields)', async () => {
 			hostCtor.factory(nestedTemplate);
 			const target = hostCtor.collection()[0];
 			target.name = 'patched';
 			const patchPromise = target.update();
 			const mockreq = httpMock.expectOne(`/hosts/${target.id}`);
 			expect(mockreq.request.method).toBe('PATCH');
-			console.log(mockreq.request.body);
 			const body = {
 				data: {
 					id: target.id.toString(),
@@ -397,7 +396,7 @@ describe('JsonApi request handler integration', () => {
 			expect(mockreq.request.body).toEqual(body);
 			mockreq.flush(null);
 			patchPromise.then(() => {
-				expect(target.field).toBe('patched');
+				expect(target.name).toBe('patched');
 			});
 		});
 		it('patching a nested resource', async () => {
