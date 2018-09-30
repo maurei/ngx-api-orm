@@ -1,11 +1,11 @@
 import { Resource } from '../src/resource/resource.core';
-import { ResourceModule } from '../src/resource/resource.module';
+import { ResourceModule, SimpleBuilder, ToOneBuilder, ToManyBuilder } from '../src/resource/resource.module';
 import { ResourceType } from '../src/resource/utils';
 import { Model, Field, ToOne, ToMany } from '../src/resource/resource.decorators';
 import { TestBed, getTestBed, async } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { JsonApiResponse } from '../src/resource/request-handlers/jsonapidotorg/declarations';
-import { JsonApiDotOrg } from '../src/resource/request-handlers/jsonapidotorg/providers';
+import { JsonApiDotOrg, JsonApiInterceptor } from '../src/resource/request-handlers/jsonapidotorg/providers';
 
 function getModels() {
 	@Model()
@@ -273,6 +273,7 @@ describe('JsonApi request handler integration', () => {
 		injector = getTestBed();
 		httpMock = injector.get(HttpTestingController);
 	}));
+
 	describe('save pipeline:', () => {
 		beforeEach(() => {
 			ctors = getModels();
@@ -419,6 +420,22 @@ describe('JsonApi request handler integration', () => {
 			patchPromise.then(() => {
 				expect(related.field).toBe('patched');
 			});
+		});
+	});
+	describe('Builder', () => {
+		let builder: SimpleBuilder;
+		let toOneBuilder: ToOneBuilder;
+		let toManyBuilder: ToManyBuilder;
+		beforeEach(() => {
+			builder = injector.get(SimpleBuilder);
+			toOneBuilder = injector.get(ToOneBuilder);
+			toManyBuilder = injector.get(ToManyBuilder);
+		});
+		fit('sets the headers correctly', async () => {
+			builder.fetch('host', {});
+			const req = httpMock.expectOne('/hosts');
+			const headers = req.request.headers;
+			expect(headers.get('Content-Type')).toBe('application/vnd.api+json');
 		});
 	});
 });
