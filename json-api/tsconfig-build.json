@@ -1,0 +1,50 @@
+{
+    "compilerOptions": {
+        "declaration": true,
+        "stripInternal": true,
+        "noImplicitAny": true,
+        "strictNullChecks": true,
+        "strictPropertyInitialization": false,
+        "noFallthroughCasesInSwitch": true,
+        "rootDir": ".",
+        "baseUrl": ".",
+        "outDir": "../",
+        "strict": true,
+        "suppressImplicitAnyIndexErrors": true,
+        "moduleResolution": "node",
+        "module": "es2015",
+        "target": "es2015",
+        "lib": [
+            "es2016",
+            "dom"
+        ],
+        "skipLibCheck": true,
+        "types": [],
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "sourceMap": true,
+        "inlineSources": true,
+        "importHelpers": true,
+        "paths": {
+            "@angular/*": [
+                "../node_modules/@angular/*"
+            ],
+            "@rxjs/*": [
+                "../node_modules/rxjs/*"
+            ],
+        },
+
+    },
+    "files": [
+        "public_api.ts",
+        "../../node_modules/zone.js/dist/zone.js.d.ts"
+    ],
+    "angularCompilerOptions": {
+        "enableResourceInlining": true,
+        "skipTemplateCodegen": true,
+        "annotateForClosureCompiler": true,
+        "strictMetadataEmit": true,
+        "flatModuleOutFile": "ngx-api-orm-json-api.js",
+        "flatModuleId": "@ngx-api-orm/json-api"
+    }
+}
