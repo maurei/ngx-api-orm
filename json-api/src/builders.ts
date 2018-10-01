@@ -25,7 +25,7 @@ export namespace JsonApiBuilders {
 			return this.request(HttpVerb.PATCH, path, options, body).then(() => Promise.resolve());
 		}
 		protected buildUrl(targetName: string, relatedName: string, relatedInstance: any): string {
-			const path = this.config.rootPath || '' + `/${toPlural(relatedName)}/${relatedInstance.id}/relationships/${targetName}`;
+			const path = (this.config.rootPath || '') + `/${toPlural(relatedName)}/${relatedInstance.id}/relationships/${targetName}`;
 			return path;
 		}
 	}
@@ -35,7 +35,7 @@ export namespace JsonApiBuilders {
 			super(_http, _config);
 		}
 		protected buildUrl(targetName: string, relatedName: string, relatedInstance: any): string {
-			const path = this.config.rootPath || '' + `/${toPlural(relatedName)}/${relatedInstance.id}/relationships/${toPlural(targetName)}`;
+			const path = (this.config.rootPath || '') + `/${toPlural(relatedName)}/${relatedInstance.id}/relationships/${toPlural(targetName)}`;
 			return path;
 		}
 		public remove(targetName: string, relatedName: string, body: any, relatedInstance: any, options: HttpClientOptions): Promise<void> {

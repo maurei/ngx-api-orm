@@ -1,6 +1,6 @@
 {
     "name": "@ngx-api-orm/json-api",
-    "version": "0.0.1-beta5",
+    "version": "0.0.1-beta6",
     "main": "./bundles/ngx-api-orm-json-api.umd.js",
     "module": "./fesm5/ngx-api-orm-json-api.js",
     "es2015": "./fesm2015/ngx-api-orm-json-api.js",

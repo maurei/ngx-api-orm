@@ -19,7 +19,7 @@ export namespace Abstract {
 			super(_http);
 		}
 		protected buildUrl(targetName: string, targetInstance?: any): string {
-			let path = (this.config.rootPath ? this.config.rootPath : '') + `/${toPlural(targetName)}/$targetId`;
+			let path = (this.config.rootPath || '') + `/${toPlural(targetName)}/$targetId`;
 			path = path.replace('/$targetId', targetInstance ? `/${targetInstance.id}` : '');
 			return path;
 		}
@@ -46,7 +46,7 @@ export namespace Abstract {
 			super(_http);
 		}
 		protected buildUrl(targetName: string, relatedName: string, relatedInstance: any): string {
-			const path = (this.config.rootPath ? this.config.rootPath : '') + `/${toPlural(relatedName)}/${relatedInstance.id}/${targetName}`;
+			const path = (this.config.rootPath || '') + `/${toPlural(relatedName)}/${relatedInstance.id}/${targetName}`;
 			return path;
 		}
 		public add(targetName: string, relatedName: string, body: any, relatedInstance: any, options: HttpClientOptions): Promise<void> {
@@ -64,7 +64,7 @@ export namespace Abstract {
 		}
 		protected buildUrl(targetName: string, relatedName: string, relatedInstance: any): string {
 			const path =
-				(this.config.rootPath ? this.config.rootPath : '') + `/${toPlural(relatedName)}/${relatedInstance.id}/${toPlural(targetName)}`;
+				(this.config.rootPath || '') + `/${toPlural(relatedName)}/${relatedInstance.id}/${toPlural(targetName)}`;
 			return path;
 		}
 		public add(targetName: string, relatedName: string, body: any, relatedInstance: any, options: HttpClientOptions): Promise<void> {
