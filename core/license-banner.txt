@@ -1,0 +1,4 @@
+/**
+ * @license ngx-api-orm
+ * MIT license
+ */

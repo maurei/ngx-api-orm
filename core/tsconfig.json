@@ -1,0 +1,46 @@
+{
+    "angularCompilerOptions": {
+        "strictMetadataEmit": false
+    },
+    "compilerOptions": {
+        "baseUrl": ".",
+        "declaration": true,
+        "stripInternal": true,
+        "noImplicitAny": true,
+        "strictNullChecks": true,
+        "strictPropertyInitialization": false,
+        "noFallthroughCasesInSwitch": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "strict": true,
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "rootDir": ".",
+        "paths": {
+            "@angular/*": [
+                "../rs/infine-api/client/node_modules/@angular/*"
+            ],
+            "@rxjs/*": [
+                "../rs/infine-api/client/node_modules/rxjs/*"
+            ],
+            "active-angular-resource": [
+                "./src/active-angular-resource"
+            ]
+        },
+        "sourceMap": true,
+        "suppressImplicitAnyIndexErrors": true,
+        "inlineSources": true,
+        "target": "es5",
+        "skipLibCheck": true,
+        "lib": [
+            "es2016",
+            "dom"
+        ],
+        "typeRoots": [
+            "node_modules/@types/"
+        ]
+    },
+    "exclude": [
+        "node_modules"
+    ]
+}

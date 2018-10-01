@@ -16,15 +16,15 @@ export class Employee extends Resource {
   @Field()
   public firstName: string;
   @Field()
-	public lastName: string;
-	@ToOne(Team)
-	public team: ToOneRelation<Employee, Task>;
-	@ToMany(Task): 
-	public tasks: ToManyRelation<Employee, Task>;
+  public lastName: string;
+  @ToOne(Team)
+  public team: ToOneRelation<Employee, Task>;
+  @ToMany(Task): 
+  public tasks: ToManyRelation<Employee, Task>;
 
-	public mumble(): void {
-		console.log('mumble mumble mumble ....')
-	}
+  public mumble(): void {
+      console.log('mumble mumble mumble ....')
+  }
 }
 
 @Model()
@@ -97,9 +97,9 @@ import { ResourceModule, JsonApiDotOrg } from '@ngx-api-orm/core';
   declarations: [ ... ],
   imports: [ ... ,
     ResourceModule.forRoot({ 
-			rootPath: 'https://example.com/api/v1',
-			requestHandlersProviders: JsonApiDotOrg /* omit this line if you're not using a JsonApi.org formatted API. */
-		}),
+            rootPath: 'https://example.com/api/v1',
+            requestHandlers: JsonApiDotOrg /* Requires package @ngx-api-orm/json-api. Omit this line if you're not using a JsonApi.org formatted API.  */
+        }),
     HttpClientModule, /* this one is required */
     ... ],
   providers: [ ...],
