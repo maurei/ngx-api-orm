@@ -29,7 +29,7 @@ export function getPluralAndSingularNames(
 		);
 	} else if (!customCtorName && ctorName && !isSingular(ctorName)) {
 		throw new Error(
-			`Ccass name not recognized as singular. Note: "${ctorName} extends Resource"
+			`Class name not recognized as singular. Note: "${ctorName} extends Resource"
 			should be "${toSingular(ctorName)} extends Resource": your class should be named in a singular form.`
 		);
 	}
