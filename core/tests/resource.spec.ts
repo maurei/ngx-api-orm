@@ -1,9 +1,9 @@
-import { Resource } from '../src/resource/resource.core';
-import { ToManyRelation } from 'src/resource/relations/to-many';
-import { ToOneRelation } from 'src/resource/relations/to-one';
-import { RelationConfiguration } from 'src/resource/relations/relation-configuration';
-import { Model, Field, ToMany, ToOne } from '../src/resource/resource.decorators';
-import { ResourceType } from '../src/resource/utils';
+import { Resource } from '../src/resource.core';
+import { ToManyRelation } from 'src/relations/to-many';
+import { ToOneRelation } from 'src/relations/to-one';
+import { RelationConfiguration } from 'src/relations/relation-configuration';
+import { Model, Field, ToMany, ToOne } from '../src/resource.decorators';
+import { ResourceType } from '../src/utils';
 
 const completeHostWithId = {
 	id: 1,

@@ -1,7 +1,7 @@
-import { Resource } from '../src/resource/resource.core';
-import { ResourceModule } from '../src/resource/resource.module';
-import { ResourceType } from '../src/resource/utils';
-import { Model, Field, ToOne, ToMany } from '../src/resource/resource.decorators';
+import { Resource } from '../src/resource.core';
+import { ResourceModule } from '../src/resource.module';
+import { ResourceType } from '../src/utils';
+import { Model, Field, ToOne, ToMany } from '../src/resource.decorators';
 import { TestBed, getTestBed, async } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { HttpClient } from '@angular/common/http';

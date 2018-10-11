@@ -1,8 +1,8 @@
-import { Model, Field, ToMany, ToOne } from '../src/resource/resource.decorators';
-import { Resource } from '../src/resource/resource.core';
-import { METAKEYS } from '../src/resource/utils';
-import { RelationConfiguration } from '../src/resource/relations/relation-configuration';
-import { RelationType } from '../src/resource/relations/relation-configuration';
+import { Model, Field, ToMany, ToOne } from '../src/resource.decorators';
+import { Resource } from '../src/resource.core';
+import { METAKEYS } from '../src/utils';
+import { RelationConfiguration } from '../src/relations/relation-configuration';
+import { RelationType } from '../src/relations/relation-configuration';
 
 function modelWithResourceDecorator(name?: string): typeof Resource {
 	@Model(name ? { name: name } : undefined)

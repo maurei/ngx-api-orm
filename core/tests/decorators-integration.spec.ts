@@ -1,6 +1,6 @@
-import { Model, Field, ToMany, ToOne } from '../src/resource/resource.decorators';
-import { Resource } from '../src/resource/resource.core';
-import { METAKEYS } from '../src/resource/utils';
+import { Model, Field, ToMany, ToOne } from '../src/resource.decorators';
+import { Resource } from '../src/resource.core';
+import { METAKEYS } from '../src/utils';
 
 function fullyDecoratedModel(): typeof Resource {
 	@Model()
