@@ -4,13 +4,11 @@ import { Resource } from './resource.core';
 import { RelationConfiguration, RelationType } from './relations/relation-configuration';
 import { ToManyBuilder, ToOneBuilder, SimpleBuilder } from './request-handlers/default-builders';
 import { ToManyAdapter, ToOneAdapter, SimpleAdapter } from './request-handlers/default-adapters';
-import { plural, singular } from 'pluralize';
+import { plural, singular, isSingular } from 'pluralize';
 
 export const toPlural = plural;
 export const toSingular = singular;
-export function isSingular(word: string) {
-	return toSingular(word) === word;
-}
+
 
 export function getPluralAndSingularNames(
 	_singular: string | undefined,

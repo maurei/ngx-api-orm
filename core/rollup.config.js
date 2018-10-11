@@ -59,4 +59,4 @@ export default {
         exports: 'named',
         amd: { id: '@ngx-api-orm/core' }
     }
-}
+} 
