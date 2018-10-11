@@ -177,7 +177,7 @@ describe('Resource class integration', () => {
 			addPromise.then(() => {
 				expect(hostInstance.relatedInstances[hostInstance.relatedInstances.length - 1]).toBe(toManyInstance);
 			});
-			const mockreq = httpMock.expectOne('/hosts/1/related-manys');
+			const mockreq = httpMock.expectOne('/hosts/1/related-manies');
 			expect(mockreq.request.method).toBe('POST');
 			mockreq.flush(null);
 		});
@@ -220,7 +220,7 @@ describe('Resource class integration', () => {
 			deletePromise.then(() => {
 				expect(host.relatedInstances.length).toBe(preLength - 1);
 			});
-			const mockreq = httpMock.expectOne(`/hosts/2/related-manys`);
+			const mockreq = httpMock.expectOne(`/hosts/2/related-manies`);
 			expect(mockreq.request.method).toBe('DELETE');
 			mockreq.flush(null);
 		});

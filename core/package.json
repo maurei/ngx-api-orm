@@ -36,6 +36,8 @@
     ],
     "license": "MIT",
     "dependencies": {
+        "@types/pluralize": "0.0.29",
+        "pluralize": "^7.0.0",
         "tslib": "^1.9.0"
     },
     "peerDependencies": {
@@ -72,6 +74,7 @@
         "raw-loader": "0.5.1",
         "reflect-metadata": "^0.1.12",
         "rollup": "0.58.2",
+        "rollup-plugin-commonjs": "^9.2.0",
         "rollup-plugin-license": "0.6.0",
         "rollup-plugin-node-resolve": "3.3.0",
         "rollup-plugin-sourcemaps": "0.4.2",

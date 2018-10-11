@@ -6,7 +6,7 @@ import { Field, ToMany, ToOne, Model } from './resource.decorators';
 import { ToManyRelation } from './relations/to-many';
 import { ToOneRelation } from './relations/to-one';
 import { InjectorContainer, ResourceModuleConfiguration, ResourceModuleConfigurationWithProviders,
-	HttpClientOptions, toPlural, toDash, toPluralDash, HttpVerb, METAKEYS } from './utils';
+	HttpClientOptions, toDash, HttpVerb, METAKEYS, ResourceType } from './utils';
 import { Abstract as AbstractAdapters } from './request-handlers/abstract-adapters';
 import { Abstract as AbstractBuilders } from './request-handlers/abstract-builders';
 import { ToManyAdapter, ToOneAdapter, SimpleAdapter } from './request-handlers/default-adapters';
@@ -52,9 +52,8 @@ export {
 	SimpleBuilder,
 	ResourceModuleConfiguration,
 	HttpClientOptions,
-	toPlural,
 	toDash,
-	toPluralDash,
 	HttpVerb,
-	METAKEYS
+	METAKEYS,
+	ResourceType
 };

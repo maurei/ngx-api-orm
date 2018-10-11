@@ -89,7 +89,7 @@ export class Resource {
 		const injections = getDependencyInjectionEntries(this);
 		const adapter = injections[0];
 		const builder = injections[1];
-		const resourceName = Reflect.getMetadata(METAKEYS.NAME, this);
+		const resourceName = Reflect.getMetadata(METAKEYS.PLURAL, this);
 
 		const response = await builder.fetch(resourceName, options);
 		const rawInstances = adapter.parseIncoming(response);
@@ -173,7 +173,7 @@ export class Resource {
 	 * @returns Promise<T>
 	 */
 	public async save(options: HttpClientOptions = {}): Promise<this> {
-		const name = Reflect.getMetadata(METAKEYS.NAME, this.constructor);
+		const name = Reflect.getMetadata(METAKEYS.PLURAL, this.constructor);
 		const body = this._adapter.save(this);
 		const response = await this._builder.save(name, body, options);
 		const rawInstance = this._adapter.parseIncoming(response);
@@ -186,7 +186,7 @@ export class Resource {
 	 * @returns Promise<void>
 	 */
 	public async update(options: HttpClientOptions = {}): Promise<void> {
-		const name = Reflect.getMetadata(METAKEYS.NAME, this.constructor);
+		const name = Reflect.getMetadata(METAKEYS.PLURAL, this.constructor);
 		const affectedKeys = Reflect.getMetadata(METAKEYS.UPDATED, this);
 		const body = this._adapter.update(this, affectedKeys);
 		await this._builder.update(name, body, options);
@@ -198,7 +198,7 @@ export class Resource {
 	 * @returns Promise<void>
 	 */
 	public async delete(options: HttpClientOptions = {}): Promise<void> {
-		const name = Reflect.getMetadata(METAKEYS.NAME, this.constructor);
+		const name = Reflect.getMetadata(METAKEYS.PLURAL, this.constructor);
 		await this._builder.delete(name, this, options);
 		this._metaRemove();
 	}
@@ -218,7 +218,7 @@ export class Resource {
 				this[field] = rawInstance[field];
 			} else if (!rawInstance.hasOwnProperty(field)) {
 				throw Error(
-					`Expected key ${field} for instance of class ${Reflect.getMetadata(METAKEYS.NAME, this.constructor)} but it wasn't included`
+					`Expected key ${field} for instance of class ${Reflect.getMetadata(METAKEYS.PLURAL, this.constructor)} but it wasn't included`
 				);
 			}
 		});

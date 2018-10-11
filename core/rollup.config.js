@@ -1,5 +1,7 @@
 import resolve from 'rollup-plugin-node-resolve';
 import sourcemaps from 'rollup-plugin-sourcemaps';
+import commonjs from 'rollup-plugin-commonjs';
+
 
 /**
  * Add here external dependencies that actually you use.
@@ -40,7 +42,14 @@ const globals = {
 
 export default {
     external: Object.keys(globals),
-    plugins: [resolve(), sourcemaps()],
+    plugins: [resolve(), sourcemaps(), commonjs({
+        namedExports: {
+            // left-hand side can be an absolute path, a path
+            // relative to the current directory, or the name
+            // of a module in node_modules
+            'node_modules/pluralize/pluralize.js': ['plural', 'singular']
+        }
+    })],
     onwarn: () => { return },
     output: {
         format: 'umd',

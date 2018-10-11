@@ -4,6 +4,52 @@ import { Resource } from './resource.core';
 import { RelationConfiguration, RelationType } from './relations/relation-configuration';
 import { ToManyBuilder, ToOneBuilder, SimpleBuilder } from './request-handlers/default-builders';
 import { ToManyAdapter, ToOneAdapter, SimpleAdapter } from './request-handlers/default-adapters';
+import { plural, singular } from 'pluralize';
+
+export const toPlural = plural;
+export const toSingular = singular;
+export function isSingular(word: string) {
+	return toSingular(word) === word;
+}
+
+export function getPluralAndSingularNames(
+	_singular: string | undefined,
+	_plural: string | undefined,
+	customCtorName: string | undefined,
+	ctorName: string
+): { plural: string; singular: string } {
+	if ((_singular && !_plural) || (!_singular && _plural)) {
+		throw new Error(
+			`Single or plural form is missing. If you supply a custom singular or plural name in @Model decorator, you must use supply BOTH the singular and plural forms.`
+		);
+	} else if (customCtorName && (_singular && _plural)) {
+		throw new Error(`Was singular and/or plural included.
+			If you supply a custom class name, (in this case: ${customCtorName}), you shouldn't also include custom singular and/or plural forms.`);
+	} else if (customCtorName && !isSingular(customCtorName)) {
+		throw new Error(
+			`Custom class name not recognized as singular. If you supply a custom class name, (in this case: ${customCtorName}), it must be in a singular form.`
+		);
+	} else if (!customCtorName && ctorName && !isSingular(ctorName)) {
+		throw new Error(
+			`Ccass name not recognized as singular. Note: "${ctorName} extends Resource"
+			should be "${toSingular(ctorName)} extends Resource": your class should be named in a singular form.`
+		);
+	}
+
+	let singularName;
+	let pluralName;
+	if (_singular && _plural) {
+		singularName = _singular;
+		pluralName = _plural;
+	} else if (customCtorName) {
+		singularName = toDash(customCtorName);
+		pluralName = toPlural(toDash(customCtorName));
+	} else {
+		singularName = toDash(ctorName);
+		pluralName = toPlural(toDash(ctorName));
+	}
+	return { singular: singularName, plural: pluralName };
+}
 
 export function toDash(name: string): string {
 	const split = name.split('');
@@ -12,14 +58,6 @@ export function toDash(name: string): string {
 	return splitJoin.replace(/([A-Z])/g, $1 => {
 		return '-' + $1.toLowerCase();
 	});
-}
-
-export function toPluralDash(name: string) {
-	return toPlural(toDash(name));
-}
-
-export function toPlural(name: string) {
-	return name + 's';
 }
 
 /** @internal */
@@ -47,8 +85,7 @@ export enum HttpVerb {
 	POST = 'post',
 	PUT = 'put',
 	PATCH = 'patch',
-	DELETE = 'delete',
-
+	DELETE = 'delete'
 }
 
 /** @internal */
@@ -103,7 +140,8 @@ export const METAKEYS = {
 	MAP: 'orm:map',
 	UPDATED: 'orm:updated',
 	INSTANCES: 'orm:instances',
-	NAME: 'orm:name'
+	PLURAL: 'orm:plural',
+	SINGULAR: 'orm:singular'
 };
 
 /** @internal */

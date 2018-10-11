@@ -30,8 +30,8 @@ export class ToManyRelation<THost extends Resource, TRelated extends Resource> e
 	 * @param  any={} options
 	 */
 	public add = async (relatedInstance: TRelated, options: HttpClientOptions = {}): Promise<void> => {
-		const hostName = Reflect.getMetadata(METAKEYS.NAME, this._configuration.HostResource);
-		const relatedName = Reflect.getMetadata(METAKEYS.NAME, this._configuration.RelatedResource);
+		const hostName = Reflect.getMetadata(METAKEYS.PLURAL, this._configuration.HostResource);
+		const relatedName = Reflect.getMetadata(METAKEYS.PLURAL, this._configuration.RelatedResource);
 
 		if (!(relatedInstance instanceof this._configuration.RelatedResource)) {
 			throw new TypeError('parameter relatedInstance must be of type ' + relatedName);
@@ -48,8 +48,8 @@ export class ToManyRelation<THost extends Resource, TRelated extends Resource> e
 	 * @param  any={} options
 	 */
 	public remove = async (relatedInstance: TRelated, options: HttpClientOptions = {}) => {
-		const hostName = Reflect.getMetadata(METAKEYS.NAME, this._configuration.HostResource);
-		const relatedName = Reflect.getMetadata(METAKEYS.NAME, this._configuration.RelatedResource);
+		const hostName = Reflect.getMetadata(METAKEYS.PLURAL, this._configuration.HostResource);
+		const relatedName = Reflect.getMetadata(METAKEYS.PLURAL, this._configuration.RelatedResource);
 
 		if (this.findIndex(ri => ri.id === relatedInstance.id) === -1) {
 			throw new RangeError('parameter relatedInstance not included in this RelatedResourceCollection');

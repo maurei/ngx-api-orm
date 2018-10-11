@@ -111,14 +111,14 @@ describe('Request builders', () => {
 		});
 		it('can add', () => {
 			expect(toOneBuilder.add).toBeDefined();
-			const req = toOneBuilder.add('to-one-target', 'related', {}, instances.relatedWithValues, {});
+			const req = toOneBuilder.add('to-one-target', 'relateds', {}, instances.relatedWithValues, {});
 			expect(req instanceof Promise).toBe(true);
 			const mock = httpMock.expectOne('/relateds/' + instances.relatedWithValues.id + '/relationships/to-one-target');
 			expect(mock.request.method).toBe('PATCH');
 		});
 		it('can remove', () => {
 			expect(toOneBuilder.remove).toBeDefined();
-			const req = toOneBuilder.remove('to-one-target', 'related', {}, instances.relatedWithValues, {});
+			const req = toOneBuilder.remove('to-one-target', 'relateds', {}, instances.relatedWithValues, {});
 			expect(req instanceof Promise).toBe(true);
 			const mock = httpMock.expectOne('/relateds/' + instances.relatedWithValues.id + '/relationships/to-one-target');
 			expect(mock.request.method).toBe('PATCH');
@@ -131,14 +131,14 @@ describe('Request builders', () => {
 		});
 		it('can add', () => {
 			expect(toManyBuilder.add).toBeDefined();
-			const req = toManyBuilder.add('to-many-target', 'related', {}, instances.relatedWithValues, {});
+			const req = toManyBuilder.add('to-many-targets', 'relateds', {}, instances.relatedWithValues, {});
 			expect(req instanceof Promise).toBe(true);
 			const mock = httpMock.expectOne('/relateds/' + instances.relatedWithValues.id + '/relationships/to-many-targets');
 			expect(mock.request.method).toBe('POST');
 		});
 		it('can remove', () => {
 			expect(toManyBuilder.remove).toBeDefined();
-			const req = toManyBuilder.remove('to-many-target', 'related', {}, instances.relatedWithValues, {});
+			const req = toManyBuilder.remove('to-many-targets', 'relateds', {}, instances.relatedWithValues, {});
 			expect(req instanceof Promise).toBe(true);
 			const mock = httpMock.expectOne('/relateds/' + instances.relatedWithValues.id + '/relationships/to-many-targets');
 			expect(mock.request.method).toBe('DELETE');

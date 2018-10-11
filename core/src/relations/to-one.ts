@@ -40,8 +40,8 @@ export class ToOneRelation<THost extends Resource, TRelated extends Resource> {
 	 */
 	public async remove(options: HttpClientOptions = {}): Promise<void> {
 		if (this.instance) {
-			const hostName = Reflect.getMetadata(METAKEYS.NAME, this._configuration.HostResource);
-			const relatedName = Reflect.getMetadata(METAKEYS.NAME, this._configuration.RelatedResource);
+			const hostName = Reflect.getMetadata(METAKEYS.PLURAL, this._configuration.HostResource);
+			const relatedName = Reflect.getMetadata(METAKEYS.SINGULAR, this._configuration.RelatedResource);
 			const body = this._adapter.remove(this.instance, this._hostInstance);
 			await this._builder.remove(relatedName, hostName, body, this._hostInstance, options);
 			this.instance = null;
@@ -54,8 +54,8 @@ export class ToOneRelation<THost extends Resource, TRelated extends Resource> {
 	 * @returns Promise
 	 */
 	public async set(targetInstance: TRelated, options: HttpClientOptions = {}): Promise<void> {
-		const hostName = Reflect.getMetadata(METAKEYS.NAME, this._configuration.HostResource);
-		const relatedName = Reflect.getMetadata(METAKEYS.NAME, this._configuration.RelatedResource);
+		const hostName = Reflect.getMetadata(METAKEYS.PLURAL, this._configuration.HostResource);
+		const relatedName = Reflect.getMetadata(METAKEYS.SINGULAR, this._configuration.RelatedResource);
 		const body = this._adapter.add(targetInstance, this._hostInstance);
 		await this._builder.add(relatedName, hostName, body, this._hostInstance, options);
 		this.instance = targetInstance;

@@ -71,7 +71,7 @@ export namespace JsonApiAdapters {
 		private _dataFactory(instance: any): JsonApiResource {
 			return {
 				id: instance.id ? instance.id.toString() : undefined,
-				type: Reflect.getMetadata(METAKEYS.NAME, instance.constructor),
+				type: Reflect.getMetadata(METAKEYS.SINGULAR, instance.constructor),
 				attributes: {}
 			};
 		}
@@ -111,7 +111,7 @@ export namespace JsonApiAdapters {
 		public add(targetInstance: any, relatedInstance: any): JsonApiResponse<JsonApiResourceIdentifier> {
 			return {
 				data: {
-					type: Reflect.getMetadata(METAKEYS.NAME, targetInstance.constructor),
+					type: Reflect.getMetadata(METAKEYS.SINGULAR, targetInstance.constructor),
 					id: targetInstance.id.toString()
 				}
 			};
@@ -126,7 +126,7 @@ export namespace JsonApiAdapters {
 		public add(targetInstance: any, relatedInstance: any): JsonApiResponse<JsonApiResourceIdentifier> {
 			return {
 				data: {
-					type: Reflect.getMetadata(METAKEYS.NAME, targetInstance.constructor),
+					type: Reflect.getMetadata(METAKEYS.SINGULAR, targetInstance.constructor),
 					id: targetInstance.id.toString()
 				}
 			};
@@ -134,7 +134,7 @@ export namespace JsonApiAdapters {
 		public remove(targetInstance: any, relatedInstance: any) {
 			return {
 				data: {
-					type: Reflect.getMetadata(METAKEYS.NAME, targetInstance.constructor),
+					type: Reflect.getMetadata(METAKEYS.SINGULAR, targetInstance.constructor),
 					id: targetInstance.id.toString()
 				}
 			};

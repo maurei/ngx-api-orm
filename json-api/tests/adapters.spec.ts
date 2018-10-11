@@ -254,7 +254,7 @@ describe('Request adapters', () => {
 			expect(rv.data.id).toBeDefined();
 			expect(rv.data.type).toBeDefined();
 			expect(rv.data.id).toBe(instances.toOneTargetWithValues.id.toString());
-			const name = <string>Reflect.getMetadata(METAKEYS.NAME, instances.toOneTargetWithValues.constructor);
+			const name = <string>Reflect.getMetadata(METAKEYS.SINGULAR, instances.toOneTargetWithValues.constructor);
 			expect(rv.data.type).toBe(name);
 		});
 		it('can remove', () => {
@@ -281,7 +281,7 @@ describe('Request adapters', () => {
 			expect(rv.data.id).toBeDefined();
 			expect(rv.data.type).toBeDefined();
 			expect(rv.data.id).toBe(instances.toManyTargetWithValues.id.toString());
-			const name = <string>Reflect.getMetadata(METAKEYS.NAME, instances.toManyTargetWithValues.constructor);
+			const name = <string>Reflect.getMetadata(METAKEYS.SINGULAR, instances.toManyTargetWithValues.constructor);
 			expect(rv.data.type).toBe(name);
 		});
 		it('can remove', () => {
@@ -291,7 +291,7 @@ describe('Request adapters', () => {
 			expect(rv.data.id).toBeDefined();
 			expect(rv.data.type).toBeDefined();
 			expect(rv.data.id).toBe(instances.toManyTargetWithValues.id.toString());
-			const name = <string>Reflect.getMetadata(METAKEYS.NAME, instances.toManyTargetWithValues.constructor);
+			const name = <string>Reflect.getMetadata(METAKEYS.SINGULAR, instances.toManyTargetWithValues.constructor);
 			expect(rv.data.type).toBe(name);
 		});
 	});

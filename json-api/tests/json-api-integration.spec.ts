@@ -153,7 +153,7 @@ const nestedJsonApiResponse: JsonApiResponse = {
 				field: 'Nah, prefer JSON API'
 			},
 			links: {
-				self: 'http://example.com/related-manys/29'
+				self: 'http://example.com/related-manies/29'
 			}
 		},
 		{
@@ -164,7 +164,7 @@ const nestedJsonApiResponse: JsonApiResponse = {
 				field: 'Nah, prefer JSON API'
 			},
 			links: {
-				self: 'http://example.com/related-manys/30'
+				self: 'http://example.com/related-manies/30'
 			}
 		},
 		{
@@ -175,7 +175,7 @@ const nestedJsonApiResponse: JsonApiResponse = {
 				field: 'Nah, prefer JSON API'
 			},
 			links: {
-				self: 'http://example.com/related-manys/31'
+				self: 'http://example.com/related-manies/31'
 			}
 		},
 		{
@@ -186,7 +186,7 @@ const nestedJsonApiResponse: JsonApiResponse = {
 				field: 'Nah, prefer JSON API'
 			},
 			links: {
-				self: 'http://example.com/related-manys/32'
+				self: 'http://example.com/related-manies/32'
 			}
 		}
 	]
@@ -318,7 +318,7 @@ describe('JsonApi request handler integration', () => {
 			addPromise.then(() => {
 				expect(hostInstance.relatedInstances[hostInstance.relatedInstances.length - 1]).toBe(toManyInstance);
 			});
-			const mockreq = httpMock.expectOne('/hosts/1/relationships/related-manys');
+			const mockreq = httpMock.expectOne('/hosts/1/relationships/related-manies');
 			expect(mockreq.request.method).toBe('POST');
 			mockreq.flush(null);
 		});
@@ -363,7 +363,7 @@ describe('JsonApi request handler integration', () => {
 			deletePromise.then(() => {
 				expect(host.relatedInstances.length).toBe(preLength - 1);
 			});
-			const mockreq = httpMock.expectOne(`/hosts/2/relationships/related-manys`);
+			const mockreq = httpMock.expectOne(`/hosts/2/relationships/related-manies`);
 			expect(mockreq.request.method).toBe('DELETE');
 			expect(mockreq.request.body).toEqual({ data: { id: target.id.toString(), type: 'related-many' } });
 			mockreq.flush(null);
@@ -439,7 +439,7 @@ describe('JsonApi request handler integration', () => {
 			toManyBuilder = injector.get(ToManyBuilder);
 		});
 		it('sets the headers correctly', async () => {
-			builder.fetch('host', {});
+			builder.fetch('hosts', {});
 			const req = httpMock.expectOne('/hosts');
 			const headers = req.request.headers;
 			expect(headers.get('Content-Type')).toBe('application/vnd.api+json');

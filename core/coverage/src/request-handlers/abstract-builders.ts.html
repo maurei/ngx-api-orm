@@ -125,7 +125,30 @@
 <a name='L77'></a><a href='#L77'>77</a>
 <a name='L78'></a><a href='#L78'>78</a>
 <a name='L79'></a><a href='#L79'>79</a>
-<a name='L80'></a><a href='#L80'>80</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L80'></a><a href='#L80'>80</a>
+<a name='L81'></a><a href='#L81'>81</a>
+<a name='L82'></a><a href='#L82'>82</a>
+<a name='L83'></a><a href='#L83'>83</a>
+<a name='L84'></a><a href='#L84'>84</a>
+<a name='L85'></a><a href='#L85'>85</a>
+<a name='L86'></a><a href='#L86'>86</a>
+<a name='L87'></a><a href='#L87'>87</a>
+<a name='L88'></a><a href='#L88'>88</a>
+<a name='L89'></a><a href='#L89'>89</a>
+<a name='L90'></a><a href='#L90'>90</a>
+<a name='L91'></a><a href='#L91'>91</a>
+<a name='L92'></a><a href='#L92'>92</a>
+<a name='L93'></a><a href='#L93'>93</a>
+<a name='L94'></a><a href='#L94'>94</a>
+<a name='L95'></a><a href='#L95'>95</a>
+<a name='L96'></a><a href='#L96'>96</a>
+<a name='L97'></a><a href='#L97'>97</a>
+<a name='L98'></a><a href='#L98'>98</a>
+<a name='L99'></a><a href='#L99'>99</a>
+<a name='L100'></a><a href='#L100'>100</a>
+<a name='L101'></a><a href='#L101'>101</a>
+<a name='L102'></a><a href='#L102'>102</a>
+<a name='L103'></a><a href='#L103'>103</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -177,10 +200,22 @@
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -190,21 +225,32 @@
 <span class="cline-any cline-yes">21x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { toPlural, ResourceModuleConfiguration, HttpClientOptions, HttpVerb } from '../utils';
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { ResourceModuleConfiguration, HttpClientOptions, HttpVerb } from '../utils';
 import { HttpClient } from '@angular/common/http';
 &nbsp;
 export namespace Abstract {
@@ -224,26 +270,26 @@ export namespace Abstract {
 		constructor(protected readonly _http: HttpClient, protected readonly config: ResourceModuleConfiguration) {
 			super(_http);
 		}
-		protected buildUrl(targetName: string, targetInstance?: any): string {
-			let path = (this.config.rootPath || '') + `/${toPlural(targetName)}/$targetId`;
+		protected buildUrl(targetNamePlural: string, targetInstance?: any): string {
+			let path = (this.config.rootPath || '') + `/${targetNamePlural}/$targetId`;
 			path = path.replace('/$targetId', targetInstance ? `/${targetInstance.id}` : '');
 			return path;
 		}
 &nbsp;
-		public fetch(targetName: string, options: HttpClientOptions): Promise&lt;Object&gt; {
-			const path = options.url || this.buildUrl(targetName);
+		public fetch(targetNamePlural: string, options: HttpClientOptions): Promise&lt;Object&gt; {
+			const path = options.url || this.buildUrl(targetNamePlural);
 			return &lt;Promise&lt;Object[]&gt;&gt;this.request(HttpVerb.GET, path, options);
 		}
-		public save(targetName: string, body: any, options: HttpClientOptions): Promise&lt;Object&gt; {
-			const path = options.url || this.buildUrl(targetName);
+		public save(targetNamePlural: string, body: any, options: HttpClientOptions): Promise&lt;Object&gt; {
+			const path = options.url || this.buildUrl(targetNamePlural);
 			return this.request(HttpVerb.POST, path, options, body);
 		}
-		public update(targetName: string, body: any, options: HttpClientOptions): Promise&lt;any&gt; {
-			const path = options.url || this.buildUrl(targetName, body);
+		public update(targetNamePlural: string, body: any, options: HttpClientOptions): Promise&lt;any&gt; {
+			const path = options.url || this.buildUrl(targetNamePlural, body);
 			return this.request(HttpVerb.PATCH, path, options, body).then(() =&gt; Promise.resolve());
 		}
-		public delete(targetName: string, instance: any, options: HttpClientOptions): Promise&lt;any&gt; {
-			const path = options.url || this.buildUrl(targetName, instance);
+		public delete(targetNamePlural: string, instance: any, options: HttpClientOptions): Promise&lt;any&gt; {
+			const path = options.url || this.buildUrl(targetNamePlural, instance);
 			return this.request(HttpVerb.DELETE, path, options).then(() =&gt; Promise.resolve());
 		}
 	}
@@ -251,16 +297,28 @@ export namespace Abstract {
 		constructor(protected readonly _http: HttpClient, protected readonly config: ResourceModuleConfiguration) {
 			super(_http);
 		}
-		protected buildUrl(targetName: string, relatedName: string, relatedInstance: any): string {
-			const path = (this.config.rootPath || '') + `/${toPlural(relatedName)}/${relatedInstance.id}/${targetName}`;
+		protected buildUrl(targetNameSingular: string, relatedNamePlural: string, relatedInstance: any): string {
+			const path = (this.config.rootPath || '') + `/${relatedNamePlural}/${relatedInstance.id}/${targetNameSingular}`;
 			return path;
 		}
-		public add(targetName: string, relatedName: string, body: any, relatedInstance: any, options: HttpClientOptions): Promise&lt;void&gt; {
-			const path = options.url || this.buildUrl(targetName, relatedName, relatedInstance);
+		public add(
+			targetNameSingular: string,
+			relatedNamePlural: string,
+			body: any,
+			relatedInstance: any,
+			options: HttpClientOptions
+		): Promise&lt;void&gt; {
+			const path = options.url || this.buildUrl(targetNameSingular, relatedNamePlural, relatedInstance);
 			return this.request(HttpVerb.PATCH, path, options, body).then(() =&gt; Promise.resolve());
 		}
-		public remove(targetName: string, relatedName: string, body: any, relatedInstance: any, options: HttpClientOptions): Promise&lt;void&gt; {
-			const path = options.url || this.buildUrl(targetName, relatedName, relatedInstance);
+		public remove(
+			targetNameSingular: string,
+			relatedNamePlural: string,
+			body: any,
+			relatedInstance: any,
+			options: HttpClientOptions
+		): Promise&lt;void&gt; {
+			const path = options.url || this.buildUrl(targetNameSingular, relatedNamePlural, relatedInstance);
 			return this.request(HttpVerb.DELETE, path, options).then(() =&gt; Promise.resolve());
 		}
 	}
@@ -268,17 +326,28 @@ export namespace Abstract {
 		constructor(protected readonly _http: HttpClient, protected readonly config: ResourceModuleConfiguration) {
 			super(_http);
 		}
-		protected buildUrl(targetName: string, relatedName: string, relatedInstance: any): string {
-			const path =
-				(this.config.rootPath || '') + `/${toPlural(relatedName)}/${relatedInstance.id}/${toPlural(targetName)}`;
+		protected buildUrl(targetNamePlural: string, relatedNamePlural: string, relatedInstance: any): string {
+			const path = (this.config.rootPath || '') + `/${relatedNamePlural}/${relatedInstance.id}/${targetNamePlural}`;
 			return path;
 		}
-		public add(targetName: string, relatedName: string, body: any, relatedInstance: any, options: HttpClientOptions): Promise&lt;void&gt; {
-			const path = options.url || this.buildUrl(targetName, relatedName, relatedInstance);
+		public add(
+			targetNamePlural: string,
+			relatedNamePlural: string,
+			body: any,
+			relatedInstance: any,
+			options: HttpClientOptions
+		): Promise&lt;void&gt; {
+			const path = options.url || this.buildUrl(targetNamePlural, relatedNamePlural, relatedInstance);
 			return this.request(HttpVerb.POST, path, options, body).then(() =&gt; Promise.resolve());
 		}
-		public remove(targetName: string, relatedName: string, body: any, relatedInstance: any, options: HttpClientOptions): Promise&lt;void&gt; {
-			const path = options.url || this.buildUrl(targetName, relatedName, relatedInstance);
+		public remove(
+			targetNamePlural: string,
+			relatedNamePlural: string,
+			body: any,
+			relatedInstance: any,
+			options: HttpClientOptions
+		): Promise&lt;void&gt; {
+			const path = options.url || this.buildUrl(targetNamePlural, relatedNamePlural, relatedInstance);
 			return this.request(HttpVerb.DELETE, path, options, body).then(() =&gt; Promise.resolve());
 		}
 	}
@@ -289,7 +358,7 @@ export namespace Abstract {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Thu Oct 11 2018 12:47:39 GMT+0200 (Central European Summer Time)
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Thu Oct 11 2018 15:40:51 GMT+0200 (Central European Summer Time)
 </div>
 </div>
 <script src="../../prettify.js"></script>

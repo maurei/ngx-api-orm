@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Resource } from './resource.core';
 import { RelationType, RelationConfiguration } from './relations/relation-configuration';
-import { toDash, initMetaData, METAKEYS } from './utils';
+import { initMetaData, METAKEYS, getPluralAndSingularNames } from './utils';
 
 /**
  * Options object that can be passed to the {@link Model} when decorating your model. Currently it is only possible to configure `name`, which is used in
@@ -36,7 +36,9 @@ import { toDash, initMetaData, METAKEYS } from './utils';
  * class MyDummyModel extends Resource {}
  */
 export interface ModelOptions {
-	name?: string;
+	camelCaseFullModelName?: string;
+	dashedPluralName?: string;
+	dashedSingularName?: string;
 }
 /**
  * Add this class decorator to your model to turn it into a `Resource` model, which means that it is considered as an endpoint on your API.
@@ -47,12 +49,14 @@ export interface ModelOptions {
  *
  * @param  ModelOptions={} options
  */
-export function Model(options?: ModelOptions) {
+export function Model(options: ModelOptions = {}) {
 	return <T extends Resource>(ctor: any) => {
 		ctor = Injectable({ providedIn: 'root' })(ctor);
 		initMetaData(ctor);
-		const resourceName = options && options.name ? (options.name.includes('-') ? options.name : toDash(options.name)) : toDash(ctor.name);
-		Reflect.defineMetadata(METAKEYS.NAME, resourceName, ctor);
+
+		const names = getPluralAndSingularNames(options.dashedSingularName, options.dashedPluralName, options.camelCaseFullModelName, ctor.name);
+		Reflect.defineMetadata(METAKEYS.SINGULAR, names.singular, ctor);
+		Reflect.defineMetadata(METAKEYS.PLURAL, names.plural, ctor);
 
 		const fields = Reflect.getMetadata(METAKEYS.FIELDS, ctor);
 		const attributes = Reflect.getMetadata(METAKEYS.ATTRIBUTES, ctor);
@@ -101,7 +105,7 @@ export const ToOne = function<TRelated extends Resource>(RelatedResource: any, m
  *  For example: the api response has a key `commentText: 'nice article!` but the key in the model is `commentContent`.
  * Then the decorator should be used as `Field('commentText').
  */
-export const ToMany = function <TRelated extends Resource>(RelatedResource: any, mapFrom?: string) {
+export const ToMany = function<TRelated extends Resource>(RelatedResource: any, mapFrom?: string) {
 	return (target: any, key: string) => {
 		const ctor = target.constructor;
 		initMetaData(ctor);
