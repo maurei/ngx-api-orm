@@ -1,11 +1,19 @@
-import { Resource } from '../src/resource/resource.core';
-import { ResourceModule, SimpleBuilder, ToOneBuilder, ToManyBuilder } from '../src/resource/resource.module';
-import { ResourceType } from '../src/resource/utils';
-import { Model, Field, ToOne, ToMany } from '../src/resource/resource.decorators';
+import {
+	Model,
+	Field,
+	ToMany,
+	ToOne,
+	SimpleBuilder,
+	ToOneBuilder,
+	ToManyBuilder,
+	ResourceType,
+	Resource,
+	ResourceModule
+} from '@ngx-api-orm/core';
 import { TestBed, getTestBed, async } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { JsonApiResponse } from '../src/resource/request-handlers/jsonapidotorg/declarations';
-import { JsonApiDotOrg, JsonApiInterceptor } from '../src/resource/request-handlers/jsonapidotorg/providers';
+import { JsonApiResponse } from '../src/declarations';
+import { JsonApi } from '../src/providers';
 
 function getModels() {
 	@Model()
@@ -266,7 +274,7 @@ describe('JsonApi request handler integration', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [ResourceModule.forRoot({ requestHandlersProviders: JsonApiDotOrg }), HttpClientTestingModule],
+			imports: [ResourceModule.forRoot({ requestHandler: JsonApi }), HttpClientTestingModule],
 			declarations: [],
 			providers: []
 		}).compileComponents();

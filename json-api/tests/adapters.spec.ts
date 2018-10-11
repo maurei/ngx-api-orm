@@ -1,12 +1,24 @@
 /* tslint:disable: no-non-null-assertion */
-import { Abstract } from '../src/resource/request-handlers/abstract/adapters';
-import { ToManyAdapter, ToOneAdapter, SimpleAdapter } from '../src/resource/request-handlers/default/adapters';
-import { JsonApiAdapters } from '../src/resource/request-handlers/jsonapidotorg/adapters';
+import {
+	AbstractAdapters as Abstract,
+	Model,
+	Field,
+	ToMany,
+	ToOne,
+	ResourceType,
+	METAKEYS,
+	Resource,
+	SimpleAdapter,
+	ToOneAdapter,
+	ToManyAdapter,
+	ResourceModule
+} from '@ngx-api-orm/core';
+import { JsonApiAdapters } from '../src/adapters';
 import { flatSingle, flatCollection, nestedSingle, nestedCollection } from './json-api-examples';
-import { JsonApiResource } from '../src/resource/request-handlers/jsonapidotorg/declarations';
-import { Model, Field, ToMany, ToOne } from '../src/resource/resource.decorators';
-import { ResourceType, METAKEYS } from '../src/resource/utils';
-import { Resource } from '../src/resource/resource.core';
+import { TestBed, getTestBed, async } from '@angular/core/testing';
+
+import { JsonApiResource } from '../src/declarations';
+import { JsonApi } from '../src/providers';
 
 function getModels() {
 	@Model()
@@ -122,238 +134,165 @@ function generateInstances() {
 }
 
 describe('Request adapters', () => {
-	describe('Abstract adapters', () => {
-		it('are defined', () => {
-			expect(Abstract.SimpleAdapter).toBeDefined();
-			expect(Abstract.ToOneAdapter).toBeDefined();
-			expect(Abstract.ToManyAdapter).toBeDefined();
+	let simpleAdapter: SimpleAdapter;
+	let toOneAdapter: ToOneAdapter;
+	let toManyAdapter: ToManyAdapter;
+	let injector: TestBed;
+	beforeEach(async(() => {
+		TestBed.configureTestingModule({
+			imports: [ResourceModule.forRoot({ requestHandler: JsonApi })],
+			declarations: [],
+			providers: []
+		}).compileComponents();
+		injector = getTestBed();
+		simpleAdapter = injector.get(SimpleAdapter);
+		toOneAdapter = injector.get(ToOneAdapter);
+		toManyAdapter = injector.get(ToManyAdapter);
+	}));
+	describe('Extendability', () => {
+		it('has replaced default handler with JsonApi handler', () => {
+			expect(JsonApiAdapters.Simple).toBeDefined();
+			expect(JsonApiAdapters.ToOne).toBeDefined();
+			expect(JsonApiAdapters.ToMany).toBeDefined();
+			expect(simpleAdapter).toBeDefined();
+			expect(toOneAdapter).toBeDefined();
+			expect(toManyAdapter).toBeDefined();
+			expect(simpleAdapter instanceof JsonApiAdapters.Simple).toBe(true);
+			expect(toOneAdapter instanceof JsonApiAdapters.ToOne).toBe(true);
+			expect(toManyAdapter instanceof JsonApiAdapters.ToMany).toBe(true);
 		});
 	});
-	describe('Default', () => {
-		describe('Simple adapter', () => {
-			let instances: any;
-			let adapter: SimpleAdapter;
-			beforeAll(() => {
-				instances = generateInstances();
-				adapter = new SimpleAdapter();
-			});
-			it('is defined', () => {
-				expect(SimpleAdapter).toBeDefined();
-			});
-			it('can save', () => {
-				expect(adapter.save).toBeDefined();
-				const body = adapter['convertOutgoing'](instances.related);
-				const rv = adapter.save(instances.related);
-				expect(rv).toBeDefined();
-				expect(rv).toEqual(body);
-			});
-			it('can update', () => {
-				expect(adapter.update).toBeDefined();
-				const rv = adapter.update(instances.related, {});
-				const body = adapter['convertOutgoing'](instances.related);
-				expect(rv).toBeDefined();
-				expect(rv).toEqual(body);
-			});
-			it('can parse response', () => {
-				const rawInstances = [{}, {}, {}];
-				expect(adapter.parseIncoming).toBeDefined();
-				const rv = adapter.parseIncoming(rawInstances);
-				expect(rv).toBeDefined();
-				expect(rv).toBe(rawInstances);
-			});
-			it('can convert outgoing', () => {
-				const nestedInstances = getModels()
-					.getHost()
-					.factory(nestedTemplate);
-				const converted = adapter['convertOutgoing'](nestedInstances[1]);
-				expect(converted.field).toBe('last');
-				expect(converted.fullName).toBe('first');
-				expect(converted.id).toBe(2);
-				expect(converted.relatedInstance).toEqual({ id: 20, field: 'content' });
-				expect(converted.relatedInstances).toEqual([
-					{ id: 50, field: 'to-many', test: 'more content' },
-					{ id: 51, field: 'to-many', test: 'more content' }
-				]);
-			});
+	describe('Simple adapter', () => {
+		let instances: any;
+		let adapter: JsonApiAdapters.Simple;
+		beforeAll(() => {
+			instances = generateInstances();
+			adapter = new JsonApiAdapters.Simple();
 		});
-		describe('To One adapter', () => {
-			let instances: any;
-			let adapter: ToOneAdapter;
-			beforeAll(() => {
-				instances = generateInstances();
-				adapter = new ToOneAdapter();
-			});
-			it('is defined', () => {
-				expect(ToOneAdapter).toBeDefined();
-			});
-			it('can add', () => {
-				expect(adapter.add).toBeDefined();
-				const rv = adapter.add(instances.toOneTargetWithValues, instances.related);
-				expect(rv).toBeDefined();
-				expect(rv).toEqual({ id: instances.toOneTargetWithValues.id });
-			});
-			it('can remove', () => {
-				expect(adapter.remove).toBeDefined();
-				const rv = adapter.remove(instances.toOneTargetWithValues, instances.related);
-				expect(rv).toBeUndefined();
-			});
+		it('is defined', () => {
+			expect(JsonApiAdapters.Simple).toBeDefined();
 		});
-		describe('To Many adapter', () => {
-			let instances: any;
-			let adapter: ToManyAdapter;
-			beforeAll(() => {
-				instances = generateInstances();
-				adapter = new ToManyAdapter();
-			});
-			it('is defined', () => {
-				expect(ToManyAdapter).toBeDefined();
-			});
-			it('can add', () => {
-				expect(adapter.add).toBeDefined();
-				const rv = adapter.add(instances.toManyTargetWithValues, instances.relatedWithValues);
-				expect(rv).toBeDefined();
-				expect(rv).toEqual({ id: instances.toManyTargetWithValues.id });
-			});
-			it('can remove', () => {
-				expect(adapter.remove).toBeDefined();
-				const rv = adapter.remove(instances.toManyTargetWithValues, instances.relatedWithValues);
-				expect(rv).toBeUndefined();
-			});
+		it('can save', () => {
+			expect(adapter.save).toBeDefined();
+			const data = adapter.save(instances.related);
+			const resource = <JsonApiResource>data.data;
+			expect(resource).toBeDefined();
+			expect(resource.id).toBeUndefined();
+			expect(resource.type).toBe('host');
+			expect(resource.attributes!.some).toBeUndefined();
+			expect(resource.attributes!.field).toBeUndefined();
+		});
+		it('can update', () => {
+			expect(adapter.update).toBeDefined();
+			const data = adapter.update(instances.relatedWithValues, { some: undefined });
+			const resource = <JsonApiResource>data.data;
+			expect(resource).toBeDefined();
+			expect(resource.id).toBe('123');
+			expect(resource.type).toBe('host');
+			expect(resource.attributes!.some).toBe('stuff');
+			expect(resource.attributes!.name).toBeUndefined();
+			expect(resource.attributes!.fullName).toBeUndefined('more stuff');
+			expect(resource.attributes!.field).toBeUndefined();
+		});
+		it('can parse a flat JsonApiResponse with a single item', () => {
+			const parsed = adapter.parseIncoming(flatSingle);
+			expect(parsed.length).toBe(1);
+			expect(parsed[0].id).toBe('1');
+			expect(parsed[0].title).toBe('JSON API paints my bikeshed!');
+			expect(Object.getOwnPropertyNames(parsed[0]).length).toBe(2);
+		});
+		it('can parse a flat JsonApiResponse with a collection of items', () => {
+			const parsed = adapter.parseIncoming(flatCollection);
+			expect(parsed.length).toBe(2);
+			expect(parsed[0].id).toBe('1');
+			expect(parsed[1].id).toBe('2');
+			expect(parsed[0].title).toBe('JSON API paints my bikeshed!');
+			expect(parsed[1].title).toBe('JSON API paints my bikeshed: episode 2!');
+			expect(Object.getOwnPropertyNames(parsed[0]).length).toBe(2);
+			expect(Object.getOwnPropertyNames(parsed[1]).length).toBe(2);
+		});
+		it('can parse a nested JsonApiResponse with a single item', () => {
+			const parsed = adapter.parseIncoming(nestedSingle);
+			expect(parsed.length).toBe(1);
+			expect(parsed[0].id).toBe('1');
+			expect(parsed[0].title).toBe('JSON API paints my bikeshed!');
+			expect(Object.getOwnPropertyNames(parsed[0]).length).toBe(4);
+			expect(parsed[0].author.id).toBe('9');
+			expect(parsed[0].author.firstName).toBe('Dan');
+			expect(Object.getOwnPropertyNames(parsed[0].author).length).toBe(4);
+			expect(parsed[0].comments.length).toBe(2);
+		});
+		it('can parse a nested JsonApiResponse with a collection of items (where some nested items are missing from include)', () => {
+			const parsed = adapter.parseIncoming(nestedCollection);
+			expect(parsed.length).toBe(2);
+			expect(parsed[0].id).toBe('1');
+			expect(parsed[1].id).toBe('2');
+			expect(parsed[0].title).toBe('JSON API paints my bikeshed!');
+			expect(parsed[1].title).toBe('JSON API paints my bikeshed: episode 2!');
+			expect(parsed[0].author).not.toBeNull();
+			expect(parsed[0].comments).not.toEqual([]);
+			expect(Object.getOwnPropertyNames(parsed[0]).length).toBe(4);
+			expect(parsed[1].author).toBeNull();
+			expect(parsed[1].comments).toEqual([]);
+			expect(Object.getOwnPropertyNames(parsed[1]).length).toBe(4);
 		});
 	});
-	describe('JsonApi.org,', () => {
-		describe('Simple adapter', () => {
-			let instances: any;
-			let adapter: JsonApiAdapters.Simple;
-			beforeAll(() => {
-				instances = generateInstances();
-				adapter = new JsonApiAdapters.Simple();
-			});
-			it('is defined', () => {
-				expect(JsonApiAdapters.Simple).toBeDefined();
-			});
-			it('can save', () => {
-				expect(adapter.save).toBeDefined();
-				const data = adapter.save(instances.related);
-				const resource = <JsonApiResource>data.data;
-				expect(resource).toBeDefined();
-				expect(resource.id).toBeUndefined();
-				expect(resource.type).toBe('host');
-				expect(resource.attributes!.some).toBeUndefined();
-				expect(resource.attributes!.field).toBeUndefined();
-			});
-			it('can update', () => {
-				expect(adapter.update).toBeDefined();
-				const data = adapter.update(instances.relatedWithValues, { some: undefined });
-				const resource = <JsonApiResource>data.data;
-				expect(resource).toBeDefined();
-				expect(resource.id).toBe('123');
-				expect(resource.type).toBe('host');
-				expect(resource.attributes!.some).toBe('stuff');
-				expect(resource.attributes!.name).toBeUndefined();
-				expect(resource.attributes!.fullName).toBeUndefined('more stuff');
-				expect(resource.attributes!.field).toBeUndefined();
-			});
-			it('can parse a flat JsonApiResponse with a single item', () => {
-				const parsed = adapter.parseIncoming(flatSingle);
-				expect(parsed.length).toBe(1);
-				expect(parsed[0].id).toBe('1');
-				expect(parsed[0].title).toBe('JSON API paints my bikeshed!');
-				expect(Object.getOwnPropertyNames(parsed[0]).length).toBe(2);
-			});
-			it('can parse a flat JsonApiResponse with a collection of items', () => {
-				const parsed = adapter.parseIncoming(flatCollection);
-				expect(parsed.length).toBe(2);
-				expect(parsed[0].id).toBe('1');
-				expect(parsed[1].id).toBe('2');
-				expect(parsed[0].title).toBe('JSON API paints my bikeshed!');
-				expect(parsed[1].title).toBe('JSON API paints my bikeshed: episode 2!');
-				expect(Object.getOwnPropertyNames(parsed[0]).length).toBe(2);
-				expect(Object.getOwnPropertyNames(parsed[1]).length).toBe(2);
-			});
-			it('can parse a nested JsonApiResponse with a single item', () => {
-				const parsed = adapter.parseIncoming(nestedSingle);
-				expect(parsed.length).toBe(1);
-				expect(parsed[0].id).toBe('1');
-				expect(parsed[0].title).toBe('JSON API paints my bikeshed!');
-				expect(Object.getOwnPropertyNames(parsed[0]).length).toBe(4);
-				expect(parsed[0].author.id).toBe('9');
-				expect(parsed[0].author.firstName).toBe('Dan');
-				expect(Object.getOwnPropertyNames(parsed[0].author).length).toBe(4);
-				expect(parsed[0].comments.length).toBe(2);
-			});
-			it('can parse a nested JsonApiResponse with a collection of items (where some nested items are missing from include)', () => {
-				const parsed = adapter.parseIncoming(nestedCollection);
-				expect(parsed.length).toBe(2);
-				expect(parsed[0].id).toBe('1');
-				expect(parsed[1].id).toBe('2');
-				expect(parsed[0].title).toBe('JSON API paints my bikeshed!');
-				expect(parsed[1].title).toBe('JSON API paints my bikeshed: episode 2!');
-				expect(parsed[0].author).not.toBeNull();
-				expect(parsed[0].comments).not.toEqual([]);
-				expect(Object.getOwnPropertyNames(parsed[0]).length).toBe(4);
-				expect(parsed[1].author).toBeNull();
-				expect(parsed[1].comments).toEqual([]);
-				expect(Object.getOwnPropertyNames(parsed[1]).length).toBe(4);
-			});
+	describe('To One adapter', () => {
+		let instances: any;
+		let adapter: JsonApiAdapters.ToOne;
+		beforeAll(() => {
+			instances = generateInstances();
+			adapter = new JsonApiAdapters.ToOne();
 		});
-		describe('To One adapter', () => {
-			let instances: any;
-			let adapter: JsonApiAdapters.ToOne;
-			beforeAll(() => {
-				instances = generateInstances();
-				adapter = new JsonApiAdapters.ToOne();
-			});
-			it('is defined', () => {
-				expect(JsonApiAdapters.ToOne).toBeDefined();
-			});
-			it('can add', () => {
-				expect(adapter.add).toBeDefined();
-				const rv = adapter.add(instances.toOneTargetWithValues, instances.related);
-				expect(rv.data).toBeDefined();
-				expect(rv.data.id).toBeDefined();
-				expect(rv.data.type).toBeDefined();
-				expect(rv.data.id).toBe(instances.toOneTargetWithValues.id.toString());
-				const name = <string>Reflect.getMetadata(METAKEYS.NAME, instances.toOneTargetWithValues.constructor);
-				expect(rv.data.type).toBe(name);
-			});
-			it('can remove', () => {
-				expect(adapter.remove).toBeDefined();
-				const rv = adapter.remove(instances.toOneTargetWithValues, instances.related);
-				expect(rv.data).toBeDefined();
-				expect(rv.data).toBeNull();
-			});
+		it('is defined', () => {
+			expect(JsonApiAdapters.ToOne).toBeDefined();
 		});
-		describe('To Many adapter', () => {
-			let instances: any;
-			let adapter: JsonApiAdapters.ToMany;
-			beforeAll(() => {
-				instances = generateInstances();
-				adapter = new JsonApiAdapters.ToMany();
-			});
-			it('is defined', () => {
-				expect(JsonApiAdapters.ToMany).toBeDefined();
-			});
-			it('can add', () => {
-				expect(adapter.add).toBeDefined();
-				const rv = adapter.add(instances.toManyTargetWithValues, instances.related);
-				expect(rv.data).toBeDefined();
-				expect(rv.data.id).toBeDefined();
-				expect(rv.data.type).toBeDefined();
-				expect(rv.data.id).toBe(instances.toManyTargetWithValues.id.toString());
-				const name = <string>Reflect.getMetadata(METAKEYS.NAME, instances.toManyTargetWithValues.constructor);
-				expect(rv.data.type).toBe(name);
-			});
-			it('can remove', () => {
-				expect(adapter.remove).toBeDefined();
-				const rv = adapter.remove(instances.toManyTargetWithValues, instances.related);
-				expect(rv.data).toBeDefined();
-				expect(rv.data.id).toBeDefined();
-				expect(rv.data.type).toBeDefined();
-				expect(rv.data.id).toBe(instances.toManyTargetWithValues.id.toString());
-				const name = <string>Reflect.getMetadata(METAKEYS.NAME, instances.toManyTargetWithValues.constructor);
-				expect(rv.data.type).toBe(name);
-			});
+		it('can add', () => {
+			expect(adapter.add).toBeDefined();
+			const rv = adapter.add(instances.toOneTargetWithValues, instances.related);
+			expect(rv.data).toBeDefined();
+			expect(rv.data.id).toBeDefined();
+			expect(rv.data.type).toBeDefined();
+			expect(rv.data.id).toBe(instances.toOneTargetWithValues.id.toString());
+			const name = <string>Reflect.getMetadata(METAKEYS.NAME, instances.toOneTargetWithValues.constructor);
+			expect(rv.data.type).toBe(name);
+		});
+		it('can remove', () => {
+			expect(adapter.remove).toBeDefined();
+			const rv = adapter.remove(instances.toOneTargetWithValues, instances.related);
+			expect(rv.data).toBeDefined();
+			expect(rv.data).toBeNull();
+		});
+	});
+	describe('To Many adapter', () => {
+		let instances: any;
+		let adapter: JsonApiAdapters.ToMany;
+		beforeAll(() => {
+			instances = generateInstances();
+			adapter = new JsonApiAdapters.ToMany();
+		});
+		it('is defined', () => {
+			expect(JsonApiAdapters.ToMany).toBeDefined();
+		});
+		it('can add', () => {
+			expect(adapter.add).toBeDefined();
+			const rv = adapter.add(instances.toManyTargetWithValues, instances.related);
+			expect(rv.data).toBeDefined();
+			expect(rv.data.id).toBeDefined();
+			expect(rv.data.type).toBeDefined();
+			expect(rv.data.id).toBe(instances.toManyTargetWithValues.id.toString());
+			const name = <string>Reflect.getMetadata(METAKEYS.NAME, instances.toManyTargetWithValues.constructor);
+			expect(rv.data.type).toBe(name);
+		});
+		it('can remove', () => {
+			expect(adapter.remove).toBeDefined();
+			const rv = adapter.remove(instances.toManyTargetWithValues, instances.related);
+			expect(rv.data).toBeDefined();
+			expect(rv.data.id).toBeDefined();
+			expect(rv.data.type).toBeDefined();
+			expect(rv.data.id).toBe(instances.toManyTargetWithValues.id.toString());
+			const name = <string>Reflect.getMetadata(METAKEYS.NAME, instances.toManyTargetWithValues.constructor);
+			expect(rv.data.type).toBe(name);
 		});
 	});
 });

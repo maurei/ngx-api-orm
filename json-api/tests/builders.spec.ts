@@ -1,15 +1,22 @@
 /* tslint:disable: no-non-null-assertion */
 import { HttpParams } from '@angular/common/http';
-import { Abstract } from '../src/resource/request-handlers/abstract/builders';
-import { ToManyBuilder, ToOneBuilder, SimpleBuilder } from '../src/resource/request-handlers/default/builders';
-import { JsonApiBuilders } from '../src/resource/request-handlers/jsonapidotorg/builders';
-import { Model, Field, ToMany, ToOne } from '../src/resource/resource.decorators';
-import { ResourceType } from '../src/resource/utils';
-import { Resource } from '../src/resource/resource.core';
-import { ResourceModule } from '../src/resource/resource.module';
+import {
+	AbstractBuilders as Abstract,
+	Model,
+	Field,
+	ToMany,
+	ToOne,
+	SimpleBuilder,
+	ToOneBuilder,
+	ToManyBuilder,
+	ResourceType,
+	Resource,
+	ResourceModule
+} from '@ngx-api-orm/core';
+import { JsonApiBuilders } from '../src/builders';
 import { TestBed, getTestBed, async } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { JsonApiDotOrg } from '../src/resource/request-handlers/jsonapidotorg/providers';
+import { JsonApi} from '../src/providers';
 
 function getModels() {
 	@Model()
@@ -67,210 +74,74 @@ function generateInstances() {
 }
 
 describe('Request builders', () => {
-	describe('Abstract builders', () => {
-		it('are defined', () => {
-			expect(Abstract.SimpleBuilder).toBeDefined();
-			expect(Abstract.ToOneBuilder).toBeDefined();
-			expect(Abstract.ToManyBuilder).toBeDefined();
+	let builder: SimpleBuilder;
+	let toOneBuilder: ToOneBuilder;
+	let toManyBuilder: ToManyBuilder;
+	let injector: TestBed;
+	let httpMock: HttpTestingController;
+	beforeEach(async(() => {
+		TestBed.configureTestingModule({
+			imports: [ResourceModule.forRoot({ requestHandler: JsonApi }), HttpClientTestingModule],
+			declarations: [],
+			providers: []
+		}).compileComponents();
+		injector = getTestBed();
+		httpMock = injector.get(HttpTestingController);
+		builder = injector.get(SimpleBuilder);
+		toOneBuilder = injector.get(ToOneBuilder);
+		toManyBuilder = injector.get(ToManyBuilder);
+	}));
+	describe('Extendability', () => {
+		it('has replaced default handler with JsonApi handler', () => {
+			expect(JsonApiBuilders.Simple).toBeDefined();
+			expect(JsonApiBuilders.ToOne).toBeDefined();
+			expect(JsonApiBuilders.ToMany).toBeDefined();
+			expect(builder).toBeDefined();
+			expect(toOneBuilder).toBeDefined();
+			expect(toManyBuilder).toBeDefined();
+			expect(builder instanceof JsonApiBuilders.Simple).toBe(true);
+			expect(toOneBuilder instanceof JsonApiBuilders.ToOne).toBe(true);
+			expect(toManyBuilder instanceof JsonApiBuilders.ToMany).toBe(true);
 		});
 	});
-	describe('Default', () => {
-		let builder: SimpleBuilder;
-		let toOneBuilder: ToOneBuilder;
-		let toManyBuilder: ToManyBuilder;
-		let injector: TestBed;
-		let httpMock: HttpTestingController;
-		beforeEach(async(() => {
-			TestBed.configureTestingModule({
-				imports: [ResourceModule.forRoot(), HttpClientTestingModule],
-				declarations: [],
-				providers: []
-			}).compileComponents();
-			injector = getTestBed();
-			httpMock = injector.get(HttpTestingController);
-			builder = injector.get(SimpleBuilder);
-			toOneBuilder = injector.get(ToOneBuilder);
-			toManyBuilder = injector.get(ToManyBuilder);
-		}));
-		describe('Simple builder', () => {
-			let instances: any;
-			beforeAll(() => {
-				instances = generateInstances();
-			});
-			it('is defined', () => {
-				expect(SimpleBuilder).toBeDefined();
-				expect(builder).toBeDefined();
-			});
-			it('can fetch', async () => {
-				expect(builder.fetch).toBeDefined();
-				const rv = {};
-				const req = builder.fetch('host', {});
-				expect(req instanceof Promise).toBe(true);
-				req.then(_rv => {
-					expect(rv).toBe(_rv);
-				});
-				const mock = httpMock.expectOne('/hosts');
-				expect(mock.request.method).toBe('GET');
-				mock.flush(rv);
-			});
-			it('can save', async () => {
-				expect(builder.save).toBeDefined();
-				const rv = {};
-				const req = builder.save('host', instances.related, {});
-				expect(req instanceof Promise).toBe(true);
-				req.then(_rv => {
-					expect(rv).toBe(_rv);
-				});
-				const mock = httpMock.expectOne('/hosts');
-				expect(mock.request.method).toBe('POST');
-				mock.flush(rv);
-			});
-			it('can update', async () => {
-				expect(builder.update).toBeDefined();
-				const req = builder.update('host', instances.relatedWithValues, {});
-				expect(req instanceof Promise).toBe(true);
-				const mock = httpMock.expectOne('/hosts/' + instances.relatedWithValues.id);
-				expect(mock.request.method).toBe('PATCH');
-			});
-			it('can delete', async () => {
-				expect(builder.delete).toBeDefined();
-				const req = builder.delete('host', instances.relatedWithValues, {});
-				expect(req instanceof Promise).toBe(true);
-				const mock = httpMock.expectOne('/hosts/' + instances.relatedWithValues.id);
-				expect(mock.request.method).toBe('DELETE');
-			});
-			it('can query a custom url', async () => {
-				builder.fetch('host', { url: '/foo/bar' });
-				const mock = httpMock.expectOne('/foo/bar');
-				expect(mock.request.method).toBe('GET');
-			});
-			it('can query a with query params', async () => {
-				const params = new HttpParams().set('page', '10').set('include', 'authors.comment');
-				builder.fetch('host', { url: '/foo/bar', params: params });
-				const mock = httpMock.expectOne('/foo/bar?page=10&include=authors.comment');
-				expect(mock.request.params).toEqual(params);
-				expect(mock.request.method).toBe('GET');
-			});
+	describe('To One builder', () => {
+		let instances: any;
+		beforeAll(() => {
+			instances = generateInstances();
 		});
-		describe('To One builder', () => {
-			let instances: any;
-			beforeAll(() => {
-				instances = generateInstances();
-			});
-			it('is defined', () => {
-				expect(ToOneBuilder).toBeDefined();
-				expect(toOneBuilder).toBeDefined();
-			});
-			it('can add', () => {
-				expect(toOneBuilder.add).toBeDefined();
-				const req = toOneBuilder.add('to-one-target', 'related', {}, instances.relatedWithValues, {});
-				expect(req instanceof Promise).toBe(true);
-				const mock = httpMock.expectOne('/relateds/' + instances.relatedWithValues.id + '/to-one-target');
-				expect(mock.request.method).toBe('PATCH');
-			});
-			it('can remove', () => {
-				expect(toOneBuilder.remove).toBeDefined();
-				const req = toOneBuilder.remove('to-one-target', 'related', {}, instances.relatedWithValues, {});
-				expect(req instanceof Promise).toBe(true);
-				const mock = httpMock.expectOne('/relateds/' + instances.relatedWithValues.id + '/to-one-target');
-				expect(mock.request.method).toBe('DELETE');
-			});
+		it('can add', () => {
+			expect(toOneBuilder.add).toBeDefined();
+			const req = toOneBuilder.add('to-one-target', 'related', {}, instances.relatedWithValues, {});
+			expect(req instanceof Promise).toBe(true);
+			const mock = httpMock.expectOne('/relateds/' + instances.relatedWithValues.id + '/relationships/to-one-target');
+			expect(mock.request.method).toBe('PATCH');
 		});
-		describe('To Many builder', () => {
-			let instances: any;
-			beforeAll(() => {
-				instances = generateInstances();
-			});
-			it('is defined', () => {
-				expect(ToManyBuilder).toBeDefined();
-				expect(toManyBuilder).toBeDefined();
-			});
-			it('can add', () => {
-				expect(toManyBuilder.add).toBeDefined();
-				const req = toManyBuilder.add('to-many-target', 'related', {}, instances.relatedWithValues, {});
-				expect(req instanceof Promise).toBe(true);
-				const mock = httpMock.expectOne('/relateds/' + instances.relatedWithValues.id + '/to-many-targets');
-				expect(mock.request.method).toBe('POST');
-			});
-			it('can remove', () => {
-				expect(toManyBuilder.remove).toBeDefined();
-				const req = toManyBuilder.remove('to-many-target', 'related', {}, instances.relatedWithValues, {});
-				expect(req instanceof Promise).toBe(true);
-				const mock = httpMock.expectOne('/relateds/' + instances.relatedWithValues.id + '/to-many-targets');
-				expect(mock.request.method).toBe('DELETE');
-			});
+		it('can remove', () => {
+			expect(toOneBuilder.remove).toBeDefined();
+			const req = toOneBuilder.remove('to-one-target', 'related', {}, instances.relatedWithValues, {});
+			expect(req instanceof Promise).toBe(true);
+			const mock = httpMock.expectOne('/relateds/' + instances.relatedWithValues.id + '/relationships/to-one-target');
+			expect(mock.request.method).toBe('PATCH');
 		});
 	});
-	describe('JsonApi.org,', () => {
-		let builder: SimpleBuilder;
-		let toOneBuilder: ToOneBuilder;
-		let toManyBuilder: ToManyBuilder;
-		let injector: TestBed;
-		let httpMock: HttpTestingController;
-		beforeEach(async(() => {
-			TestBed.configureTestingModule({
-				imports: [ResourceModule.forRoot({ requestHandlersProviders: JsonApiDotOrg }), HttpClientTestingModule],
-				declarations: [],
-				providers: []
-			}).compileComponents();
-			injector = getTestBed();
-			httpMock = injector.get(HttpTestingController);
-			builder = injector.get(SimpleBuilder);
-			toOneBuilder = injector.get(ToOneBuilder);
-			toManyBuilder = injector.get(ToManyBuilder);
-		}));
-		describe('Extendability', () => {
-			it('is has replaced default handler with JsonApi handler', () => {
-				expect(JsonApiBuilders.Simple).toBeDefined();
-				expect(JsonApiBuilders.ToOne).toBeDefined();
-				expect(JsonApiBuilders.ToMany).toBeDefined();
-				expect(builder).toBeDefined();
-				expect(toOneBuilder).toBeDefined();
-				expect(toManyBuilder).toBeDefined();
-				expect(builder instanceof JsonApiBuilders.Simple).toBe(true);
-				expect(toOneBuilder instanceof JsonApiBuilders.ToOne).toBe(true);
-				expect(toManyBuilder instanceof JsonApiBuilders.ToMany).toBe(true);
-			});
+	describe('To Many builder', () => {
+		let instances: any;
+		beforeAll(() => {
+			instances = generateInstances();
 		});
-		describe('To One builder', () => {
-			let instances: any;
-			beforeAll(() => {
-				instances = generateInstances();
-			});
-			it('can add', () => {
-				expect(toOneBuilder.add).toBeDefined();
-				const req = toOneBuilder.add('to-one-target', 'related', {}, instances.relatedWithValues, {});
-				expect(req instanceof Promise).toBe(true);
-				const mock = httpMock.expectOne('/relateds/' + instances.relatedWithValues.id + '/relationships/to-one-target');
-				expect(mock.request.method).toBe('PATCH');
-			});
-			it('can remove', () => {
-				expect(toOneBuilder.remove).toBeDefined();
-				const req = toOneBuilder.remove('to-one-target', 'related', {}, instances.relatedWithValues, {});
-				expect(req instanceof Promise).toBe(true);
-				const mock = httpMock.expectOne('/relateds/' + instances.relatedWithValues.id + '/relationships/to-one-target');
-				expect(mock.request.method).toBe('PATCH');
-			});
+		it('can add', () => {
+			expect(toManyBuilder.add).toBeDefined();
+			const req = toManyBuilder.add('to-many-target', 'related', {}, instances.relatedWithValues, {});
+			expect(req instanceof Promise).toBe(true);
+			const mock = httpMock.expectOne('/relateds/' + instances.relatedWithValues.id + '/relationships/to-many-targets');
+			expect(mock.request.method).toBe('POST');
 		});
-		describe('To Many builder', () => {
-			let instances: any;
-			beforeAll(() => {
-				instances = generateInstances();
-			});
-			it('can add', () => {
-				expect(toManyBuilder.add).toBeDefined();
-				const req = toManyBuilder.add('to-many-target', 'related', {}, instances.relatedWithValues, {});
-				expect(req instanceof Promise).toBe(true);
-				const mock = httpMock.expectOne('/relateds/' + instances.relatedWithValues.id + '/relationships/to-many-targets');
-				expect(mock.request.method).toBe('POST');
-			});
-			it('can remove', () => {
-				expect(toManyBuilder.remove).toBeDefined();
-				const req = toManyBuilder.remove('to-many-target', 'related', {}, instances.relatedWithValues, {});
-				expect(req instanceof Promise).toBe(true);
-				const mock = httpMock.expectOne('/relateds/' + instances.relatedWithValues.id + '/relationships/to-many-targets');
-				expect(mock.request.method).toBe('DELETE');
-			});
+		it('can remove', () => {
+			expect(toManyBuilder.remove).toBeDefined();
+			const req = toManyBuilder.remove('to-many-target', 'related', {}, instances.relatedWithValues, {});
+			expect(req instanceof Promise).toBe(true);
+			const mock = httpMock.expectOne('/relateds/' + instances.relatedWithValues.id + '/relationships/to-many-targets');
+			expect(mock.request.method).toBe('DELETE');
 		});
 	});
 });
