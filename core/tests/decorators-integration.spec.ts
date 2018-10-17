@@ -52,12 +52,11 @@ describe('Decoraters integration', () => {
 		const relations = Object.keys(Reflect.getMetadata(METAKEYS.RELATIONS, ctor));
 		expect(fields.length).toBe(attributes.length + relations.length);
 	});
-	fit('can be set using strings instead of constructors', () => {
+	it('can be set using strings instead of constructors', () => {
 		const { Host, Related, AnotherRelated } = fullyDecoratedModelWithRelationshipsStrings();
 		ResourceRootModule.processRelationships();
 		const config = Reflect.getMetadata(METAKEYS.RELATIONS, Host)['relatedInstance'];
 		const anotherConfig = Reflect.getMetadata(METAKEYS.RELATIONS, Host)['anotherRelated'];
-		
 		expect(config).toBeDefined();
 		expect(config.RelatedResource).toBeDefined();
 		expect(config.RelatedResource).toBe(Related);

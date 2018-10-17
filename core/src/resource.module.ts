@@ -1,3 +1,5 @@
+/*tslint:disable:no-non-null-assertion*/
+
 import 'reflect-metadata';
 import { NgModule, ModuleWithProviders, Injector, Provider } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
@@ -29,19 +31,42 @@ export class ResourceRootModule {
 		if (!resources) {
 			return;
 		} else {
-			this.setRelatedConstructors(resources);
+			for (const [singularName, ctor] of resources.entries()) {
+				const relations = Reflect.getMetadata(METAKEYS.RELATIONS, ctor);
+				Reflect.ownKeys(relations).forEach(r => {
+					const config = relations[r];
+					this.setRelatedConstructors(config, resources);
+					this.setCircularRelations(config, resources);
+				});
+			}
 		}
 	}
 
-	private static setRelatedConstructors(resources: Map<string, ResourceType<any>>) {
-		for (const [singularName, ctor] of resources.entries()) {
-			const relations = Reflect.getMetadata(METAKEYS.RELATIONS, ctor);
-			Reflect.ownKeys(relations).forEach(r => {
-				const config = relations[r];
-				if (config.relatedResourceString) {
-					config.RelatedResource = resources.get(config.relatedResourceString);
-				}
-			});
+	private static setRelatedConstructors(config: RelationConfiguration<any, any>, resources: Map<string, ResourceType<any>>) {
+		if (config.relatedResourceString) {
+			config.RelatedResource = resources.get(config.relatedResourceString)!;
+		}
+	}
+	private static setCircularRelations(config: RelationConfiguration<any, any>, resources: Map<string, ResourceType<any>>) {
+		const hostResource = config.HostResource;
+		const relationsOfRelated = Reflect.getMetadata(METAKEYS.RELATIONS, config.RelatedResource);
+		const potentialCircularMatches: RelationConfiguration<any, any>[] = [];
+		Reflect.ownKeys(relationsOfRelated).forEach(rot => {
+			const relatedRelationConfig = relationsOfRelated[rot];
+			if (relatedRelationConfig.RelatedResource === hostResource) {
+				potentialCircularMatches.push(relatedRelationConfig);
+			}
+		});
+		if (potentialCircularMatches.length === 1) {
+			potentialCircularMatches[0].circular = true;
+		} else if (potentialCircularMatches.length > 1) {
+			throw Error(
+				'It seems that there is a model X for which a model Y has multiple foreign keys directed to it. This is not yet implemented'
+			);
+			// if (!config.relatedNavigationProperty) {
+			// 	throw Error(`There is a problem with a circular relation. If model X has multiple foreign keys to model Y, then you need to supply
+			// 	 a navigation property to tell the ORM which of the foreign keys belongs to which relation.`);
+			// }
 		}
 	}
 	constructor(injector: Injector) {
