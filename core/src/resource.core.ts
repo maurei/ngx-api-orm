@@ -230,6 +230,8 @@ export class Resource {
 			const config = relations[key];
 			switch (config.type) {
 				case RelationType.ToOne:
+					console.log('break her');
+
 					this[key] = new ToOneRelation(this, config, this._toOneAdapter, this._toOneBuilder);
 					break;
 				case RelationType.ToMany:

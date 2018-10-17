@@ -15,6 +15,7 @@ export class RelationConfiguration<THost extends Resource, TRelated extends Reso
 		public readonly HostResource: ResourceType<THost>,
 		public readonly RelatedResource: ResourceType<TRelated>,
 		public readonly keyOnInstance: any,
-		public readonly type: RelationType
+		public readonly type: RelationType,
+		public circular?: boolean
 	) {}
 }

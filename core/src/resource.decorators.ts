@@ -54,13 +54,31 @@ export function Model(options: ModelOptions = {}) {
 		ctor = Injectable({ providedIn: 'root' })(ctor);
 		initMetaData(ctor);
 
-		const names = getPluralAndSingularNames(options.dashedSingularName, options.dashedPluralName, options.camelCaseFullModelName, ctor.name);
+		const names = getPluralAndSingularNames(
+			options.dashedSingularName,
+			options.dashedPluralName,
+			options.camelCaseFullModelName,
+			ctor.name
+		);
 		Reflect.defineMetadata(METAKEYS.SINGULAR, names.singular, ctor);
 		Reflect.defineMetadata(METAKEYS.PLURAL, names.plural, ctor);
 
 		const fields = Reflect.getMetadata(METAKEYS.FIELDS, ctor);
 		const attributes = Reflect.getMetadata(METAKEYS.ATTRIBUTES, ctor);
 		Reflect.defineMetadata(METAKEYS.FIELDS, fields.concat(attributes), ctor);
+
+		// // detect circular relations
+		// const relationships = Reflect.getMetadata(METAKEYS.RELATIONS, ctor);
+
+		// Reflect.ownKeys(relationships).forEach(r => {
+		// 	const config = relationships[r];
+		// 	const foreignRelationships = Reflect.getMetadata(METAKEYS.RELATIONS, config.RelatedResource);
+		// 	// Reflect.ownKeys(foreignRelationships).forEach( fr => {
+		// 	// 	console.log(foreignRelationships[fr]) {
+
+		// 	// 	}
+		// 	// });
+		// });
 
 		return ctor;
 	};
@@ -75,6 +93,7 @@ export function Model(options: ModelOptions = {}) {
 export function Field(mapFrom?: string) {
 	return <T extends Resource>(target: any, key: string) => {
 		const ctor = target.constructor;
+		console.log('field in ' + ctor.name);
 		initMetaData(ctor);
 		Reflect.defineMetadata(METAKEYS.MAP, mapFrom, ctor, key);
 		Reflect.getMetadata(METAKEYS.ATTRIBUTES, ctor).push(key);

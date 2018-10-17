@@ -15,6 +15,10 @@ export class ToOneRelation<THost extends Resource, TRelated extends Resource> {
 	) {
 		const rawObject: {} = _hostInstance[_configuration.keyOnInstance] || null;
 
+		// check if target relation also has navigation property back
+		// if so: monkey patch here
+
+
 		this.instance = rawObject === null ? null : _configuration.RelatedResource.factory(rawObject);
 	}
 
