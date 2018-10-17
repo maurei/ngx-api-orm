@@ -120,6 +120,7 @@ export namespace JsonApiAdapters {
 			return { data: null };
 		}
 	}
+
 	/** @internal */
 	@Injectable({ providedIn: 'root' })
 	export class ToMany extends Abstract.ToManyAdapter {

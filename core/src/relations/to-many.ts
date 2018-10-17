@@ -35,8 +35,7 @@ export class ToManyRelation<THost extends Resource, TRelated extends Resource> e
 
 		if (!(relatedInstance instanceof this._configuration.RelatedResource)) {
 			throw new TypeError('parameter relatedInstance must be of type ' + relatedName);
-		}
-
+		}	
 		const body = this._adapter.add(relatedInstance, this._hostInstance);
 		await this._builder.add(relatedName, hostName, body, this._hostInstance, options);
 		this.push(relatedInstance);
