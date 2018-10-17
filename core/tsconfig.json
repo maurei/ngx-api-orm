@@ -3,6 +3,7 @@
         "strictMetadataEmit": false
     },
     "compilerOptions": {
+        "downlevelIteration": true,    
         "baseUrl": ".",
         "declaration": true,
         "stripInternal": true,

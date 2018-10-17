@@ -1,14 +1,14 @@
 import { Injector, Provider } from '@angular/core';
 import { HttpHeaders, HttpParams } from '@angular/common/http';
-import { Resource } from './resource.core';
+// import { Resource } from './resource.core';
 import { RelationConfiguration, RelationType } from './relations/relation-configuration';
 import { ToManyBuilder, ToOneBuilder, SimpleBuilder } from './request-handlers/default-builders';
 import { ToManyAdapter, ToOneAdapter, SimpleAdapter } from './request-handlers/default-adapters';
 import { plural, singular, isSingular } from 'pluralize';
+import { Resource } from './resource.core';
 
 export const toPlural = plural;
 export const toSingular = singular;
-
 
 export function getPluralAndSingularNames(
 	_singular: string | undefined,
@@ -102,6 +102,8 @@ export function initMetaData(ctor: any) {
 	}
 }
 
+
+
 /** @internal */
 export function updateInterceptProxyFactory(targetInstance: Resource) {
 	const attributes = Reflect.getMetadata(METAKEYS.ATTRIBUTES, targetInstance.constructor);
@@ -139,7 +141,8 @@ export const METAKEYS = {
 	UPDATED: 'orm:updated',
 	INSTANCES: 'orm:instances',
 	PLURAL: 'orm:plural',
-	SINGULAR: 'orm:singular'
+	SINGULAR: 'orm:singular',
+	RESOURCES: 'orm:resources'
 };
 
 /** @internal */

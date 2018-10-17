@@ -13,9 +13,12 @@ export enum RelationType {
 export class RelationConfiguration<THost extends Resource, TRelated extends Resource> {
 	constructor(
 		public readonly HostResource: ResourceType<THost>,
-		public readonly RelatedResource: ResourceType<TRelated>,
 		public readonly keyOnInstance: any,
 		public readonly type: RelationType,
-		public circular?: boolean
-	) {}
+		// public circular?: boolean
+		public RelatedResource: ResourceType<TRelated>,
+		public readonly relatedResourceString?: string,
+	) {
+
+	}
 }

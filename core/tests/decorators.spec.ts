@@ -3,6 +3,7 @@ import { Resource } from '../src/resource.core';
 import { METAKEYS, getPluralAndSingularNames as getName } from '../src/utils';
 import { RelationConfiguration } from '../src/relations/relation-configuration';
 import { RelationType } from '../src/relations/relation-configuration';
+import { ResourceRootModule } from '../src/resource.module';
 
 function modelWithResourceDecorator(name?: string): typeof Resource {
 	@Model(name ? { camelCaseFullModelName: name } : undefined)
@@ -46,6 +47,8 @@ function modelWithOneToOneDecorators(): typeof Resource {
 	}
 	return <any>Host;
 }
+
+
 describe('Decorators: metaproperties fields, relations, list, resourceName, requestBuilder', () => {
 	describe('getPluralAndSingularNames', () => {
 		it('is defined', () => {
@@ -185,7 +188,7 @@ describe('Decorators: metaproperties fields, relations, list, resourceName, requ
 	describe('ToOne', () => {
 		it('is defined', () => {
 			expect(ToOne).toBeDefined();
-			expect(ToOne({}).constructor.name).toBe('Function');
+			expect(ToOne(new Function()).constructor.name).toBe('Function');
 		});
 		it('sets metadata correctly', () => {
 			const host = modelWithOneToOneDecorators();
@@ -212,7 +215,7 @@ describe('Decorators: metaproperties fields, relations, list, resourceName, requ
 	describe('ToMany', () => {
 		it('is defined', () => {
 			expect(ToMany).toBeDefined();
-			expect(ToMany({}).constructor.name).toBe('Function');
+			expect(ToMany(new Function()).constructor.name).toBe('Function');
 		});
 		it('sets metadata correctly', () => {
 			const host = modelWithOneToManyDecorators();

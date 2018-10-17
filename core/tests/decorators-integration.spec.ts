@@ -1,6 +1,7 @@
 import { Model, Field, ToMany, ToOne } from '../src/resource.decorators';
 import { Resource } from '../src/resource.core';
 import { METAKEYS } from '../src/utils';
+import { ResourceRootModule } from '../src';
 
 function fullyDecoratedModel(): typeof Resource {
 	@Model()
@@ -26,6 +27,23 @@ function fullyDecoratedModel(): typeof Resource {
 	return <any>HostTest;
 }
 
+function fullyDecoratedModelWithRelationshipsStrings() {
+	@Model()
+	class Related {}
+
+	@Model()
+	class AnotherRelated {}
+
+	@Model()
+	class Host {
+		@ToOne('related')
+		public relatedInstance: any;
+		@ToOne('another-related', 'someKey')
+		public anotherRelated: any;
+	}
+	return { Host, Related, AnotherRelated };
+}
+
 describe('Decoraters integration', () => {
 	it('Field, ToOne and ToMany set metadata correctly together', () => {
 		const ctor = fullyDecoratedModel();
@@ -34,5 +52,17 @@ describe('Decoraters integration', () => {
 		const relations = Object.keys(Reflect.getMetadata(METAKEYS.RELATIONS, ctor));
 		expect(fields.length).toBe(attributes.length + relations.length);
 	});
-
+	fit('can be set using strings instead of constructors', () => {
+		const { Host, Related, AnotherRelated } = fullyDecoratedModelWithRelationshipsStrings();
+		ResourceRootModule.processRelationships();
+		const config = Reflect.getMetadata(METAKEYS.RELATIONS, Host)['relatedInstance'];
+		const anotherConfig = Reflect.getMetadata(METAKEYS.RELATIONS, Host)['anotherRelated'];
+		
+		expect(config).toBeDefined();
+		expect(config.RelatedResource).toBeDefined();
+		expect(config.RelatedResource).toBe(Related);
+		expect(anotherConfig).toBeDefined();
+		expect(anotherConfig.RelatedResource).toBeDefined();
+		expect(anotherConfig.RelatedResource).toBe(AnotherRelated);
+	});
 });

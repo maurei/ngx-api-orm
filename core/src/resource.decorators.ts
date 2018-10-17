@@ -67,6 +67,11 @@ export function Model(options: ModelOptions = {}) {
 		const attributes = Reflect.getMetadata(METAKEYS.ATTRIBUTES, ctor);
 		Reflect.defineMetadata(METAKEYS.FIELDS, fields.concat(attributes), ctor);
 
+		if (!Reflect.hasOwnMetadata(METAKEYS.RESOURCES, Resource)) {
+			Reflect.defineMetadata(METAKEYS.RESOURCES, new Map(), Resource);
+		}
+		Reflect.getMetadata(METAKEYS.RESOURCES, Resource).set(names.singular, ctor);
+
 		// // detect circular relations
 		// const relationships = Reflect.getMetadata(METAKEYS.RELATIONS, ctor);
 
@@ -93,7 +98,6 @@ export function Model(options: ModelOptions = {}) {
 export function Field(mapFrom?: string) {
 	return <T extends Resource>(target: any, key: string) => {
 		const ctor = target.constructor;
-		console.log('field in ' + ctor.name);
 		initMetaData(ctor);
 		Reflect.defineMetadata(METAKEYS.MAP, mapFrom, ctor, key);
 		Reflect.getMetadata(METAKEYS.ATTRIBUTES, ctor).push(key);
@@ -107,13 +111,28 @@ export function Field(mapFrom?: string) {
  *  For example: the api response has a key `commentText: 'nice article!` but the key in the model is `commentContent`.
  * Then the decorator should be used as `Field('commentText').
  */
-export const ToOne = function<TRelated extends Resource>(RelatedResource: any, mapFrom?: string) {
+export const ToOne = function<TRelated extends Resource>(RelatedResource: Function | string, mapFrom?: string) {
 	return (target: any, key: string) => {
+		let relatedResourceString;
+		let relatedResource: any;
+		if (typeof RelatedResource === 'function') {
+			relatedResource = RelatedResource;
+		}  else if (typeof RelatedResource === 'string') {
+			relatedResourceString = RelatedResource;
+		} else {
+			throw Error();
+		}
 		const ctor = target.constructor;
 		initMetaData(ctor);
 		Reflect.defineMetadata(METAKEYS.MAP, mapFrom, ctor, key);
 		Reflect.getMetadata(METAKEYS.FIELDS, ctor).push(key);
-		Reflect.getMetadata(METAKEYS.RELATIONS, ctor)[key] = new RelationConfiguration(ctor, RelatedResource, key, RelationType.ToOne);
+		Reflect.getMetadata(METAKEYS.RELATIONS, ctor)[key] = new RelationConfiguration(
+			ctor,
+			key,
+			RelationType.ToOne,
+			relatedResource,
+			relatedResourceString
+		);
 	};
 };
 
@@ -124,12 +143,27 @@ export const ToOne = function<TRelated extends Resource>(RelatedResource: any, m
  *  For example: the api response has a key `commentText: 'nice article!` but the key in the model is `commentContent`.
  * Then the decorator should be used as `Field('commentText').
  */
-export const ToMany = function<TRelated extends Resource>(RelatedResource: any, mapFrom?: string) {
+export const ToMany = function<TRelated extends Resource>(RelatedResource: Function | string, mapFrom?: string) {
 	return (target: any, key: string) => {
+		let relatedResourceString;
+		let relatedResource: any;
+		if (typeof RelatedResource === 'function') {
+			relatedResource = RelatedResource;
+		} else if (typeof RelatedResource === 'string') {
+			relatedResourceString = RelatedResource;
+		} else {
+			throw Error();
+		}
 		const ctor = target.constructor;
 		initMetaData(ctor);
 		Reflect.defineMetadata(METAKEYS.MAP, mapFrom, ctor, key);
 		Reflect.getMetadata(METAKEYS.FIELDS, ctor).push(key);
-		Reflect.getMetadata(METAKEYS.RELATIONS, ctor)[key] = new RelationConfiguration(ctor, RelatedResource, key, RelationType.ToMany);
+		Reflect.getMetadata(METAKEYS.RELATIONS, ctor)[key] = new RelationConfiguration(
+			ctor,
+			key,
+			RelationType.ToMany,
+			relatedResource,
+			relatedResourceString
+		);
 	};
 };
