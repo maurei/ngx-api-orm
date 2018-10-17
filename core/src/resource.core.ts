@@ -151,10 +151,12 @@ export class Resource {
 			}
 		}
 
+		// TODO: NEED TO CHECK PROXY DIRTY STATE
 		this._populateFields(_rawInstance);
-		this._populateRelations();
-		this.onInit(_rawInstance);
 		const proxyInstance = updateInterceptProxyFactory(this);
+		this._populateRelations(proxyInstance);
+		const init = this.onInit.bind(undefined);
+		init(proxyInstance, _rawInstance);
 		Reflect.defineMetadata(METAKEYS.UPDATED, {}, proxyInstance);
 		this._metaAdd(proxyInstance);
 		return proxyInstance;
@@ -165,7 +167,7 @@ export class Resource {
 	 * @param rawInstance the raw instance template as consumed by the constructor
 	 * @returns void You cannot return anything from the onInit hook.
 	 */
-	public onInit(rawInstance: any): void {}
+	public onInit(instance: this, rawInstance: any): void {}
 
 	/**
 	 * Runs the save pipeline of your model for a single resource using the simple request adapter and builder.
@@ -224,16 +226,16 @@ export class Resource {
 		});
 	}
 	/** @internal */
-	private _populateRelations() {
-		const relations = Reflect.getMetadata(METAKEYS.RELATIONS, this.constructor);
+	private _populateRelations(host: this) {
+		const relations = Reflect.getMetadata(METAKEYS.RELATIONS, host.constructor);
 		Reflect.ownKeys(relations).forEach(key => {
 			const config = relations[key];
 			switch (config.type) {
 				case RelationType.ToOne:
-					this[key] = new ToOneRelation(this, config, this._toOneAdapter, this._toOneBuilder);
+					host[key] = new ToOneRelation(host, config, host._toOneAdapter, host._toOneBuilder);
 					break;
 				case RelationType.ToMany:
-					this[key] = new ToManyRelation(this, config, this._toManyAdapter, this._toManyBuilder);
+					host[key] = new ToManyRelation(host, config, host._toManyAdapter, host._toManyBuilder);
 					break;
 				default:
 					throw Error('shouldnt come here');

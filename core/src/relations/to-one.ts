@@ -15,11 +15,16 @@ export class ToOneRelation<THost extends Resource, TRelated extends Resource> {
 	) {
 		const rawObject: {} = _hostInstance[_configuration.keyOnInstance] || null;
 
-		// check if target relation also has navigation property back
-		// if so: monkey patch here
-
+		let backPointingConfig: RelationConfiguration<TRelated, THost> | undefined;
+		if (_configuration.circular && rawObject != null) {
+			backPointingConfig = _configuration.circular;
+			rawObject[backPointingConfig.keyOnInstance] = null;
+		}
 
 		this.instance = rawObject === null ? null : _configuration.RelatedResource.factory(rawObject);
+		if (backPointingConfig && this.instance) {
+			this.instance[backPointingConfig.keyOnInstance].instance = _hostInstance;
+		}
 	}
 
 	// TODO: IMPLEMENT FETCH (LAZY GETTING OF RELATIONS)

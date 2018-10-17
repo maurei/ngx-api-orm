@@ -58,7 +58,7 @@ export class ResourceRootModule {
 			}
 		});
 		if (potentialCircularMatches.length === 1) {
-			potentialCircularMatches[0].circular = true;
+			config.circular = potentialCircularMatches[0];
 		} else if (potentialCircularMatches.length > 1) {
 			throw Error(
 				'It seems that there is a model X for which a model Y has multiple foreign keys directed to it. This is not yet implemented'

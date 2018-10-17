@@ -40,6 +40,7 @@ function fullyDecoratedModelWithRelationshipsStrings() {
 		public relatedInstance: any;
 		@ToOne('another-related', 'someKey')
 		public anotherRelated: any;
+
 	}
 	return { Host, Related, AnotherRelated };
 }

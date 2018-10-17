@@ -11,7 +11,7 @@ export enum RelationType {
 // @dynamic
 /** @internal */
 export class RelationConfiguration<THost extends Resource, TRelated extends Resource> {
-	public circular = false;
+	public circular: RelationConfiguration<TRelated, THost> | undefined;
 	constructor(
 		public readonly HostResource: ResourceType<THost>,
 		public readonly keyOnInstance: any,

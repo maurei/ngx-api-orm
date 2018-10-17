@@ -62,14 +62,15 @@ const populated = {
 		id: 20,
 		test: 'more content',
 		field: 'content'
-	}
+	},
+	relatedManies: null
 };
 
 const both = [notPopulated, populated];
 
 describe('Circular relationships', () => {
 	describe('Metadata', () => {
-		fit('To one relations', () => {
+		it('One to one relations', () => {
 			const { Host, RelatedOne } = getModels();
 			ResourceRootModule.processRelationships();
 			const hostToOneConfig = Reflect.getMetadata(METAKEYS.RELATIONS, Host)['relatedInstance'];
@@ -80,7 +81,7 @@ describe('Circular relationships', () => {
 			expect(hostToOneConfig.circular).toBeTruthy();
 			expect(oneToHostConfig.circular).toBeTruthy();
 		});
-		fit('To one relations', () => {
+		it('Many to many relations', () => {
 			const { Host, RelatedOne, RelatedMany } = getModels();
 			ResourceRootModule.processRelationships();
 			const hostToManyConfig = Reflect.getMetadata(METAKEYS.RELATIONS, Host)['relatedManies'];
@@ -91,5 +92,31 @@ describe('Circular relationships', () => {
 			expect(hostToManyConfig.circular).toBeTruthy();
 			expect(manyToHostConfig.circular).toBeTruthy();
 		});
+	});
+	describe('Instantiation', () => {
+		it('One to one relations', () => {
+			const { Host, RelatedOne } = getModels();
+			ResourceRootModule.processRelationships();
+
+			const hostInstance = Host.factory(populated);
+			const oneInstance = RelatedOne.collection()[0];
+
+			expect(hostInstance.relatedInstance).toBeDefined();
+			expect(hostInstance.relatedInstance.instance).toBe(oneInstance);
+			expect(oneInstance.host).toBeDefined();
+			expect(oneInstance.host.instance).toBe(hostInstance);
+
+		});
+		// fit('Many to many relations', () => {
+		// 	const { Host, RelatedOne, RelatedMany } = getModels();
+		// 	ResourceRootModule.processRelationships();
+		// 	const hostToManyConfig = Reflect.getMetadata(METAKEYS.RELATIONS, Host)['relatedManies'];
+		// 	const manyToHostConfig = Reflect.getMetadata(METAKEYS.RELATIONS, RelatedOne)['host'];
+
+		// 	expect(hostToManyConfig).toBeDefined();
+		// 	expect(manyToHostConfig).toBeDefined();
+		// 	expect(hostToManyConfig.circular).toBeTruthy();
+		// 	expect(manyToHostConfig.circular).toBeTruthy();
+		// });
 	});
 });
