@@ -20,31 +20,31 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">84.21% </span>
+        <span class="strong">47.37% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>32/38</span>
+        <span class='fraction'>18/38</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">87.5% </span>
+        <span class="strong">75% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>14/16</span>
+        <span class='fraction'>12/16</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">80% </span>
+        <span class="strong">40% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>4/5</span>
+        <span class='fraction'>2/5</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">87.1% </span>
+        <span class="strong">54.84% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>27/31</span>
+        <span class='fraction'>17/31</span>
       </div>
     </div>
     <p class="quiet">
       Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
     </p>
   </div>
-  <div class='status-line high'></div>
+  <div class='status-line low'></div>
 <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -128,21 +128,21 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">47x</span>
-<span class="cline-any cline-yes">47x</span>
-<span class="cline-any cline-yes">47x</span>
-<span class="cline-any cline-yes">47x</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">47x</span>
+<span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">47x</span>
+<span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">47x</span>
-<span class="cline-any cline-yes">47x</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -167,13 +167,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -182,12 +182,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { RelationConfiguration } from './relation-configuration';
@@ -239,13 +239,13 @@ export class ToOneRelation&lt;THost extends Resource, TRelated extends Resource&
 	 * @param  HttpClientOptions={} options
 	 * @returns Promise
 	 */
-	public async remove(<span class="missing-if-branch" title="else path not taken" >E</span>options: HttpClientOptions = {}): Promise&lt;void&gt; {
+<span class="fstat-no" title="function not covered" >	public async remove(<span class="cstat-no" title="statement not covered" ></span>options: HttpClientOptions = {})</span>: Promise&lt;void&gt; {
 		if (<span class="cstat-no" title="statement not covered" >this.instance)</span> {
-			const hostName = Reflect.getMetadata(METAKEYS.PLURAL, this._configuration.HostResource);
-			const relatedName = Reflect.getMetadata(METAKEYS.SINGULAR, this._configuration.RelatedResource);
-			const body = this._adapter.remove(this.instance, this._hostInstance);
-			await this._builder.remove(relatedName, hostName, body, this._hostInstance, options);
-			this.instance = null;
+			const <span class="cstat-no" title="statement not covered" >hostName = Reflect.getMetadata(METAKEYS.PLURAL, this._configuration.HostResource);</span>
+			const <span class="cstat-no" title="statement not covered" >relatedName = Reflect.getMetadata(METAKEYS.SINGULAR, this._configuration.RelatedResource);</span>
+			const <span class="cstat-no" title="statement not covered" >body = this._adapter.remove(this.instance, this._hostInstance);</span>
+<span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" >			await this._builder.remove(relatedName, hostName, body, this._hostInstance, options);</span></span>
+<span class="cstat-no" title="statement not covered" >			this.instance = null;</span>
 		}
 	}
 	/**
@@ -254,12 +254,12 @@ export class ToOneRelation&lt;THost extends Resource, TRelated extends Resource&
 	 * @param  HttpClientOptions={} options
 	 * @returns Promise
 	 */
-	public async set(targetInstance: TRelated, <span class="missing-if-branch" title="else path not taken" >E</span>options: HttpClientOptions = {}): Promise&lt;void&gt; {
-		const hostName = Reflect.getMetadata(METAKEYS.PLURAL, this._configuration.HostResource);
-		const relatedName = Reflect.getMetadata(METAKEYS.SINGULAR, this._configuration.RelatedResource);
-		const body = this._adapter.add(targetInstance, this._hostInstance);
-		await this._builder.add(relatedName, hostName, body, this._hostInstance, options);
-		this.instance = targetInstance;
+<span class="fstat-no" title="function not covered" >	public async set(</span>targetInstance: TRelated, <span class="cstat-no" title="statement not covered" >options: HttpClientOptions = {})</span>: Promise&lt;void&gt; {
+		const <span class="cstat-no" title="statement not covered" >hostName = Reflect.getMetadata(METAKEYS.PLURAL, this._configuration.HostResource);</span>
+		const <span class="cstat-no" title="statement not covered" >relatedName = Reflect.getMetadata(METAKEYS.SINGULAR, this._configuration.RelatedResource);</span>
+		const <span class="cstat-no" title="statement not covered" >body = this._adapter.add(targetInstance, this._hostInstance);</span>
+<span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" >		await this._builder.add(relatedName, hostName, body, this._hostInstance, options);</span></span>
+<span class="cstat-no" title="statement not covered" >		this.instance = targetInstance;</span>
 	}
 }
 &nbsp;</pre></td></tr>
@@ -268,7 +268,7 @@ export class ToOneRelation&lt;THost extends Resource, TRelated extends Resource&
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Wed Oct 17 2018 19:36:53 GMT+0200 (Central European Summer Time)
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Thu Oct 18 2018 14:59:04 GMT+0200 (Central European Summer Time)
 </div>
 </div>
 <script src="../../prettify.js"></script>

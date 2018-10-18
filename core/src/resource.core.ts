@@ -147,11 +147,11 @@ export class Resource {
 			_rawInstance.id = _rawInstance.id || undefined;
 			const alreadyExisting = this.ctor.find(_rawInstance.id);
 			if (alreadyExisting) {
+				// TODO: (OPTIONAL?) LOGIC TO overwrite fields from new source;
 				return alreadyExisting;
 			}
 		}
 
-		// TODO: NEED TO CHECK PROXY DIRTY STATE
 		this._populateFields(_rawInstance);
 		const proxyInstance = updateInterceptProxyFactory(this);
 		this._populateRelations(proxyInstance);

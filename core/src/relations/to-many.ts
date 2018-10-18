@@ -3,6 +3,7 @@ import { Resource } from '../resource.core';
 import { METAKEYS, HttpClientOptions } from '../utils';
 import { ToManyBuilder } from '../request-handlers/default-builders';
 import { ToManyAdapter } from '../request-handlers/default-adapters';
+import { ToOneRelation } from './to-one';
 
 // @dynamic
 export class ToManyRelation<THost extends Resource, TRelated extends Resource> extends Array<TRelated> {
@@ -14,10 +15,26 @@ export class ToManyRelation<THost extends Resource, TRelated extends Resource> e
 	) {
 		super();
 		const rawObjects: Array<{}> = _hostInstance[_configuration.keyOnInstance] || null;
+		const backPointingConfig = _configuration.circular;
 		if (rawObjects == null) {
 			return;
 		}
+		if (backPointingConfig) {
+			rawObjects.forEach(ro => (ro[backPointingConfig.keyOnInstance] = null));
+		}
 		const instances = Array.prototype.concat.apply([], [<TRelated[]>_configuration.RelatedResource.factory(rawObjects)]);
+
+		if (backPointingConfig) {
+			instances.forEach((i: TRelated) => {
+				const relatedInstance = i[backPointingConfig.keyOnInstance];
+				if (relatedInstance instanceof ToOneRelation) {
+					relatedInstance.instance = _hostInstance;
+				} else {
+					relatedInstance.push(_hostInstance);
+				}
+			});
+		}
+
 		this.push(...instances);
 	}
 	// TODO: IMPLEMENT FETCH (LAZY GETTING OF RELATIONS)
@@ -35,7 +52,7 @@ export class ToManyRelation<THost extends Resource, TRelated extends Resource> e
 
 		if (!(relatedInstance instanceof this._configuration.RelatedResource)) {
 			throw new TypeError('parameter relatedInstance must be of type ' + relatedName);
-		}	
+		}
 		const body = this._adapter.add(relatedInstance, this._hostInstance);
 		await this._builder.add(relatedName, hostName, body, this._hostInstance, options);
 		this.push(relatedInstance);
