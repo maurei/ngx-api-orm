@@ -167,7 +167,7 @@ export class Resource {
 	 * @param rawInstance the raw instance template as consumed by the constructor
 	 * @returns void You cannot return anything from the onInit hook.
 	 */
-	public onInit(instance: this, rawInstance: any): void {}
+	public onInit(instance: this, rawInstance: RawInstanceTemplate<this>): void {}
 
 	/**
 	 * Runs the save pipeline of your model for a single resource using the simple request adapter and builder.
