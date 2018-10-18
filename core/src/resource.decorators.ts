@@ -106,7 +106,7 @@ export function Field(mapFrom?: string) {
 
 /**
  * Use this field decorator to parse the corresponding field from a json response by your API and to identify the key as a To-One relationship.
- * @param {Function | string} RelatedResource The constructor function of the model that is targeted for the To-One relation.
+ * @param Function | string RelatedResource The constructor function of the model that is targeted for the To-One relation.
  * Either pass a direct reference to the constructor function, or pass a string with the name of the model. For the latter:
  * this should be dashed singular form (eg MyFancyModelName => 'my-fancy-model-name'). Use string references to prevent circular references from occuring in your model definitions.
  * @param string mapFrom? An identifier to map keys coming from an incoming json response to keys in your model.
