@@ -14,7 +14,10 @@ export class ToManyRelation<THost extends Resource, TRelated extends Resource> e
 		private readonly _builder: ToManyBuilder
 	) {
 		super();
-		const rawObjects: Array<{}> = _hostInstance[_configuration.keyOnInstance] || null;
+		let rawObjects: Array<{}> | null = _hostInstance[_configuration.keyOnInstance];
+		if (rawObjects != null && !rawObjects.length) {
+			rawObjects = null;
+		}
 		const backPointingConfig = _configuration.circular;
 		if (rawObjects == null) {
 			return;

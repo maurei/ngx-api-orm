@@ -74,10 +74,35 @@ const toOnePostResponse: JsonApiResponse = {
 		attributes: {
 			field: 'Ember Hamster'
 		},
-		links: {
-			self: 'http://example.com/related-one/1337'
+		relationships: {
+			host: {
+				data: { type: 'hosts', id: '1337' }
+			}
 		}
-	}
+	},
+	included: [
+		{
+			type: 'hosts',
+			id: '1338',
+			attributes: {
+				name: 'JSON API paints my bikeshed!',
+				some: 'I dont like paint',
+				fullName: 'I prefer blue',
+				field: 'Red bikeshes are the bomb'
+			},
+			relationships: {
+				relatedInstance: {
+					data: { type: 'related-ones', id: '20' }
+				},
+				relatedInstances: {
+					data: [{ type: 'related-manies', id: '30' }, { type: 'related-manies', id: '31' }, { type: 'related-manies', id: '32' }]
+				}
+			},
+			links: {
+				self: 'http://example.com/hosts/1'
+			}
+		}
+	]
 };
 
 const nestedJsonApiResponse: JsonApiResponse = {
@@ -292,7 +317,6 @@ describe('JsonApi request handler integration', () => {
 
 	describe('save pipeline:', () => {
 		beforeEach(() => {
-			console.log('break here');
 			ctors = getModels();
 			hostCtor = ctors.getHost();
 			toOneCtor = ctors.getRelatedOne();
@@ -303,7 +327,6 @@ describe('JsonApi request handler integration', () => {
 			const savePromise = unsavedToOne.save();
 			const mockreq = httpMock.expectOne(`/related-ones`);
 			expect(mockreq.request.method).toBe('POST');
-			const rv = Object.assign({}, completeHostWithId);
 			mockreq.flush(toOnePostResponse);
 			savePromise.then((savedInstance: any) => {
 				expect(toOneCtor.collection()[0].id).toBe('1337');
@@ -396,7 +419,7 @@ describe('JsonApi request handler integration', () => {
 				expect(toManyCtor.collection().length).toBe(4);
 			});
 		});
-		fit('patching a resource (only affected fields)', async () => {
+		it('patching a resource (only affected fields)', async () => {
 			hostCtor.factory(nestedTemplate);
 			const target = hostCtor.collection()[0];
 			target.name = 'patched';

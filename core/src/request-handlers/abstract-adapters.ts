@@ -17,15 +17,27 @@ export namespace Abstract {
 		public parseIncoming(rawInstances: Object): Object[] {
 			return <Object[]>rawInstances;
 		}
-		protected convertOutgoing(instance: any): any {
+		private getBackPointingKey(instance: any) {
+			const circular = instance._configuration.circular;
+			if (circular) {
+				return circular.keyOnInstance;
+			} else {
+				return '';
+			}
+		}
+		protected convertOutgoing(instance: any, skipRelationKey = ''): any {
 			const rv = {};
 			const fields = Reflect.getMetadata(METAKEYS.FIELDS, instance.constructor);
 			fields.forEach((f: string) => {
-				if (instance[f] instanceof ToOneRelation) {
-					rv[f] = instance[f].instance === null ? null : this.convertOutgoing(instance[f].instance);
+				if (skipRelationKey !== '' && f === skipRelationKey) {
+					rv[f] = null;
+				} else if (instance[f] instanceof ToOneRelation) {
+					const backPointingKey = this.getBackPointingKey(instance[f]);
+					rv[f] = instance[f].instance === null ? null : this.convertOutgoing(instance[f].instance, backPointingKey);
 				} else if (instance[f] instanceof Array) {
+					const backPointingKey = this.getBackPointingKey(instance[f]);
 					rv[f] = [];
-					instance[f].forEach( (i: any) => rv[f].push(this.convertOutgoing(i)));
+					instance[f].forEach((i: any) => rv[f].push(this.convertOutgoing(i, backPointingKey)));
 				} else {
 					rv[f] = instance[f];
 				}

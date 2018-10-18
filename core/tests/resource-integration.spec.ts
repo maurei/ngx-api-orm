@@ -1,5 +1,5 @@
 import { Resource } from '../src/resource.core';
-import { ResourceModule } from '../src/resource.module';
+import { ResourceModule, ResourceRootModule } from '../src/resource.module';
 import { ResourceType } from '../src/utils';
 import { Model, Field, ToOne, ToMany } from '../src/resource.decorators';
 import { TestBed, getTestBed, async } from '@angular/core/testing';
@@ -15,6 +15,8 @@ function getModels() {
 		public experiment: any;
 		@Field()
 		public field: any;
+		@ToMany('host')
+		public hosts: any;
 	}
 
 	@Model()
@@ -23,6 +25,8 @@ function getModels() {
 		public id: number;
 		@Field()
 		public field: any;
+		@ToMany('host')
+		public hosts: any;
 	}
 
 	@Model()
@@ -42,6 +46,7 @@ function getModels() {
 
 		public notIncluded: any;
 	}
+	ResourceRootModule.processRelationships();
 	return {
 		getHost: () => (Host as any) as ResourceType<Host>,
 		getRelatedOne: () => (RelatedOne as any) as ResourceType<RelatedOne>,
@@ -114,13 +119,15 @@ const completeHostWithoutId = {
 const toOneWithId = {
 	id: 20,
 	experiment: 'more content',
-	field: 'content'
+	field: 'content',
+	hosts: null
 };
 
 const toManyWithId = {
 	id: 52,
 	field: 'to-many',
-	experiment: 'test content'
+	experiment: 'test content',
+	hosts: null
 };
 
 describe('Resource class integration', () => {
@@ -250,7 +257,7 @@ describe('Resource class integration', () => {
 			const putPromise = related.update();
 			const mockreq = httpMock.expectOne(`/related-ones/${related.id}`);
 			expect(mockreq.request.method).toBe('PATCH');
-			expect(mockreq.request.body).toEqual({id: related.id, field: 'patched'});
+			const expected = expect(mockreq.request.body).toEqual(patchExpected);
 			mockreq.flush(null);
 			putPromise.then(() => {
 				expect(related.field).toBe('patched');
@@ -258,3 +265,22 @@ describe('Resource class integration', () => {
 		});
 	});
 });
+
+const patchExpected = {
+	hosts: [
+		{ relatedInstance: null, relatedInstances: [], id: 1, some: 'middle', field: 'last', fullName: 'first' },
+		{
+			relatedInstance: null,
+			relatedInstances: [
+				{ hosts: null, id: 50, field: 'to-many', test: 'more content' },
+				{ hosts: null, id: 51, field: 'to-many', test: 'more content' }
+			],
+			id: 2,
+			some: 'middle',
+			field: 'last',
+			fullName: 'first'
+		}
+	],
+	id: 20,
+	field: 'patched'
+};

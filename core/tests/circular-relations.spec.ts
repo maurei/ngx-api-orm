@@ -7,7 +7,7 @@ import { TestBed, getTestBed, async } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { HttpClient } from '@angular/common/http';
 
-fdescribe('Circular relationships', () => {
+describe('Circular relationships', () => {
 	describe('Metadata', () => {
 		const { HostModel, OneToOne, OneToMany, ManyToMany } = getCircularModels();
 		ResourceRootModule.processRelationships();

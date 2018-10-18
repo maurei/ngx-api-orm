@@ -23,7 +23,12 @@ export class ToOneRelation<THost extends Resource, TRelated extends Resource> {
 
 		this.instance = rawObject === null ? null : _configuration.RelatedResource.factory(rawObject);
 		if (backPointingConfig && this.instance) {
-			this.instance[backPointingConfig.keyOnInstance].instance = _hostInstance;
+			const relationWrapper = this.instance[backPointingConfig.keyOnInstance];
+			if (relationWrapper instanceof ToOneRelation) {
+				relationWrapper.instance = _hostInstance;
+			} else {
+				relationWrapper.push(_hostInstance);
+			}
 		}
 	}
 
