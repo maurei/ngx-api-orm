@@ -1,14 +1,18 @@
 # ngx-api-orm
+Also lovingly called NAO
+Some links to get you started:
+* [API Documentation](https://maurei.github.io/ngx-api-orm/).
+* [NPM Package](https://www.npmjs.com/package/@ngx-api-orm/json-api)
 
-#### Note: docs are still under construction.
+**Note: docs are still under construction.**
 
-A rest api orm for Angular. Tested with Angular 6.1.x. Can be use used seamlessly with JsonApi.org or easibly be adjusted to work with your own format. 
+A rest api Object Relationship Mapper (ORM) for Angular. Tested with Angular 6.1.x. Can be use used seamlessly with [JSON:api](JsonApi.org) or easibly be adjusted to work with your own format. 
 
-It aims to remove as much boilerplate code as possible while allowing for easy extendability. It will empower your models with CRUD functionality and also manages to-one and to-many relationships.
+It's aim is to remove as much boilerplate code as possible while allowing for easy extendability. It will empower your models with CRUD functionality and also manages to-one and to-many relationships.
 
-Your models will look something like
+An example of a model would be:
 
-```js
+```typescript
 @Model()
 export class Employee extends Resource {
   @Field()
@@ -43,12 +47,9 @@ export class Team extends Resource {
   public teamName: string;
 }
 ```
+Then, common usage will look like
 
-
-Then, some common usage will look like
-
-
-```js
+```typescript
 
 /* POST /employees */
 const john: Employee = await new Employee().save(); /*  All CRUD methods come with type safety. */
@@ -80,18 +81,27 @@ For more detailed information on the available methods and how to use them, see 
 
 
 ## Getting Started
+To get started you need the following:
+* Install the library
+* Import it in your module
+* Write a model
+* (optional) extend functionality
+* use it!
 
-### Install the library
-Using npm:
+### Installing the library
+Using NPM (link to package [here](https://www.npmjs.com/package/@ngx-api-orm/json-api)):
 ```console
-npm install --save-dev @ngx-api-orm/core
+npm install --save @ngx-api-orm/core
+```
+If you wish to install a specific version, you can use the following format:
+```console
+npm install --save @ngx-api-orm/core@0.0.1-beta6
 ```
 
 ### Import the library in your module
-```js
+```typescript
 import { HttpClientModule } from '@angular/common/http';
 import { ResourceModule, JsonApiDotOrg } from '@ngx-api-orm/core';
-
 
 @NgModule({
   declarations: [ ... ],
@@ -100,7 +110,7 @@ import { ResourceModule, JsonApiDotOrg } from '@ngx-api-orm/core';
             rootPath: 'https://example.com/api/v1',
             requestHandlers: JsonApiDotOrg /* Requires package @ngx-api-orm/json-api. Omit this line if you're not using a JsonApi.org formatted API.  */
         }),
-    HttpClientModule, /* this one is required */
+    HttpClientModule, /* this is required */
     ... ],
   providers: [ ...],
   bootstrap: [ ... ]
@@ -108,12 +118,11 @@ import { ResourceModule, JsonApiDotOrg } from '@ngx-api-orm/core';
 export class SomeModule {}
 ```
 
-### Write some models
+### Writing Models
 See the [model usage guide](https://maurei.github.io/ngx-api-orm/additional-documentation/model-usage.html) for detailed instructions on how to use the `Resource` classes and decorators.
 
 ### Extend the functionality where needed
 If the `ngx-api-orm` default format or the JsonApi.org format is not what you're getting from your API, see the [extendability guide](/https://maurei.github.io/ngx-api-orm/additional-documentation/extendability.html). This library leverages the power of Angular's dependency injection, making it super easy to override certain default features.
 
-### Check out the API docs to learn more
-[They're right here](https://maurei.github.io/ngx-api-orm/documentation).
+
 
