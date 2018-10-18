@@ -20,31 +20,31 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">100% </span>
+        <span class="strong">62.86% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>35/35</span>
+        <span class='fraction'>22/35</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">81.82% </span>
+        <span class="strong">51.52% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>27/33</span>
+        <span class='fraction'>17/33</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">100% </span>
+        <span class="strong">46.67% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>15/15</span>
+        <span class='fraction'>7/15</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">100% </span>
+        <span class="strong">61.54% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>26/26</span>
+        <span class='fraction'>16/26</span>
       </div>
     </div>
     <p class="quiet">
       Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
     </p>
   </div>
-  <div class='status-line high'></div>
+  <div class='status-line medium'></div>
 <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -105,8 +105,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -115,12 +115,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -129,12 +129,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -150,9 +150,9 @@ export namespace JsonApiBuilders {
 		constructor(_http: HttpClient, _config: ResourceModuleConfiguration<span class="branch-2 cbranch-no" title="branch not covered" >) {</span>
 			super(_http, _config)<span class="branch-1 cbranch-no" title="branch not covered" >;</span>
 		}
-		public update(targetNamePlural: string, body: any, options: HttpClientOptions): Promise&lt;any&gt; {
-			const path = options.url || this.buildUrl(targetNamePlural, { id: body.data.id });
-			return this.request(HttpVerb.PATCH, path, options, body).then(() =&gt; Promise.resolve());
+<span class="fstat-no" title="function not covered" >		public update(</span>targetNamePlural: string, body: any, options: HttpClientOptions): Promise&lt;any&gt; {
+			const path = <span class="cstat-no" title="statement not covered" >options.url || this.buildUrl(targetNamePlural, { id: body.data.id });</span>
+<span class="cstat-no" title="statement not covered" >			return this.request(HttpVerb.PATCH, path, options, body).then(<span class="fstat-no" title="function not covered" >() =&gt; <span class="cstat-no" title="statement not covered" ></span>Promise.resolve())</span>;</span>
 		}
 	}
 	@Injectable({ providedIn: 'root' })
@@ -160,13 +160,13 @@ export namespace JsonApiBuilders {
 		constructor(_http: HttpClient, _config: ResourceModuleConfiguration<span class="branch-2 cbranch-no" title="branch not covered" >) {</span>
 			super(_http, _config)<span class="branch-1 cbranch-no" title="branch not covered" >;</span>
 		}
-		public remove(targetNameSingular: string, relatedNamePlural: string, body: any, relatedInstance: any, options: HttpClientOptions): Promise&lt;void&gt; {
-			const path = options.url || this.buildUrl(targetNameSingular, relatedNamePlural, relatedInstance);
-			return this.request(HttpVerb.PATCH, path, options, body).then(() =&gt; Promise.resolve());
+<span class="fstat-no" title="function not covered" >		public remove(</span>targetNameSingular: string, relatedNamePlural: string, body: any, relatedInstance: any, options: HttpClientOptions): Promise&lt;void&gt; {
+			const path = <span class="cstat-no" title="statement not covered" >options.url || this.buildUrl(targetNameSingular, relatedNamePlural, relatedInstance);</span>
+<span class="cstat-no" title="statement not covered" >			return this.request(HttpVerb.PATCH, path, options, body).then(<span class="fstat-no" title="function not covered" >() =&gt; <span class="cstat-no" title="statement not covered" ></span>Promise.resolve())</span>;</span>
 		}
-		protected buildUrl(targetNameSingular: string, relatedNamePlural: string, relatedInstance: any): string {
-			const path = (this.config.rootPath || '') + `/${relatedNamePlural}/${relatedInstance.id}/relationships/${targetNameSingular}`;
-			return path;
+<span class="fstat-no" title="function not covered" >		protected buildUrl(</span>targetNameSingular: string, relatedNamePlural: string, relatedInstance: any): string {
+			const path = <span class="cstat-no" title="statement not covered" >(this.config.rootPath || '') + `/${relatedNamePlural}/${relatedInstance.id}/relationships/${targetNameSingular}`;</span>
+<span class="cstat-no" title="statement not covered" >			return path;</span>
 		}
 	}
 	@Injectable({ providedIn: 'root' })
@@ -174,13 +174,13 @@ export namespace JsonApiBuilders {
 		constructor(_http: HttpClient, _config: ResourceModuleConfiguration<span class="branch-2 cbranch-no" title="branch not covered" >) {</span>
 			super(_http, _config)<span class="branch-1 cbranch-no" title="branch not covered" >;</span>
 		}
-		protected buildUrl(targetNamePlural: string, relatedNamePlural: string, relatedInstance: any): string {
-			const path = (this.config.rootPath || '') + `/${relatedNamePlural}/${relatedInstance.id}/relationships/${targetNamePlural}`;
-			return path;
+<span class="fstat-no" title="function not covered" >		protected buildUrl(</span>targetNamePlural: string, relatedNamePlural: string, relatedInstance: any): string {
+			const path = <span class="cstat-no" title="statement not covered" >(this.config.rootPath || '') + `/${relatedNamePlural}/${relatedInstance.id}/relationships/${targetNamePlural}`;</span>
+<span class="cstat-no" title="statement not covered" >			return path;</span>
 		}
-		public remove(targetNamePlural: string, relatedNamePlural: string, body: any, relatedInstance: any, options: HttpClientOptions): Promise&lt;void&gt; {
-			const path = options.url || this.buildUrl(targetNamePlural, relatedNamePlural, relatedInstance);
-			return this.request(HttpVerb.DELETE, path, options, body).then(() =&gt; Promise.resolve());
+<span class="fstat-no" title="function not covered" >		public remove(</span>targetNamePlural: string, relatedNamePlural: string, body: any, relatedInstance: any, options: HttpClientOptions): Promise&lt;void&gt; {
+			const path = <span class="cstat-no" title="statement not covered" >options.url || this.buildUrl(targetNamePlural, relatedNamePlural, relatedInstance);</span>
+<span class="cstat-no" title="statement not covered" >			return this.request(HttpVerb.DELETE, path, options, body).then(<span class="fstat-no" title="function not covered" >() =&gt; <span class="cstat-no" title="statement not covered" ></span>Promise.resolve())</span>;</span>
 		}
 	}
 }
@@ -190,7 +190,7 @@ export namespace JsonApiBuilders {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Thu Oct 11 2018 16:09:42 GMT+0200 (Central European Summer Time)
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Thu Oct 18 2018 22:42:48 GMT+0200 (Central European Summer Time)
 </div>
 </div>
 <script src="../prettify.js"></script>

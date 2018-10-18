@@ -178,7 +178,7 @@ describe('Request adapters', () => {
 			const resource = <JsonApiResource>data.data;
 			expect(resource).toBeDefined();
 			expect(resource.id).toBeUndefined();
-			expect(resource.type).toBe('host');
+			expect(resource.type).toBe('hosts');
 			expect(resource.attributes!.some).toBeUndefined();
 			expect(resource.attributes!.field).toBeUndefined();
 		});
@@ -188,7 +188,7 @@ describe('Request adapters', () => {
 			const resource = <JsonApiResource>data.data;
 			expect(resource).toBeDefined();
 			expect(resource.id).toBe('123');
-			expect(resource.type).toBe('host');
+			expect(resource.type).toBe('hosts');
 			expect(resource.attributes!.some).toBe('stuff');
 			expect(resource.attributes!.name).toBeUndefined();
 			expect(resource.attributes!.fullName).toBeUndefined('more stuff');
@@ -254,7 +254,7 @@ describe('Request adapters', () => {
 			expect(rv.data.id).toBeDefined();
 			expect(rv.data.type).toBeDefined();
 			expect(rv.data.id).toBe(instances.toOneTargetWithValues.id.toString());
-			const name = <string>Reflect.getMetadata(METAKEYS.SINGULAR, instances.toOneTargetWithValues.constructor);
+			const name = <string>Reflect.getMetadata(METAKEYS.PLURAL, instances.toOneTargetWithValues.constructor);
 			expect(rv.data.type).toBe(name);
 		});
 		it('can remove', () => {
@@ -281,7 +281,7 @@ describe('Request adapters', () => {
 			expect(rv.data.id).toBeDefined();
 			expect(rv.data.type).toBeDefined();
 			expect(rv.data.id).toBe(instances.toManyTargetWithValues.id.toString());
-			const name = <string>Reflect.getMetadata(METAKEYS.SINGULAR, instances.toManyTargetWithValues.constructor);
+			const name = <string>Reflect.getMetadata(METAKEYS.PLURAL, instances.toManyTargetWithValues.constructor);
 			expect(rv.data.type).toBe(name);
 		});
 		it('can remove', () => {
@@ -291,7 +291,7 @@ describe('Request adapters', () => {
 			expect(rv.data.id).toBeDefined();
 			expect(rv.data.type).toBeDefined();
 			expect(rv.data.id).toBe(instances.toManyTargetWithValues.id.toString());
-			const name = <string>Reflect.getMetadata(METAKEYS.SINGULAR, instances.toManyTargetWithValues.constructor);
+			const name = <string>Reflect.getMetadata(METAKEYS.PLURAL, instances.toManyTargetWithValues.constructor);
 			expect(rv.data.type).toBe(name);
 		});
 	});

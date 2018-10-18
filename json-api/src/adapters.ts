@@ -19,11 +19,35 @@ import {
 import { AbstractAdapters as Abstract } from '@ngx-api-orm/core';
 import { METAKEYS } from '@ngx-api-orm/core';
 
+
+// 		protected convertOutgoing(instance: any): any {
+// 	const rv = {};
+// 	const fields = Reflect.getMetadata(METAKEYS.FIELDS, instance.constructor);
+// 	fields.forEach((f: string) => {
+// 		if (instance[f] instanceof ToOneRelation) {
+// 			rv[f] = instance[f].instance === null ? null : this.convertOutgoing(instance[f].instance);
+// 		} else if (instance[f] instanceof Array) {
+// 			rv[f] = [];
+// 			instance[f].forEach((i: any) => rv[f].push(this.convertOutgoing(i)));
+// 		} else {
+// 			rv[f] = instance[f];
+// 		}
+// 	});
+// 	Reflect.ownKeys(instance).forEach(property => {
+// 		const map = Reflect.getMetadata(METAKEYS.MAP, instance.constructor, <string>property);
+// 		if (map) {
+// 			rv[map] = rv[property];
+// 			delete rv[property];
+// 		}
+// 	});
+// 	return rv;
+// }
+// 	}
+
 /**
  * request adapters convert incoming bodies and outgoing bodies.
  * They do not touch options (headers and stuff).
  */
-
 /** @internal */
 export namespace JsonApiAdapters {
 	/** @internal */

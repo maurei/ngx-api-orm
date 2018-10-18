@@ -24,6 +24,8 @@ function getModels() {
 		public experiment: any;
 		@Field()
 		public field: any;
+		@ToMany('host')
+		public hosts: any;
 	}
 
 	@Model()
@@ -32,6 +34,8 @@ function getModels() {
 		public id: number;
 		@Field()
 		public field: any;
+		@ToOne('host')
+		public host: any;
 	}
 
 	@Model()
@@ -51,6 +55,7 @@ function getModels() {
 
 		public notIncluded: any;
 	}
+	(ResourceModule.forRoot().ngModule as any).processRelationships();
 	return {
 		getHost: () => (Host as any) as ResourceType<Host>,
 		getRelatedOne: () => (RelatedOne as any) as ResourceType<RelatedOne>,
@@ -59,11 +64,12 @@ function getModels() {
 }
 
 const toOneNoId = {
-	field: 'content'
+	field: 'content',
+	host: null
 };
 const toOnePostResponse: JsonApiResponse = {
 	data: {
-		type: 'related-one',
+		type: 'related-ones',
 		id: '1337',
 		attributes: {
 			field: 'Ember Hamster'
@@ -82,7 +88,7 @@ const nestedJsonApiResponse: JsonApiResponse = {
 	},
 	data: [
 		{
-			type: 'host',
+			type: 'hosts',
 			id: '1',
 			attributes: {
 				name: 'JSON API paints my bikeshed!',
@@ -92,10 +98,10 @@ const nestedJsonApiResponse: JsonApiResponse = {
 			},
 			relationships: {
 				relatedInstance: {
-					data: { type: 'related-one', id: '20' }
+					data: { type: 'related-ones', id: '20' }
 				},
 				relatedInstances: {
-					data: [{ type: 'related-many', id: '30' }, { type: 'related-many', id: '31' }, { type: 'related-many', id: '32' }]
+					data: [{ type: 'related-manies', id: '30' }, { type: 'related-manies', id: '31' }, { type: 'related-manies', id: '32' }]
 				}
 			},
 			links: {
@@ -103,7 +109,7 @@ const nestedJsonApiResponse: JsonApiResponse = {
 			}
 		},
 		{
-			type: 'host',
+			type: 'hosts',
 			id: '2',
 			attributes: {
 				name: 'JSON API paints my bikeshed!',
@@ -113,10 +119,10 @@ const nestedJsonApiResponse: JsonApiResponse = {
 			},
 			relationships: {
 				relatedInstance: {
-					data: { type: 'related-one', id: '21' }
+					data: { type: 'related-ones', id: '21' }
 				},
 				relatedInstances: {
-					data: [{ type: 'related-many', id: '30' }, { type: 'related-many', id: '29' }]
+					data: [{ type: 'related-manies', id: '30' }, { type: 'related-manies', id: '29' }]
 				}
 			},
 			links: {
@@ -126,7 +132,7 @@ const nestedJsonApiResponse: JsonApiResponse = {
 	],
 	included: [
 		{
-			type: 'related-one',
+			type: 'related-ones',
 			id: '20',
 			attributes: {
 				field: 'Dan'
@@ -136,7 +142,7 @@ const nestedJsonApiResponse: JsonApiResponse = {
 			}
 		},
 		{
-			type: 'related-one',
+			type: 'related-ones',
 			id: '21',
 			attributes: {
 				field: 'Bikeshed'
@@ -146,7 +152,7 @@ const nestedJsonApiResponse: JsonApiResponse = {
 			}
 		},
 		{
-			type: 'related-many',
+			type: 'related-manies',
 			id: '29',
 			attributes: {
 				test: 'I like XML better',
@@ -157,7 +163,7 @@ const nestedJsonApiResponse: JsonApiResponse = {
 			}
 		},
 		{
-			type: 'related-many',
+			type: 'related-manies',
 			id: '30',
 			attributes: {
 				test: 'I like XML better',
@@ -168,7 +174,7 @@ const nestedJsonApiResponse: JsonApiResponse = {
 			}
 		},
 		{
-			type: 'related-many',
+			type: 'related-manies',
 			id: '31',
 			attributes: {
 				test: 'I like XML better',
@@ -179,7 +185,7 @@ const nestedJsonApiResponse: JsonApiResponse = {
 			}
 		},
 		{
-			type: 'related-many',
+			type: 'related-manies',
 			id: '32',
 			attributes: {
 				test: 'I like XML better',
@@ -256,12 +262,14 @@ const completeHostWithoutId = {
 
 const toOneWithId = {
 	id: 2012,
-	field: 'to-one content'
+	field: 'to-one content',
+	host: null
 };
 const toManyWithId = {
 	id: 52,
 	field: 'to-many',
-	experiment: 'test content'
+	experiment: 'test content',
+	hosts: null
 };
 
 describe('JsonApi request handler integration', () => {
@@ -284,6 +292,7 @@ describe('JsonApi request handler integration', () => {
 
 	describe('save pipeline:', () => {
 		beforeEach(() => {
+			console.log('break here');
 			ctors = getModels();
 			hostCtor = ctors.getHost();
 			toOneCtor = ctors.getRelatedOne();
@@ -365,7 +374,7 @@ describe('JsonApi request handler integration', () => {
 			});
 			const mockreq = httpMock.expectOne(`/hosts/2/relationships/related-manies`);
 			expect(mockreq.request.method).toBe('DELETE');
-			expect(mockreq.request.body).toEqual({ data: { id: target.id.toString(), type: 'related-many' } });
+			expect(mockreq.request.body).toEqual({ data: { id: target.id.toString(), type: 'related-manies' } });
 			mockreq.flush(null);
 		});
 	});
@@ -387,7 +396,7 @@ describe('JsonApi request handler integration', () => {
 				expect(toManyCtor.collection().length).toBe(4);
 			});
 		});
-		it('patching a resource (only affected fields)', async () => {
+		fit('patching a resource (only affected fields)', async () => {
 			hostCtor.factory(nestedTemplate);
 			const target = hostCtor.collection()[0];
 			target.name = 'patched';
@@ -397,7 +406,7 @@ describe('JsonApi request handler integration', () => {
 			const body = {
 				data: {
 					id: target.id.toString(),
-					type: 'host',
+					type: 'hosts',
 					attributes: { fullName: 'patched' }
 				}
 			};
@@ -418,7 +427,7 @@ describe('JsonApi request handler integration', () => {
 			const body = {
 				data: {
 					id: related.id.toString(),
-					type: 'related-one',
+					type: 'related-ones',
 					attributes: { field: 'patched' }
 				}
 			};
