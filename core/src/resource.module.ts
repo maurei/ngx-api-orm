@@ -62,14 +62,11 @@ export class ResourceRootModule {
 			throw Error(
 				'It seems that there is a model X for which a model Y has multiple foreign keys directed to it. This is not yet implemented'
 			);
-			// if (!config.relatedNavigationProperty) {
-			// 	throw Error(`There is a problem with a circular relation. If model X has multiple foreign keys to model Y, then you need to supply
-			// 	 a navigation property to tell the ORM which of the foreign keys belongs to which relation.`);
-			// }
 		}
 	}
 	constructor(injector: Injector) {
 		InjectorContainer.instance = injector;
+		ResourceRootModule.processRelationships();
 	}
 }
 
