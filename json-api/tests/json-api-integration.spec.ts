@@ -20,7 +20,7 @@ function getModels() {
 	class RelatedMany extends Resource {
 		@Field()
 		public id: number;
-		@Field('test')
+		@Field({ mapFrom: 'test' })
 		public experiment: any;
 		@Field()
 		public field: any;
@@ -42,7 +42,7 @@ function getModels() {
 	class Host extends Resource {
 		@Field()
 		public id: number;
-		@Field('fullName')
+		@Field({ mapFrom: 'fullName' })
 		public name: any;
 		@Field()
 		public some: any;
@@ -162,12 +162,22 @@ const nestedJsonApiResponse: JsonApiResponse = {
 			attributes: {
 				field: 'Dan'
 			},
+			relationships: {
+				host: {
+					data: { type: 'hosts', id: '1' }
+				}
+			},
 			links: {
 				self: 'http://example.com/related-ones/20'
 			}
 		},
 		{
 			type: 'related-ones',
+			relationships: {
+				host: {
+					data: { type: 'hosts', id: '2' }
+				}
+			},
 			id: '21',
 			attributes: {
 				field: 'Bikeshed'
@@ -178,6 +188,12 @@ const nestedJsonApiResponse: JsonApiResponse = {
 		},
 		{
 			type: 'related-manies',
+			relationships: {
+				host: [
+					{ data: { type: 'hosts', id: '1' } },
+					{ data: { type: 'hosts', id: '2' } }
+				]
+			},
 			id: '29',
 			attributes: {
 				test: 'I like XML better',
@@ -189,6 +205,12 @@ const nestedJsonApiResponse: JsonApiResponse = {
 		},
 		{
 			type: 'related-manies',
+			relationships: {
+				host: [
+					{ data: { type: 'hosts', id: '1' }},
+					{ data: { type: 'hosts', id: '2' }}
+				]
+			},
 			id: '30',
 			attributes: {
 				test: 'I like XML better',
@@ -200,6 +222,12 @@ const nestedJsonApiResponse: JsonApiResponse = {
 		},
 		{
 			type: 'related-manies',
+			relationships: {
+				host: [
+					{ data: { type: 'hosts', id: '1' }},
+					{ data: { type: 'hosts', id: '1' }},
+			]
+			},
 			id: '31',
 			attributes: {
 				test: 'I like XML better',
@@ -211,6 +239,11 @@ const nestedJsonApiResponse: JsonApiResponse = {
 		},
 		{
 			type: 'related-manies',
+			relationships: {
+				host: {
+					data: { type: 'hosts', id: '1' }
+				}
+			},
 			id: '32',
 			attributes: {
 				test: 'I like XML better',

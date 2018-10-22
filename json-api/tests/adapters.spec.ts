@@ -25,7 +25,7 @@ function getModels() {
 	class RelatedMany extends Resource {
 		@Field()
 		public id: number;
-		@Field('test')
+		@Field({mapFrom: 'test'})
 		public experiment: any;
 		@Field()
 		public field: any;
@@ -43,7 +43,7 @@ function getModels() {
 	class Host extends Resource {
 		@Field()
 		public id: number;
-		@Field('fullName')
+		@Field({mapFrom: 'fullName'})
 		public name: any;
 		@Field()
 		public some: any;
@@ -194,7 +194,7 @@ describe('Request adapters', () => {
 			expect(resource.attributes!.fullName).toBeUndefined('more stuff');
 			expect(resource.attributes!.field).toBeUndefined();
 		});
-		it('can parse a flat JsonApiResponse with a single item', () => {
+		fit('can parse a flat JsonApiResponse with a single item', () => {
 			const parsed = adapter.parseIncoming(flatSingle);
 			expect(parsed.length).toBe(1);
 			expect(parsed[0].id).toBe('1');
