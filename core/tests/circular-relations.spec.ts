@@ -204,7 +204,7 @@ function getCircularModels() {
 	class HostModel extends Resource {
 		@Field()
 		public id: number;
-		@Field('fullName')
+		@Field({mapFrom: 'fullName'})
 		public name: any;
 		@Field()
 		public some: any;

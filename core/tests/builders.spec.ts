@@ -22,15 +22,15 @@ function getModels() {
 	class Host extends Resource {
 		@Field()
 		public id: number;
-		@Field('fullName')
+		@Field({mapFrom: 'fullName'})
 		public name: any;
 		@Field()
 		public some: any;
 		@Field()
 		public field: any;
-		@ToOne(RelatedOne)
+		@ToOne({relatedResource: RelatedOne})
 		public relatedInstance: any;
-		@ToMany(RelatedMany)
+		@ToMany({relatedResource: RelatedMany})
 		public relatedInstances: any;
 
 		public notIncluded: any;

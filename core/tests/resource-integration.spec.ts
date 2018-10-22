@@ -11,11 +11,11 @@ function getModels() {
 	class RelatedMany extends Resource {
 		@Field()
 		public id: number;
-		@Field('test')
+		@Field({mapFrom: 'test'})
 		public experiment: any;
 		@Field()
 		public field: any;
-		@ToMany('host')
+		@ToMany({relatedResource: 'host'})
 		public hosts: any;
 	}
 
@@ -25,7 +25,7 @@ function getModels() {
 		public id: number;
 		@Field()
 		public field: any;
-		@ToMany('host')
+		@ToMany({ relatedResource: 'host' })
 		public hosts: any;
 	}
 
@@ -33,15 +33,15 @@ function getModels() {
 	class Host extends Resource {
 		@Field()
 		public id: number;
-		@Field('fullName')
+		@Field({mapFrom: 'fullName'})
 		public name: any;
 		@Field()
 		public some: any;
 		@Field()
 		public field: any;
-		@ToOne(RelatedOne)
+		@ToOne({relatedResource: RelatedOne})
 		public relatedInstance: any;
-		@ToMany(RelatedMany)
+		@ToMany({relatedResource: RelatedMany})
 		public relatedInstances: any;
 
 		public notIncluded: any;

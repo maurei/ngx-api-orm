@@ -219,9 +219,20 @@ export class Resource {
 			} else if (rawInstance.hasOwnProperty(field)) {
 				this[field] = rawInstance[field];
 			} else if (!rawInstance.hasOwnProperty(field)) {
-				throw Error(
-					`Expected key ${field} for instance of class ${Reflect.getMetadata(METAKEYS.PLURAL, this.constructor)} but it wasn't included`
-				);
+				const optionalKeys = Reflect.getMetadata(METAKEYS.OPTIONAL_FIELDS, this.constructor);
+				if (optionalKeys.includes(field)) {
+					this[field] = undefined;
+				} else {
+					throw Error(
+						`A non-optional key was missing when trying to create an instance of resource ${Reflect.getMetadata(
+							METAKEYS.PLURAL,
+							this.constructor
+						)}.
+					 Missing key: ${field}.
+					 Mapped from api response: ${map ? map : 'not mapped'}.
+					 `
+					);
+				}
 			}
 		});
 	}
