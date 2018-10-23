@@ -30,14 +30,14 @@ export class ResourceRootModule {
 		if (!resources) {
 			return;
 		} else {
-			for (const [singularName, ctor] of resources.entries()) {
+			resources.forEach((ctor: any, singularName: string) => {
 				const relations = Reflect.getMetadata(METAKEYS.RELATIONS, ctor);
 				Reflect.ownKeys(relations).forEach(r => {
 					const config = relations[r];
 					this.setRelatedConstructors(config, resources);
 					this.setCircularRelations(config, resources);
 				});
-			}
+			});
 		}
 	}
 
@@ -47,7 +47,9 @@ export class ResourceRootModule {
 			if (!match) {
 				throw Error(`A related resource string identifier could not be matched to one of your resource.
 				identifier: ${config.relatedResourceString}
-				where: "${(config.type === RelationType.ToMany ? '@ToOne(' : '@ToMany(') + config.relatedResourceString + ')'} ${config.keyOnInstance}" in class ${config.HostResource.name}.
+				where: "${(config.type === RelationType.ToMany ? '@ToOne(' : '@ToMany(') + config.relatedResourceString + ')'} ${
+					config.keyOnInstance
+				}" in class ${config.HostResource.name}.
 				Make sure the key is singular and dashed. Eg: for a class named MyTestResourceName, use my-test-resource-name.`);
 			} else {
 				config.RelatedResource = match;
