@@ -43,7 +43,14 @@ export class ResourceRootModule {
 
 	private static setRelatedConstructors(config: RelationConfiguration<any, any>, resources: Map<string, ResourceType<any>>) {
 		if (config.relatedResourceString) {
-			config.RelatedResource = resources.get(config.relatedResourceString)!;
+			const match = resources.get(config.relatedResourceString);
+			if (!match) {
+				throw Error(`the relatedResource ${config.relatedResourceString} for key ${config.keyOnInstance} of class ${config.HostResource.name}
+				 could not be matches to one of your resources. Make sure the key is singular and dashed.
+				 Eg: for a class named MyTestResourceName, use my-test-resource-name.`);
+			} else {
+				config.RelatedResource = match;
+			}
 		}
 	}
 	private static setCircularRelations(config: RelationConfiguration<any, any>, resources: Map<string, ResourceType<any>>) {

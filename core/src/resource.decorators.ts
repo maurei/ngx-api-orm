@@ -159,7 +159,7 @@ export function OptionalToOne<TRelated extends Resource>(options: Function | str
 		return relationDecoratorFactory(Object.assign(_options, options), RelationType.ToOne);
 	}
 }
-export function OptionalToMany<TRelated extends Resource>(options: OptionalRelationOptions) {
+export function OptionalToMany<TRelated extends Resource>(options: Function | string | OptionalRelationOptions) {
 	const _options = { optional: true };
 	if (options instanceof Function || typeof options === 'string') {
 		return relationDecoratorFactory(Object.assign(_options, { relatedResource: options }), RelationType.ToMany);

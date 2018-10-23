@@ -178,7 +178,7 @@ describe('Resource class:', () => {
 			expect(instance.relatedInstance.instance).toBe(null);
 			expect(instance.relatedInstances.length).toEqual(0);
 		});
-		fit('incomplete template', () => {
+		it('incomplete template', () => {
 			const ctors = getModels();
 			const hostCtor = ctors.getHost();
 			expect(() => new hostCtor(incompleteHost)).toThrowError();
