@@ -9,6 +9,7 @@ export namespace JsonApiBuilders {
 	export class Simple extends Abstract.SimpleBuilder {
 		constructor(_http: HttpClient, _config: ResourceModuleConfiguration) {
 			super(_http, _config);
+			console.log("wut");
 		}
 		public update(targetNamePlural: string, body: any, options: HttpClientOptions): Promise<any> {
 			const path = options.url || this.buildUrl(targetNamePlural, { id: body.data.id });
