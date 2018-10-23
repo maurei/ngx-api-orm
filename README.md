@@ -1,12 +1,16 @@
-# ngx-api-orm
-Also lovingly called NAO
+# NAO (ngx-api-orm)
 Some links to get you started:
 * [API Documentation](https://maurei.github.io/ngx-api-orm/).
-* [NPM Package](https://www.npmjs.com/package/@ngx-api-orm/json-api)
+
+The NPM packages:
+
+* [Core package](https://www.npmjs.com/package/@ngx-api-orm/core) - This is the default package needed to start
+* Optional packages:
+  * [Json:api implementation](https://www.npmjs.com/package/@ngx-api-orm/json-api)
 
 **Note: docs are still under construction.**
 
-A rest api Object Relationship Mapper (ORM) for Angular. Tested with Angular 6.1.x. Can be use used seamlessly with [JSON:api](JsonApi.org) or easibly be adjusted to work with your own format. 
+A rest API Object Relationship Mapper (ORM) for Angular. Tested with Angular 6.1.x. Can be used seamlessly with [JSON:api](JsonApi.org) or easily be adjusted to work with your own format. 
 
 It's aim is to remove as much boilerplate code as possible while allowing for easy extendability. It will empower your models with CRUD functionality and also manages to-one and to-many relationships.
 
@@ -92,8 +96,9 @@ To get started you need the following:
 Using NPM (link to package [here](https://www.npmjs.com/package/@ngx-api-orm/json-api)):
 ```console
 npm install --save @ngx-api-orm/core
+npm install --save @ngx-api-orm/json-api 
 ```
-If you wish to install a specific version, you can use the following format:
+If you wish to install a specific version, you can use the following format (if you would like to use 0.0.1-beta6 of the core package)
 ```console
 npm install --save @ngx-api-orm/core@0.0.1-beta6
 ```
