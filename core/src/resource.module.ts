@@ -20,7 +20,7 @@ import { Abstract as AbstractAdapters } from './request-handlers/abstract-adapte
 import { Abstract as AbstractBuilders } from './request-handlers/abstract-builders';
 import { ToManyAdapter, ToOneAdapter, SimpleAdapter } from './request-handlers/default-adapters';
 import { ToManyBuilder, ToOneBuilder, SimpleBuilder } from './request-handlers/default-builders';
-import { RelationConfiguration } from './relations/relation-configuration';
+import { RelationConfiguration, RelationType } from './relations/relation-configuration';
 
 /** @internal */
 @NgModule({ imports: [HttpClientModule] })
@@ -45,9 +45,10 @@ export class ResourceRootModule {
 		if (config.relatedResourceString) {
 			const match = resources.get(config.relatedResourceString);
 			if (!match) {
-				throw Error(`the relatedResource ${config.relatedResourceString} for key ${config.keyOnInstance} of class ${config.HostResource.name}
-				 could not be matches to one of your resources. Make sure the key is singular and dashed.
-				 Eg: for a class named MyTestResourceName, use my-test-resource-name.`);
+				throw Error(`A related resource string identifier could not be matched to one of your resource.
+				identifier: ${config.relatedResourceString}
+				where: "${(config.type === RelationType.ToMany ? '@ToOne(' : '@ToMany(') + config.relatedResourceString + ')'} ${config.keyOnInstance}" in class ${config.HostResource.name}.
+				Make sure the key is singular and dashed. Eg: for a class named MyTestResourceName, use my-test-resource-name.`);
 			} else {
 				config.RelatedResource = match;
 			}
