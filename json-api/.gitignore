@@ -1,0 +1,12 @@
+/node_modules
+/dist
+/documentation
+/coverage
+core/node_modules
+json-api/node_modules
+
+core/dist
+json-api/dist
+
+*.log
+*.tgz

@@ -1,9 +1,20 @@
 /*tslint:disable:no-non-null-assertion*/
 import { ResourceRootModule} from '../src/resource.module';
 import { METAKEYS } from '../src/utils';
-import { getModels, IHostModel, IOneToOneModel, IOneToManyModel, IManyToManyModel, oneToOneTemplate, oneToManyTemplate, manyToManyTemplate, TestCase } from './models';
+import { 	getModels,
+					IHostModel,
+					IOneToOneModel,
+					IOneToManyModel,
+					IManyToManyModel,
+					oneToOneTemplate,
+					oneToManyTemplate,
+					manyToManyTemplate,
+					TestCase,
+					fullComplexCircularTemplate } from './models';
+import { RelationConfiguration } from '../src/relations/relation-configuration';
+import { ToOneRelation } from '../src/relations/to-one';
 
-describe('Circular relationships', () => {
+describe('Circular relationships: X <-> Y', () => {
 	describe('Metadata', () => {
 		const { HostModel, OneToOneModel, OneToManyModel, ManyToManyModel } = getModels(TestCase.Circular);
 		ResourceRootModule.processRelationships();
@@ -168,3 +179,139 @@ describe('Circular relationships', () => {
 	});
 });
 
+
+describe('Complex circular relationships: X <-> ( Y <-> Z )', () => {
+	describe('Metadata', () => {
+		const { HostModel, OneToOneModel, OneToManyModel, ManyToManyModel } = getModels(TestCase.CircularComplex);
+		ResourceRootModule.processRelationships();
+		it('Total config count', () => {
+			const hostConfig = Reflect.getMetadata(METAKEYS.RELATIONS, HostModel);
+			const oneToOneModelConfig = Reflect.getMetadata(METAKEYS.RELATIONS, OneToOneModel);
+			const oneToManyModelConfigs = Reflect.getMetadata(METAKEYS.RELATIONS, OneToManyModel);
+			const manyToManyModelConfigs = Reflect.getMetadata(METAKEYS.RELATIONS, ManyToManyModel);
+			expect(Reflect.ownKeys(hostConfig).length).toBe(3);
+			expect(Reflect.ownKeys(oneToOneModelConfig).length).toBe(1);
+			expect(Reflect.ownKeys(oneToManyModelConfigs).length).toBe(2);
+			expect(Reflect.ownKeys(manyToManyModelConfigs).length).toBe(2);
+		});
+		it('Complex circular configs set correctly', () => {
+			const oneToManyModelConfigs = Reflect.getMetadata(METAKEYS.RELATIONS, OneToManyModel);
+			const manyToManyModelConfigs = Reflect.getMetadata(METAKEYS.RELATIONS, ManyToManyModel);
+
+			const otmmc = Reflect.ownKeys(oneToManyModelConfigs).map((k) => oneToManyModelConfigs[k] );
+			const mtmmc = Reflect.ownKeys(manyToManyModelConfigs).map((k) => manyToManyModelConfigs[k]);
+			expect(otmmc[0].RelatedResource ).toBe(HostModel);
+			expect(mtmmc[0].RelatedResource ).toBe(HostModel);
+
+			expect(otmmc[1].RelatedResource).toBe(ManyToManyModel);
+			expect(mtmmc[1].RelatedResource).toBe(OneToManyModel);
+		});
+	});
+	describe('Instantiation', () => {
+		describe('full complex circular relation', () => {
+			const { HostModel, OneToOneModel, ManyToManyModel, OneToManyModel } = getModels(TestCase.CircularComplex);
+			ResourceRootModule.processRelationships();
+			let hostInstances: IHostModel[];
+			let oneToManyInstance: IOneToManyModel;
+			let manyToManyInstance: IManyToManyModel;
+			beforeAll(() => {
+				hostInstances = HostModel.factory(fullComplexCircularTemplate);
+				oneToManyInstance = OneToManyModel.collection()[0];
+				manyToManyInstance = ManyToManyModel.collection()[0];
+			});
+
+			it('some sanity checks', () => {
+				const hostInstance = hostInstances[0];
+				expect(hostInstance.oneToOneModel).toBeDefined();
+				expect(oneToManyInstance.host).toBeDefined();
+				expect(manyToManyInstance.hosts).toBeDefined();
+				expect(manyToManyInstance.oneToManyModel).toBeDefined();
+			});
+			describe('deep references', () => {
+				it('X -> Y -> Z', () => {
+					const hostInstance = hostInstances[0];
+					expect(hostInstance.oneToManyModels[0].manyToManyModels instanceof Array).toBeTruthy();
+					expect(hostInstance.manyToManyModels[0].oneToManyModel instanceof ToOneRelation).toBeDefined();
+					expect(hostInstance.manyToManyModels[0].oneToManyModel.instance).toBeNull();
+				});
+				it('X <- Y -> Z', () => {
+					const hostInstance = hostInstances[0];
+					expect(oneToManyInstance.host instanceof ToOneRelation).toBeTruthy();
+					expect(oneToManyInstance.host.instance).toBeDefined();
+					expect(oneToManyInstance.manyToManyModels instanceof Array).toBeTruthy();
+				});
+			});
+			describe('complex circular relations with pre-existing instances', () => {
+				it('stuff', () => {
+					OneToManyModel.factory(oneToManyModel);
+				});
+				it('X <- Y -> Z', () => {
+					const hostInstance = hostInstances[0];
+					expect(oneToManyInstance.host instanceof ToOneRelation).toBeTruthy();
+					expect(oneToManyInstance.host.instance).toBeDefined();
+					expect(oneToManyInstance.manyToManyModels instanceof Array).toBeTruthy();
+				});
+			});
+		});
+	});
+	describe('Instantiation with pre existing instances', () => {
+		describe('full complex circular relation', () => {
+			const { HostModel, OneToOneModel, ManyToManyModel, OneToManyModel } = getModels(TestCase.CircularComplex);
+			ResourceRootModule.processRelationships();
+			beforeEach(() => {
+				OneToManyModel.factory(oneToManyModel);
+			});
+			describe('sanity check', () => {
+				it('collection count', () => {
+					expect(OneToManyModel.collection().length).toBe(1);
+					expect(ManyToManyModel.collection().length).toBe(1);
+				});
+				it('OTM -> MTM', () => {
+					expect(OneToManyModel.collection()[0].manyToManyModels[0]).toBe(ManyToManyModel.collection()[0]);
+				});
+				it('OTM -> MTM -> OTM', () => {
+					expect(OneToManyModel.collection()[0].manyToManyModels[0].oneToManyModel.instance).toBe(OneToManyModel.collection()[0]);
+				});
+				it('MTM -> OTM', () => {
+					expect(ManyToManyModel.collection()[0].oneToManyModel.instance).toBe(OneToManyModel.collection()[0]);
+				});
+				it('MTM -> OTM -> MTM', () => {
+					expect(ManyToManyModel.collection()[0].oneToManyModel.instance!.manyToManyModels[0]).toBe(ManyToManyModel.collection()[0]);
+				});
+			});
+			describe('instantiation', () => {
+				it('collection count', () => {
+					const hostInstance = HostModel.factory(host);
+					const otmm = hostInstance.oneToManyModels[0];
+					expect(otmm).toBe(OneToManyModel.collection()[0]);
+					expect(otmm.manyToManyModels.length).toBe(1);
+				});
+			});
+		});
+	});
+});
+
+
+const oneToManyModel = {
+	id: 30,
+	field: 'one-to-many with id 30',
+	host: null,
+	manyToManyModels: [{
+		id: 40,
+		field: 'many-to-many with id 40',
+		hosts: null,
+	}]
+};
+
+const host = {
+	id: 1,
+	field: 'some field',
+	'another-field': 'mapped field',
+	oneToManyModels: [{
+		id: 30,
+		field: 'one-to-many with id 30',
+		manyToManyModels: null
+	}],
+	oneToOneModel: null,
+	manyToManyModels: null
+};
