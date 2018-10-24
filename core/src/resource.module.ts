@@ -20,7 +20,7 @@ import { Abstract as AbstractAdapters } from './request-handlers/abstract-adapte
 import { Abstract as AbstractBuilders } from './request-handlers/abstract-builders';
 import { ToManyAdapter, ToOneAdapter, SimpleAdapter } from './request-handlers/default-adapters';
 import { ToManyBuilder, ToOneBuilder, SimpleBuilder } from './request-handlers/default-builders';
-import { RelationConfiguration } from './relations/relation-configuration';
+import { RelationConfiguration, RelationType } from './relations/relation-configuration';
 
 /** @internal */
 @NgModule({ imports: [HttpClientModule] })
@@ -30,20 +30,30 @@ export class ResourceRootModule {
 		if (!resources) {
 			return;
 		} else {
-			for (const [singularName, ctor] of resources.entries()) {
+			resources.forEach((ctor: any, singularName: string) => {
 				const relations = Reflect.getMetadata(METAKEYS.RELATIONS, ctor);
 				Reflect.ownKeys(relations).forEach(r => {
 					const config = relations[r];
 					this.setRelatedConstructors(config, resources);
 					this.setCircularRelations(config, resources);
 				});
-			}
+			});
 		}
 	}
 
 	private static setRelatedConstructors(config: RelationConfiguration<any, any>, resources: Map<string, ResourceType<any>>) {
 		if (config.relatedResourceString) {
-			config.RelatedResource = resources.get(config.relatedResourceString)!;
+			const match = resources.get(config.relatedResourceString);
+			if (!match) {
+				throw Error(`A related resource string identifier could not be matched to one of your resource.
+				identifier: ${config.relatedResourceString}
+				where: "${(config.type === RelationType.ToMany ? '@ToOne(' : '@ToMany(') + config.relatedResourceString + ')'} ${
+					config.keyOnInstance
+				}" in class ${config.HostResource.name}.
+				Make sure the key is singular and dashed. Eg: for a class named MyTestResourceName, use my-test-resource-name.`);
+			} else {
+				config.RelatedResource = match;
+			}
 		}
 	}
 	private static setCircularRelations(config: RelationConfiguration<any, any>, resources: Map<string, ResourceType<any>>) {
