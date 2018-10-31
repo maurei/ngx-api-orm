@@ -64,6 +64,9 @@ export namespace JsonApiAdapters {
 			let resources: JsonApiResource[];
 			response.data instanceof Array ? (resources = response.data) : (resources = [response.data]);
 			resources.forEach(i => parsed.push(this._parseResources(i, included)));
+			if ( !(response.data instanceof Array) ) {
+				return parsed[0];
+			}
 			return parsed;
 		}
 
@@ -80,7 +83,7 @@ export namespace JsonApiAdapters {
 			Object.assign(instance, data.attributes);
 			if (data.relationships) {
 				included = included || [];
-			// if (data.relationships && included) {
+				// if (data.relationships && included) {
 				const relationships = data.relationships;
 				Object.getOwnPropertyNames(data.relationships).forEach(r => {
 					const target = relationships[r].data;

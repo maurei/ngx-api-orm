@@ -174,12 +174,17 @@ export class Resource {
 	 * @param  HttpClientOptions={} options
 	 * @returns Promise<T>
 	 */
-	public async save(options: HttpClientOptions = {}): Promise<this> {
+	public async save(options: HttpClientOptions = {}): Promise<void> {
 		const name = Reflect.getMetadata(METAKEYS.PLURAL, this.constructor);
 		const body = this._adapter.save(this);
 		const response = await this._builder.save(name, body, options);
-		const rawInstance = this._adapter.parseIncoming(response);
-		return this.ctor.factory(<Object>rawInstance);
+		const rawInstance = this._adapter.parseIncoming(response) as any;
+		// there is no need to construct anything here, we only need to set the id to the current instance,
+		// and add it to the internal collection;
+		this.id = rawInstance.id;
+		this._metaAdd(this);
+		return Promise.resolve();
+		// return this.ctor.factory(<Object>rawInstance);
 	}
 
 	/**
