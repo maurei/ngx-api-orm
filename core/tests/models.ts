@@ -2,7 +2,7 @@
 import { Resource } from '../src/resource.core';
 import { ToOneRelation, ToManyRelation, ResourceType } from '../src/resource.module';
 import { Model, Field, ToOne, ToMany, OptionalToMany, OptionalToOne } from '../src/resource.decorators';
-import { ModelOptions } from 'dist/src/resource.decorators';
+import { ModelOptions } from '../src/resource.decorators';
 
 export enum TestCase {
 	Circular,

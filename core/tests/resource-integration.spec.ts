@@ -4,7 +4,7 @@ import { ResourceModule } from '../src/resource.module';
 import { ResourceType } from '../src/utils';
 import { TestBed, getTestBed, async } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { IHostModel, IOneToOneModel, IOneToManyModel, getModels, TestCase, hostNoRelation, fullTemplateNoMTM } from './models';
+import { IHostModel, IOneToOneModel, IOneToManyModel, getModels, TestCase, hostNoRelation, fullTemplateNoMTM, hostNoRelationNoId } from './models';
 
 
 describe('Resource class integration', () => {
@@ -31,7 +31,7 @@ describe('Resource class integration', () => {
 			ToManyModel = OneToManyModel;
 		});
 		it('a new resource', async () => {
-			const unsavedHost = new Model(hostNoRelation);
+			const unsavedHost = new Model(hostNoRelationNoId);
 			const savePromise = unsavedHost.save();
 			const mockreq = httpMock.expectOne(`/host-models`);
 			expect(mockreq.request.method).toBe('POST');
