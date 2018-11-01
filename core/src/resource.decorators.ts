@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Optional } from '@angular/core';
 import { Resource } from './resource.core';
 import { RelationType, RelationConfiguration } from './relations/relation-configuration';
 import { initMetaData, METAKEYS, getPluralAndSingularNames } from './utils';
@@ -40,6 +40,27 @@ export interface ModelOptions {
 	dashedPluralName?: string;
 	dashedSingularName?: string;
 }
+
+export interface RelationOptions {
+	relatedResource: Function | string;
+	mapFrom?: string;
+	optional?: boolean;
+}
+
+export interface FieldOptions {
+	mapFrom?: string;
+	optional?: boolean;
+}
+
+export interface OptionalRelationOptions {
+	relatedResource: Function | string;
+	mapFrom?: string;
+}
+
+export interface OptionalFieldOptions {
+	mapFrom?: string;
+}
+
 /**
  * Add this class decorator to your model to turn it into a `Resource` model, which means that it is considered as an endpoint on your API.
  *
@@ -66,42 +87,41 @@ export function Model(options: ModelOptions = {}) {
 		const fields = Reflect.getMetadata(METAKEYS.FIELDS, ctor);
 		const attributes = Reflect.getMetadata(METAKEYS.ATTRIBUTES, ctor);
 		Reflect.defineMetadata(METAKEYS.FIELDS, fields.concat(attributes), ctor);
-
 		if (!Reflect.hasOwnMetadata(METAKEYS.RESOURCES, Resource)) {
 			Reflect.defineMetadata(METAKEYS.RESOURCES, new Map(), Resource);
 		}
 		Reflect.getMetadata(METAKEYS.RESOURCES, Resource).set(names.singular, ctor);
-
-		// // detect circular relations
-		// const relationships = Reflect.getMetadata(METAKEYS.RELATIONS, ctor);
-
-		// Reflect.ownKeys(relationships).forEach(r => {
-		// 	const config = relationships[r];
-		// 	const foreignRelationships = Reflect.getMetadata(METAKEYS.RELATIONS, config.RelatedResource);
-		// 	// Reflect.ownKeys(foreignRelationships).forEach( fr => {
-		// 	// 	console.log(foreignRelationships[fr]) {
-
-		// 	// 	}
-		// 	// });
-		// });
-
 		return ctor;
 	};
 }
 
 /**
  * Use this field decorator to parse the corresponding field from a json response by your API.
- * @param string mapFrom? An identifier to map keys coming from an incoming json response to keys in your model.
+ * @param FieldOptions options? mapFrom: an identifier to map keys coming from an incoming json response to keys in your model.
  *  For example: the api response has a key `commentText: 'nice article!` but the key in the model is `commentContent`.
- * Then the decorator should be used as `Field('commentText').
+ * Then the decorator should be used as `Field({mapFrom: 'commentText'})`.
+ * Optional: mark this field as optional.
+ *  For example: the api response sometimes contains a certain key `authors` and sometimes it doesn't.
+ * Then the useage is: `Field({optional: true})`.
  */
-export function Field(mapFrom?: string) {
+export function Field(options: FieldOptions = {}) {
 	return <T extends Resource>(target: any, key: string) => {
 		const ctor = target.constructor;
 		initMetaData(ctor);
-		Reflect.defineMetadata(METAKEYS.MAP, mapFrom, ctor, key);
+		Reflect.defineMetadata(METAKEYS.MAP, options.mapFrom, ctor, key);
 		Reflect.getMetadata(METAKEYS.ATTRIBUTES, ctor).push(key);
+		if (options.optional) {
+			Reflect.getMetadata(METAKEYS.OPTIONAL_FIELDS, ctor).push(key);
+		}
 	};
+}
+/**
+ * An alias for Field({optional: true}).
+ * @param  OptionalFieldOptions={} options
+ */
+export function OptionalField(options: OptionalFieldOptions = {}) {
+	const _options: FieldOptions = { optional: true };
+	return Field(Object.assign(_options, options));
 }
 
 /**
@@ -113,30 +133,9 @@ export function Field(mapFrom?: string) {
  *  For example: the api response has a key `commentText: 'nice article!` but the key in the model is `commentContent`.
  * Then the decorator should be used as `Field('commentText').
  */
-export const ToOne = function<TRelated extends Resource>(RelatedResource: Function | string, mapFrom?: string) {
-	return (target: any, key: string) => {
-		let relatedResourceString;
-		let relatedResource: any;
-		if (typeof RelatedResource === 'function') {
-			relatedResource = RelatedResource;
-		} else if (typeof RelatedResource === 'string') {
-			relatedResourceString = RelatedResource;
-		} else {
-			throw Error();
-		}
-		const ctor = target.constructor;
-		initMetaData(ctor);
-		Reflect.defineMetadata(METAKEYS.MAP, mapFrom, ctor, key);
-		Reflect.getMetadata(METAKEYS.FIELDS, ctor).push(key);
-		Reflect.getMetadata(METAKEYS.RELATIONS, ctor)[key] = new RelationConfiguration(
-			ctor,
-			key,
-			RelationType.ToOne,
-			relatedResource,
-			relatedResourceString
-		);
-	};
-};
+export function ToOne<TRelated extends Resource>(options: Function | string | RelationOptions) {
+	return relationDecoratorFactory(options, RelationType.ToOne);
+}
 
 /**
  * Use this field decorator to parse the corresponding field from a json response by your API and to identify the key as a To-Many relationship.
@@ -147,27 +146,59 @@ export const ToOne = function<TRelated extends Resource>(RelatedResource: Functi
  *  For example: the api response has a key `commentText: 'nice article!` but the key in the model is `commentContent`.
  * Then the decorator should be used as `Field('commentText').
  */
-export const ToMany = function<TRelated extends Resource>(RelatedResource: Function | string, mapFrom?: string) {
+export function ToMany<TRelated extends Resource>(options: Function | string | RelationOptions) {
+	return relationDecoratorFactory(options, RelationType.ToMany);
+}
+
+export function OptionalToOne<TRelated extends Resource>(options: Function | string | OptionalRelationOptions) {
+	const _options = { optional: true };
+	if (options instanceof Function || typeof options === 'string') {
+		return relationDecoratorFactory(Object.assign(_options, { relatedResource: options }), RelationType.ToOne);
+	} else {
+		Object.assign(_options, options);
+		return relationDecoratorFactory(Object.assign(_options, options), RelationType.ToOne);
+	}
+}
+export function OptionalToMany<TRelated extends Resource>(options: Function | string | OptionalRelationOptions) {
+	const _options = { optional: true };
+	if (options instanceof Function || typeof options === 'string') {
+		return relationDecoratorFactory(Object.assign(_options, { relatedResource: options }), RelationType.ToMany);
+	} else {
+		Object.assign(_options, options);
+		return relationDecoratorFactory(Object.assign(_options, options), RelationType.ToMany);
+	}
+}
+
+export function relationDecoratorFactory(options: RelationOptions | Function | string, type: RelationType) {
 	return (target: any, key: string) => {
 		let relatedResourceString;
 		let relatedResource: any;
-		if (typeof RelatedResource === 'function') {
-			relatedResource = RelatedResource;
-		} else if (typeof RelatedResource === 'string') {
-			relatedResourceString = RelatedResource;
+		let mapFrom;
+		let optional;
+		if (options instanceof Function) {
+			relatedResource = options;
+		} else if (typeof options === 'string') {
+			relatedResourceString = options;
 		} else {
-			throw Error();
+			mapFrom = options.mapFrom;
+			optional = options.optional;
+			if (typeof options.relatedResource === 'function') {
+				relatedResource = options.relatedResource;
+			} else if (typeof options.relatedResource === 'string') {
+				relatedResourceString = options.relatedResource;
+			} else {
+				throw Error(
+					'The property "relatedResource" of argument options of type RelationOptions must be either a string or a constructor function.'
+				);
+			}
 		}
 		const ctor = target.constructor;
 		initMetaData(ctor);
 		Reflect.defineMetadata(METAKEYS.MAP, mapFrom, ctor, key);
 		Reflect.getMetadata(METAKEYS.FIELDS, ctor).push(key);
-		Reflect.getMetadata(METAKEYS.RELATIONS, ctor)[key] = new RelationConfiguration(
-			ctor,
-			key,
-			RelationType.ToMany,
-			relatedResource,
-			relatedResourceString
-		);
+		Reflect.getMetadata(METAKEYS.RELATIONS, ctor)[key] = new RelationConfiguration(ctor, key, type, relatedResource, relatedResourceString);
+		if (optional) {
+			Reflect.getMetadata(METAKEYS.OPTIONAL_FIELDS, ctor).push(key);
+		}
 	};
-};
+}

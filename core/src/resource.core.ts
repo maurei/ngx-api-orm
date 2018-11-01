@@ -178,8 +178,12 @@ export class Resource {
 		const name = Reflect.getMetadata(METAKEYS.PLURAL, this.constructor);
 		const body = this._adapter.save(this);
 		const response = await this._builder.save(name, body, options);
-		const rawInstance = this._adapter.parseIncoming(response);
-		return this.ctor.factory(<Object>rawInstance);
+		const rawInstance = this._adapter.parseIncoming(response) as any;
+		// there is no need to construct anything here, we only need to set the id to the current instance,
+		// and add it to the internal collection, and then return this.
+		this.id = rawInstance.id;
+		this._metaAdd(this);
+		return Promise.resolve(this);
 	}
 
 	/**
@@ -219,9 +223,20 @@ export class Resource {
 			} else if (rawInstance.hasOwnProperty(field)) {
 				this[field] = rawInstance[field];
 			} else if (!rawInstance.hasOwnProperty(field)) {
-				throw Error(
-					`Expected key ${field} for instance of class ${Reflect.getMetadata(METAKEYS.PLURAL, this.constructor)} but it wasn't included`
-				);
+				const optionalKeys = Reflect.getMetadata(METAKEYS.OPTIONAL_FIELDS, this.constructor);
+				if (optionalKeys.includes(field)) {
+					this[field] = undefined;
+				} else {
+					throw Error(
+						`A non-optional key was missing when trying to create an instance of resource ${Reflect.getMetadata(
+							METAKEYS.PLURAL,
+							this.constructor
+						)}.
+					 Missing key: ${field}.
+					 Mapped from api response: ${map ? map : 'not mapped'}.
+					 `
+					);
+				}
 			}
 		});
 	}

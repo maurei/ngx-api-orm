@@ -44,7 +44,8 @@ export type UJsonApiResource = JsonApiResource | Array<JsonApiResource>;
 export interface JsonApiResponse<T = UJsonApiResource> extends JsonApiBaseResponse {
 	data: T;
 	links?: JsonApiLink;
-	included?: Array<JsonApiResource>;
+	// included?: Array<JsonApiResource>;
+	included?: any;
 }
 export interface JsonApiError extends JsonApiBaseResponse {
 	error: any;

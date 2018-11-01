@@ -19,31 +19,6 @@ import {
 import { AbstractAdapters as Abstract } from '@ngx-api-orm/core';
 import { METAKEYS } from '@ngx-api-orm/core';
 
-
-// 		protected convertOutgoing(instance: any): any {
-// 	const rv = {};
-// 	const fields = Reflect.getMetadata(METAKEYS.FIELDS, instance.constructor);
-// 	fields.forEach((f: string) => {
-// 		if (instance[f] instanceof ToOneRelation) {
-// 			rv[f] = instance[f].instance === null ? null : this.convertOutgoing(instance[f].instance);
-// 		} else if (instance[f] instanceof Array) {
-// 			rv[f] = [];
-// 			instance[f].forEach((i: any) => rv[f].push(this.convertOutgoing(i)));
-// 		} else {
-// 			rv[f] = instance[f];
-// 		}
-// 	});
-// 	Reflect.ownKeys(instance).forEach(property => {
-// 		const map = Reflect.getMetadata(METAKEYS.MAP, instance.constructor, <string>property);
-// 		if (map) {
-// 			rv[map] = rv[property];
-// 			delete rv[property];
-// 		}
-// 	});
-// 	return rv;
-// }
-// 	}
-
 /**
  * request adapters convert incoming bodies and outgoing bodies.
  * They do not touch options (headers and stuff).
@@ -89,6 +64,9 @@ export namespace JsonApiAdapters {
 			let resources: JsonApiResource[];
 			response.data instanceof Array ? (resources = response.data) : (resources = [response.data]);
 			resources.forEach(i => parsed.push(this._parseResources(i, included)));
+			if ( !(response.data instanceof Array) ) {
+				return parsed[0];
+			}
 			return parsed;
 		}
 
@@ -103,15 +81,17 @@ export namespace JsonApiAdapters {
 		private _parseResources(data: JsonApiResource, included?: JsonApiResource[]): ParsedJsonApiResource {
 			const instance: ParsedJsonApiResource = { id: data.id! };
 			Object.assign(instance, data.attributes);
-			if (data.relationships && included) {
+			if (data.relationships) {
+				included = included || [];
+				// if (data.relationships && included) {
 				const relationships = data.relationships;
 				Object.getOwnPropertyNames(data.relationships).forEach(r => {
 					const target = relationships[r].data;
 					let related;
 					if (target) {
 						target instanceof Array
-							? (related = target.map(t => this._parseResourceIdentifier(t, included)).filter(p => !!p))
-							: (related = this._parseResourceIdentifier(target, included));
+							? (related = target.map(t => this._parseResourceIdentifier(t, included!)).filter(p => !!p))
+							: (related = this._parseResourceIdentifier(target, included!));
 					} else {
 						related = null;
 					}

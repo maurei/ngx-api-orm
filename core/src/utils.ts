@@ -100,6 +100,9 @@ export function initMetaData(ctor: any) {
 	if (!Reflect.hasOwnMetadata(METAKEYS.INSTANCES, ctor)) {
 		Reflect.defineMetadata(METAKEYS.INSTANCES, [], ctor);
 	}
+	if (!Reflect.hasOwnMetadata(METAKEYS.OPTIONAL_FIELDS, ctor)) {
+		Reflect.defineMetadata(METAKEYS.OPTIONAL_FIELDS, [], ctor);
+	}
 }
 
 
@@ -134,15 +137,16 @@ export function readOnlyArrayProxyFactory(targetArray: Array<any>) {
 }
 
 export const METAKEYS = {
-	FIELDS: 'orm:fields',
-	ATTRIBUTES: 'orm:attributes',
-	RELATIONS: 'orm:relations',
-	MAP: 'orm:map',
-	UPDATED: 'orm:updated',
-	INSTANCES: 'orm:instances',
-	PLURAL: 'orm:plural',
-	SINGULAR: 'orm:singular',
-	RESOURCES: 'orm:resources'
+	FIELDS: 'nao:fields',
+	ATTRIBUTES: 'nao:attributes',
+	RELATIONS: 'nao:relations',
+	MAP: 'nao:map',
+	UPDATED: 'nao:updated',
+	INSTANCES: 'nao:instances',
+	PLURAL: 'nao:plural',
+	SINGULAR: 'nao:singular',
+	RESOURCES: 'nao:resources',
+	OPTIONAL_FIELDS: 'nao:optional_fields'
 };
 
 /** @internal */

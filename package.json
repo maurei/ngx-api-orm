@@ -4,8 +4,7 @@
   "description": "",
   "scripts": {
     "compodoc": "compodoc --disableInternal -p tsconfig.json -s --includes core/guides --includesName \"Usage guides\" --theme material --hideGenerator --output ./docs/",
-    "build:packages": "cd ./core && npm run pack:lib && cd ../json-api && npm install --save ../core.tgz && npm run pack:lib"
-
+    "build": "cd ./core && npm run pack:lib && cd ../json-api && npm install --save ../core.tgz && npm run pack:lib"
   },
   "author": "",
   "license": "ISC",

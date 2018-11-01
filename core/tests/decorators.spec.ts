@@ -14,7 +14,7 @@ function modelWithResourceDecorator(name?: string): typeof Resource {
 function modelWithFieldDecorators(): typeof Resource {
 	class MyDummyResource {
 		public myTestField0: any;
-		@Field('test-mapping-field')
+		@Field({mapFrom: 'test-mapping-field'})
 		public myTestField1: any;
 		@Field()
 		public myTestField2: any;
@@ -28,9 +28,9 @@ function modelWithOneToManyDecorators(): typeof Resource {
 	class Related {}
 	class AnotherRelated {}
 	class Host {
-		@ToMany(Related)
+		@ToMany({relatedResource: Related})
 		public relatedInstance: any;
-		@ToMany(AnotherRelated, 'someKey')
+		@ToMany({relatedResource: AnotherRelated, mapFrom: 'someKey'})
 		public anotherRelated: any;
 	}
 	return <any>Host;
@@ -40,9 +40,9 @@ function modelWithOneToOneDecorators(): typeof Resource {
 	class Related {}
 	class AnotherRelated {}
 	class Host {
-		@ToOne(Related)
+		@ToOne({relatedResource: Related})
 		public relatedInstance: any;
-		@ToOne(AnotherRelated, 'someKey')
+		@ToOne({ relatedResource: AnotherRelated, mapFrom: 'someKey'})
 		public anotherRelated: any;
 	}
 	return <any>Host;
@@ -188,7 +188,7 @@ describe('Decorators: metaproperties fields, relations, list, resourceName, requ
 	describe('ToOne', () => {
 		it('is defined', () => {
 			expect(ToOne).toBeDefined();
-			expect(ToOne(new Function()).constructor.name).toBe('Function');
+			expect(ToOne({ relatedResource: new Function() }).constructor.name).toBe('Function');
 		});
 		it('sets metadata correctly', () => {
 			const host = modelWithOneToOneDecorators();
@@ -215,7 +215,7 @@ describe('Decorators: metaproperties fields, relations, list, resourceName, requ
 	describe('ToMany', () => {
 		it('is defined', () => {
 			expect(ToMany).toBeDefined();
-			expect(ToMany(new Function()).constructor.name).toBe('Function');
+			expect(ToMany({ relatedResource: new Function()}).constructor.name).toBe('Function');
 		});
 		it('sets metadata correctly', () => {
 			const host = modelWithOneToManyDecorators();

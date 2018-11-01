@@ -38,7 +38,7 @@ function fullyDecoratedModelWithRelationshipsStrings() {
 	class Host {
 		@ToOne('related')
 		public relatedInstance: any;
-		@ToOne('another-related', 'someKey')
+		@ToOne({relatedResource: 'another-related', mapFrom: 'someKey'})
 		public anotherRelated: any;
 
 	}

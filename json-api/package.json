@@ -1,6 +1,6 @@
 {
     "name": "@ngx-api-orm/json-api",
-    "version": "0.0.1-beta10",
+    "version": "0.0.1-beta11",
     "main": "./bundles/ngx-api-orm-json-api.umd.js",
     "module": "./fesm5/ngx-api-orm-json-api.js",
     "es2015": "./fesm2015/ngx-api-orm-json-api.js",
@@ -48,7 +48,6 @@
         "@angular/platform-browser-dynamic": "6.1.8",
         "@angular/platform-server": "6.1.8",
         "@compodoc/compodoc": "^1.1.2",
-        "@ngx-api-orm/core": "file:../core.tgz",
         "@types/jasmine": "2.8.7",
         "@types/node": "10.0.3",
         "angular2-template-loader": "0.6.2",
