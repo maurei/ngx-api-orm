@@ -90,7 +90,6 @@ export class Resource {
 		const adapter = injections[0];
 		const builder = injections[1];
 		const resourceName = Reflect.getMetadata(METAKEYS.PLURAL, this);
-
 		const response = await builder.fetch(resourceName, options);
 		const rawInstances = adapter.parseIncoming(response);
 		return this.factory<T>(rawInstances);
@@ -134,7 +133,11 @@ export class Resource {
 			toManyBuilder
 		];
 
-		/**  The constructor can be called by the dependency injector or by the user. In the former case, assuming that the user did not manually inject the requestHandlers, only the first parameter will be falsy. In the latter case, only the first parameter will be truthy, in which case we will retrieve the injections by getDependencyInjectionEntries (see _handleInjections internal method). */
+		/**  The constructor can be called by the dependency injector or by the user. In the former case, 
+		 * assuming that the user did not manually inject the requestHandlers, only the first parameter will be falsy.
+		 *  In the latter case, only the first parameter will be truthy, in which case we will retrieve the injections
+		 *  by getDependencyInjectionEntries (see _handleInjections internal method). 
+		 */
 		const instantationByAngularDI = this._handleInjections(requestHandlers);
 		if (instantationByAngularDI && rawInstance === null) {
 			return this;
@@ -151,7 +154,6 @@ export class Resource {
 				return alreadyExisting;
 			}
 		}
-
 		this._populateFields(_rawInstance);
 		const proxyInstance = updateInterceptProxyFactory(this);
 		this._populateRelations(proxyInstance);
@@ -229,11 +231,11 @@ export class Resource {
 							this.constructor
 						)}.
 					 Missing key: ${field}.
-					 Mapped from api response: ${map ? map : 'not mapped'}.
-					 `
+					 Mapped from api response: ${map ? map : 'not mapped'}.`
 					);
 				}
 			}
+
 		});
 	}
 	/** @internal */
