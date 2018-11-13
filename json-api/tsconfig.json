@@ -3,7 +3,7 @@
         "strictMetadataEmit": false
     },
     "compilerOptions": {
-        "baseUrl": ".",
+        "baseUrl": "../.",
         "declaration": true,
         "stripInternal": true,
         "noImplicitAny": true,
@@ -15,14 +15,18 @@
         "strict": true,
         "module": "commonjs",
         "moduleResolution": "node",
-        "rootDir": ".",
+        "rootDir": "../.",
         "paths": {
             "@angular/*": [
-                "../node_modules/@angular/*"
+                "../../node_modules/@angular/*"
             ],
             "@rxjs/*": [
-                "../node_modules/rxjs/*"
+                "../../node_modules/rxjs/*"
             ],
+            "@ngx-api-orm/core": [
+                "./core/src"
+            ],
+                
         },
         "sourceMap": true,
         "suppressImplicitAnyIndexErrors": true,

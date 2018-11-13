@@ -19,14 +19,11 @@
         "rootDir": ".",
         "paths": {
             "@angular/*": [
-                "../rs/infine-api/client/node_modules/@angular/*"
+                "../../../node_modules/@angular/*"
             ],
             "@rxjs/*": [
-                "../rs/infine-api/client/node_modules/rxjs/*"
+                "../../../node_modules/rxjs/*"
             ],
-            "active-angular-resource": [
-                "./src/active-angular-resource"
-            ]
         },
         "sourceMap": true,
         "suppressImplicitAnyIndexErrors": true,
