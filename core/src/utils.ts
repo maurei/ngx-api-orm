@@ -6,6 +6,7 @@ import { ToManyBuilder, ToOneBuilder, SimpleBuilder } from './request-handlers/d
 import { ToManyAdapter, ToOneAdapter, SimpleAdapter } from './request-handlers/default-adapters';
 import { plural, singular, isSingular } from 'pluralize';
 import { Resource } from './resource.core';
+import { Observable } from 'rxjs';
 
 export const toPlural = plural;
 export const toSingular = singular;
@@ -105,8 +106,6 @@ export function initMetaData(ctor: any) {
 	}
 }
 
-
-
 /** @internal */
 export function updateInterceptProxyFactory(targetInstance: Resource) {
 	const attributes = Reflect.getMetadata(METAKEYS.ATTRIBUTES, targetInstance.constructor);
@@ -169,6 +168,7 @@ export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export type RawInstanceTemplate<T extends Resource> = Omit<T, keyof Resource>;
 
 export interface ResourceType<T> extends Instantiable<T> {
+	asyncMode: PromiseConstructor | typeof Observable;
 	_instances: T[];
 	collection<U extends Resource>(this: ResourceType<U>): U[];
 	fetch<U extends Resource>(this: ResourceType<U>): Promise<U[]>;

@@ -17,6 +17,14 @@ import { ToOneRelation } from './relations/to-one';
 import { ToManyBuilder, ToOneBuilder, SimpleBuilder } from './request-handlers/default-builders';
 
 import { ToManyAdapter, ToOneAdapter, SimpleAdapter } from './request-handlers/default-adapters';
+import { Observable } from 'rxjs';
+
+export type Filter<T, U> = T extends U ? T : never;
+export type AsyncMode<T = any> = Promise<T> | Observable<T>;
+export const AsyncMode = Promise;
+export type ObservableMode = Observable<any>;
+export type PromiseMode = Observable<any>;
+export type SelectAsyncMode<T, U> = Filter<AsyncMode<T>, U>;
 
 /** A dummy class required to allow for an optional argument in the constructor of your model while keeping it compatible with Angular's dependency injection.
  *
@@ -28,7 +36,8 @@ import { ToManyAdapter, ToOneAdapter, SimpleAdapter } from './request-handlers/d
 export class RawInstance {}
 
 // @dynamic
-export class Resource {
+export class Resource<TMode extends AsyncMode = ObservableMode> {
+	public static asyncMode: PromiseConstructor | typeof Observable;
 	private _adapter: SimpleAdapter;
 	private _builder: SimpleBuilder;
 	private _toOneAdapter: ToOneAdapter;
@@ -191,11 +200,12 @@ export class Resource {
 	 * @param  HttpClientOptions={} options
 	 * @returns Promise<void>
 	 */
-	public async update(options: HttpClientOptions = {}): Promise<void> {
+	public update(options: HttpClientOptions = {}): SelectAsyncMode<this, TMode> {
 		const name = Reflect.getMetadata(METAKEYS.PLURAL, this.constructor);
 		const affectedKeys = Reflect.getMetadata(METAKEYS.UPDATED, this);
 		const body = this._adapter.update(this, affectedKeys);
-		await this._builder.update(name, body, options);
+		const $request = (this._builder.update(name, body, options) as any) as Observable<any>;
+		return (this.ctor.asyncMode === Promise ? $request.toPromise() : $request)  as SelectAsyncMode<this, TMode>;
 	}
 
 	/**
@@ -295,3 +305,13 @@ export class Resource {
 		return instantationByAngularDI;
 	}
 }
+
+class PoepModel extends Resource {}
+
+const x = new PoepModel();
+const y = x.update();
+
+class KakModel extends Resource<Observable> {}
+
+const u = new KakModel();
+const v = u.update();
