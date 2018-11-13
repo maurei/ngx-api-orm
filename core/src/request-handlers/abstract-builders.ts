@@ -1,16 +1,17 @@
 import { ResourceModuleConfiguration, HttpClientOptions, HttpVerb } from '../utils';
 import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 export namespace Abstract {
 	export abstract class BaseBuilder {
 		constructor(protected readonly _http: HttpClient) {}
 
-		public request(method: HttpVerb, path: string, options: HttpClientOptions, body?: any): Promise<Object> {
+		public request(method: HttpVerb, path: string, options: HttpClientOptions, body?: any): Observable<any> {
 			delete options.url;
 			if (body) {
 				options.body = body;
 			}
-			return this._http.request(method, path, options).toPromise();
+			return this._http.request(method, path, options)
 		}
 	}
 
@@ -24,21 +25,21 @@ export namespace Abstract {
 			return path;
 		}
 
-		public fetch(targetNamePlural: string, options: HttpClientOptions): Promise<Object> {
+		public fetch(targetNamePlural: string, options: HttpClientOptions): Observable<Object[]> {
 			const path = options.url || this.buildUrl(targetNamePlural);
-			return <Promise<Object[]>>this.request(HttpVerb.GET, path, options);
+			return this.request(HttpVerb.GET, path, options);
 		}
-		public save(targetNamePlural: string, body: any, options: HttpClientOptions): Promise<Object> {
+		public save(targetNamePlural: string, body: any, options: HttpClientOptions): Observable<Object> {
 			const path = options.url || this.buildUrl(targetNamePlural);
 			return this.request(HttpVerb.POST, path, options, body);
 		}
-		public update(targetNamePlural: string, body: any, options: HttpClientOptions): Promise<any> {
+		public update(targetNamePlural: string, body: any, options: HttpClientOptions): Observable<Object> {
 			const path = options.url || this.buildUrl(targetNamePlural, body);
-			return this.request(HttpVerb.PATCH, path, options, body).then(() => Promise.resolve());
+			return this.request(HttpVerb.PATCH, path, options, body);
 		}
-		public delete(targetNamePlural: string, instance: any, options: HttpClientOptions): Promise<any> {
+		public delete(targetNamePlural: string, instance: any, options: HttpClientOptions): Observable<Object> {
 			const path = options.url || this.buildUrl(targetNamePlural, instance);
-			return this.request(HttpVerb.DELETE, path, options).then(() => Promise.resolve());
+			return this.request(HttpVerb.DELETE, path, options);
 		}
 	}
 	export abstract class ToOneBuilder extends BaseBuilder {
@@ -55,9 +56,9 @@ export namespace Abstract {
 			body: any,
 			relatedInstance: any,
 			options: HttpClientOptions
-		): Promise<void> {
+		): Observable<void> {
 			const path = options.url || this.buildUrl(targetNameSingular, relatedNamePlural, relatedInstance);
-			return this.request(HttpVerb.PATCH, path, options, body).then(() => Promise.resolve());
+			return this.request(HttpVerb.PATCH, path, options, body) as Observable<void>;
 		}
 		public remove(
 			targetNameSingular: string,
@@ -65,9 +66,9 @@ export namespace Abstract {
 			body: any,
 			relatedInstance: any,
 			options: HttpClientOptions
-		): Promise<void> {
+		): Observable<void> {
 			const path = options.url || this.buildUrl(targetNameSingular, relatedNamePlural, relatedInstance);
-			return this.request(HttpVerb.DELETE, path, options).then(() => Promise.resolve());
+			return this.request(HttpVerb.DELETE, path, options);
 		}
 	}
 	export abstract class ToManyBuilder extends BaseBuilder {
@@ -84,9 +85,9 @@ export namespace Abstract {
 			body: any,
 			relatedInstance: any,
 			options: HttpClientOptions
-		): Promise<void> {
+		): Observable<void> {
 			const path = options.url || this.buildUrl(targetNamePlural, relatedNamePlural, relatedInstance);
-			return this.request(HttpVerb.POST, path, options, body).then(() => Promise.resolve());
+			return this.request(HttpVerb.POST, path, options, body);
 		}
 		public remove(
 			targetNamePlural: string,
@@ -94,9 +95,9 @@ export namespace Abstract {
 			body: any,
 			relatedInstance: any,
 			options: HttpClientOptions
-		): Promise<void> {
+		): Observable<void> {
 			const path = options.url || this.buildUrl(targetNamePlural, relatedNamePlural, relatedInstance);
-			return this.request(HttpVerb.DELETE, path, options, body).then(() => Promise.resolve());
+			return this.request(HttpVerb.DELETE, path, options, body);
 		}
 	}
 }

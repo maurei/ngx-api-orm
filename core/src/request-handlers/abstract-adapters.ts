@@ -14,8 +14,8 @@ export namespace Abstract {
 		public update(instance: any, affectedFields: { [field: string]: string | undefined | null }) {
 			return this.convertOutgoing(instance);
 		}
-		public parseIncoming(rawInstances: Object): Object[] {
-			return <Object[]>rawInstances;
+		public parseIncoming(rawInstances: Object): Object {
+			return <Object>rawInstances;
 		}
 		private getBackPointingKey(instance: any) {
 			const circular = instance._configuration.circular;

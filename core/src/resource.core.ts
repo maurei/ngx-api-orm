@@ -9,7 +9,12 @@ import {
 	HttpClientOptions,
 	RequestHandlers,
 	UnresolvedRequestHandlers,
-	RawInstanceTemplate
+	RawInstanceTemplate,
+	AsyncModes,
+	Return,
+	Observables,
+	Promises,
+	ResourceModeAgnostic
 } from './utils';
 import { ToManyRelation } from './relations/to-many';
 import { RelationType } from './relations/relation-configuration';
@@ -18,25 +23,19 @@ import { ToManyBuilder, ToOneBuilder, SimpleBuilder } from './request-handlers/d
 
 import { ToManyAdapter, ToOneAdapter, SimpleAdapter } from './request-handlers/default-adapters';
 import { Observable } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 
-export type Filter<T, U> = T extends U ? T : never;
-export type AsyncMode<T = any> = Promise<T> | Observable<T>;
-export const AsyncMode = Promise;
-export type ObservableMode = Observable<any>;
-export type PromiseMode = Observable<any>;
-export type SelectAsyncMode<T, U> = Filter<AsyncMode<T>, U>;
+// export type SelectAsyncMode<T extends any, U> = Filter<AsyncMode<T>, U>;
 
 /** A dummy class required to allow for an optional argument in the constructor of your model while keeping it compatible with Angular's dependency injection.
- *
  * There is no need to use this type anywhere explicitly.
- *
  * On the other hand, the type {@link RawInstanceTemplate<T>} might come in handy when instantiating instances of your model from plain objects, e.g. when using the [factory method]{@link Resource#factory}.
  *
  */
 export class RawInstance {}
 
 // @dynamic
-export class Resource<TMode extends AsyncMode = ObservableMode> {
+export class Resource<TMode extends AsyncModes = Observables> {
 	public static asyncMode: PromiseConstructor | typeof Observable;
 	private _adapter: SimpleAdapter;
 	private _builder: SimpleBuilder;
@@ -161,6 +160,9 @@ export class Resource<TMode extends AsyncMode = ObservableMode> {
 			}
 		}
 
+		let roffel: Resource<Observables>;
+		roffel = this;
+
 		this._populateFields(_rawInstance);
 		const proxyInstance = updateInterceptProxyFactory(this);
 		this._populateRelations(proxyInstance);
@@ -183,29 +185,36 @@ export class Resource<TMode extends AsyncMode = ObservableMode> {
 	 * @param  HttpClientOptions={} options
 	 * @returns Promise<T>
 	 */
-	public async save(options: HttpClientOptions = {}): Promise<this> {
+	public save(options: HttpClientOptions = {}): Return<TMode, this> {
 		const name = Reflect.getMetadata(METAKEYS.PLURAL, this.constructor);
 		const body = this._adapter.save(this);
-		const response = await this._builder.save(name, body, options);
-		const rawInstance = this._adapter.parseIncoming(response) as any;
-		// there is no need to construct anything here, we only need to set the id to the current instance,
-		// and add it to the internal collection, and then return this.
-		this.id = rawInstance.id;
-		this._metaAdd(this);
-		return Promise.resolve(this);
+		const $request = this._builder.save(name, body, options).pipe(
+			map(this._adapter.parseIncoming),
+			tap((rawInstance: RawInstanceTemplate<any>) => {
+				this.id = rawInstance.id;
+				this._metaAdd(this);
+			}),
+			// there is no need to construct anything here, we only need to set the id to the current instance,
+			// and add it to the internal collection, and then return this.
+			map(() => this)
+		);
+		return this.return<this>($request);
 	}
 
+	private return<T = void>($request: Observable<any>): Return<TMode, T> {
+		return (this.ctor.asyncMode === Promise ? $request.toPromise() : $request) as Return<TMode, T>;
+	}
 	/**
 	 * Runs the update pipeline of your model for a single resource using the simple request adapter and builder.
 	 * @param  HttpClientOptions={} options
 	 * @returns Promise<void>
 	 */
-	public update(options: HttpClientOptions = {}): SelectAsyncMode<this, TMode> {
+	public update(options: HttpClientOptions = {}): Return<TMode> {
 		const name = Reflect.getMetadata(METAKEYS.PLURAL, this.constructor);
 		const affectedKeys = Reflect.getMetadata(METAKEYS.UPDATED, this);
 		const body = this._adapter.update(this, affectedKeys);
-		const $request = (this._builder.update(name, body, options) as any) as Observable<any>;
-		return (this.ctor.asyncMode === Promise ? $request.toPromise() : $request)  as SelectAsyncMode<this, TMode>;
+		const $request = this._builder.update(name, body, options);
+		return this.return($request);
 	}
 
 	/**
@@ -311,7 +320,7 @@ class PoepModel extends Resource {}
 const x = new PoepModel();
 const y = x.update();
 
-class KakModel extends Resource<Observable> {}
+class KakModel extends Resource<Promises> {}
 
 const u = new KakModel();
 const v = u.update();

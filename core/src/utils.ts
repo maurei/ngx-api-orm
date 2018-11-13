@@ -5,7 +5,7 @@ import { RelationConfiguration, RelationType } from './relations/relation-config
 import { ToManyBuilder, ToOneBuilder, SimpleBuilder } from './request-handlers/default-builders';
 import { ToManyAdapter, ToOneAdapter, SimpleAdapter } from './request-handlers/default-adapters';
 import { plural, singular, isSingular } from 'pluralize';
-import { Resource } from './resource.core';
+import { Resource, AsyncModes } from './resource.core';
 import { Observable } from 'rxjs';
 
 export const toPlural = plural;
@@ -106,8 +106,14 @@ export function initMetaData(ctor: any) {
 	}
 }
 
+export type ResourceModeAgnostic = Resource<Promise<any>> | Resource<Observable<any>>;
+export type AsyncModes<T extends any = any> = Promise<T> | Observable<T>;
+export type Return<T extends AsyncModes<U>, U = void> = T extends Promise<U> ? Promise<U> : T extends Observable<U> ? Observable<U> : never;
+export type Observables = Observable<any>;
+export type Promises = Promise<any>;
+
 /** @internal */
-export function updateInterceptProxyFactory(targetInstance: Resource) {
+export function updateInterceptProxyFactory(targetInstance: ResourceModeAgnostic) {
 	const attributes = Reflect.getMetadata(METAKEYS.ATTRIBUTES, targetInstance.constructor);
 	return new Proxy(targetInstance, {
 		set(instance: any, key: string, value: any, proxy: any): boolean {
@@ -165,10 +171,10 @@ export interface Instantiable<T> {
 }
 
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
-export type RawInstanceTemplate<T extends Resource> = Omit<T, keyof Resource>;
-
+export type RawInstanceTemplate<T extends any> = Omit<T, keyof Resource>; // need to get rid of this any here;
+export type ObservableConstructor = typeof Observable;
 export interface ResourceType<T> extends Instantiable<T> {
-	asyncMode: PromiseConstructor | typeof Observable;
+	asyncMode: PromiseConstructor | ObservableConstructor;
 	_instances: T[];
 	collection<U extends Resource>(this: ResourceType<U>): U[];
 	fetch<U extends Resource>(this: ResourceType<U>): Promise<U[]>;
