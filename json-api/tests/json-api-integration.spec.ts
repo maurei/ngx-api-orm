@@ -189,10 +189,7 @@ const nestedJsonApiResponse: JsonApiResponse = {
 		{
 			type: 'related-manies',
 			relationships: {
-				host: [
-					{ data: { type: 'hosts', id: '1' } },
-					{ data: { type: 'hosts', id: '2' } }
-				]
+				host: [{ data: { type: 'hosts', id: '1' } }, { data: { type: 'hosts', id: '2' } }]
 			},
 			id: '29',
 			attributes: {
@@ -206,10 +203,7 @@ const nestedJsonApiResponse: JsonApiResponse = {
 		{
 			type: 'related-manies',
 			relationships: {
-				host: [
-					{ data: { type: 'hosts', id: '1' }},
-					{ data: { type: 'hosts', id: '2' }}
-				]
+				host: [{ data: { type: 'hosts', id: '1' } }, { data: { type: 'hosts', id: '2' } }]
 			},
 			id: '30',
 			attributes: {
@@ -223,10 +217,7 @@ const nestedJsonApiResponse: JsonApiResponse = {
 		{
 			type: 'related-manies',
 			relationships: {
-				host: [
-					{ data: { type: 'hosts', id: '1' }},
-					{ data: { type: 'hosts', id: '1' }},
-			]
+				host: [{ data: { type: 'hosts', id: '1' } }, { data: { type: 'hosts', id: '1' } }]
 			},
 			id: '31',
 			attributes: {
@@ -357,7 +348,7 @@ describe('JsonApi request handler integration', () => {
 		});
 		it('a single resource', async () => {
 			const unsavedToOne = new toOneCtor(toOneNoId);
-			const savePromise = unsavedToOne.save();
+			const savePromise = unsavedToOne.save().toPromise();
 			const mockreq = httpMock.expectOne(`/related-ones`);
 			expect(mockreq.request.method).toBe('POST');
 			mockreq.flush(toOnePostResponse);
@@ -368,7 +359,7 @@ describe('JsonApi request handler integration', () => {
 		it('a to one resource', async () => {
 			const hostInstance = new hostCtor(completeHostWithId);
 			const toOneInstance = new toOneCtor(toOneWithId);
-			const addPromise = hostInstance.relatedInstance.set(toOneInstance);
+			const addPromise = hostInstance.relatedInstance.set(toOneInstance).toPromise();
 			addPromise.then(() => {
 				expect(hostInstance.relatedInstance.instance).toBe(toOneInstance);
 			});
@@ -379,7 +370,7 @@ describe('JsonApi request handler integration', () => {
 		it('a to many resource', async () => {
 			const hostInstance = new hostCtor(completeHostWithId);
 			const toManyInstance = new toManyCtor(toManyWithId);
-			const addPromise = hostInstance.relatedInstances.add(toManyInstance);
+			const addPromise = hostInstance.relatedInstances.add(toManyInstance).toPromise();
 			addPromise.then(() => {
 				expect(hostInstance.relatedInstances[hostInstance.relatedInstances.length - 1]).toBe(toManyInstance);
 			});
@@ -400,7 +391,7 @@ describe('JsonApi request handler integration', () => {
 		it('a single resource', async () => {
 			expect(hostCtor.collection().length).toBe(3);
 			const host = hostCtor.collection()[0];
-			const deletePromise = host.delete();
+			const deletePromise = host.delete().toPromise();
 			const mockreq = httpMock.expectOne(`/hosts/1`);
 			expect(mockreq.request.method).toBe('DELETE');
 			mockreq.flush(null);
@@ -411,7 +402,7 @@ describe('JsonApi request handler integration', () => {
 		it('a to one resource', async () => {
 			const host = nestedInstance[0];
 			const target = host.relatedInstance.instance;
-			const deletePromise = host.relatedInstance.remove();
+			const deletePromise = host.relatedInstance.remove().toPromise();
 			deletePromise.then(() => {
 				expect(host.relatedInstance.instance).toBeNull();
 			});
@@ -424,7 +415,7 @@ describe('JsonApi request handler integration', () => {
 			const host = nestedInstance[1];
 			const target = host.relatedInstances[0];
 			const preLength = host.relatedInstances.length;
-			const deletePromise = host.relatedInstances.remove(target);
+			const deletePromise = host.relatedInstances.remove(target).toPromise();
 			deletePromise.then(() => {
 				expect(host.relatedInstances.length).toBe(preLength - 1);
 			});
@@ -442,7 +433,7 @@ describe('JsonApi request handler integration', () => {
 			toManyCtor = ctors.getRelatedMany();
 		});
 		it('getting nested resources', async () => {
-			const getPromise = hostCtor.fetch();
+			const getPromise = hostCtor.fetch().toPromise();
 			const mockreq = httpMock.expectOne('/hosts');
 			expect(mockreq.request.method).toBe('GET');
 			mockreq.flush(nestedJsonApiResponse);
@@ -456,7 +447,7 @@ describe('JsonApi request handler integration', () => {
 			hostCtor.factory(nestedTemplate);
 			const target = hostCtor.collection()[0];
 			target.name = 'patched';
-			const patchPromise = target.update();
+			const patchPromise = target.update().toPromise();
 			const mockreq = httpMock.expectOne(`/hosts/${target.id}`);
 			expect(mockreq.request.method).toBe('PATCH');
 			const body = {
@@ -476,7 +467,7 @@ describe('JsonApi request handler integration', () => {
 			hostCtor.factory(nestedTemplate);
 			const related = hostCtor.collection()[0].relatedInstance.instance;
 			related.field = 'patched';
-			const patchPromise = related.update();
+			const patchPromise = related.update().toPromise();
 			const mockreq = httpMock.expectOne(`/related-ones/${related.id}`);
 			expect(mockreq.request.method).toBe('PATCH');
 
@@ -504,7 +495,7 @@ describe('JsonApi request handler integration', () => {
 			toManyBuilder = injector.get(ToManyBuilder);
 		});
 		it('sets the headers correctly', async () => {
-			builder.fetch('hosts', {});
+			builder.fetch('hosts', {}).toPromise();
 			const req = httpMock.expectOne('/hosts');
 			const headers = req.request.headers;
 			expect(headers.get('Content-Type')).toBe('application/vnd.api+json');

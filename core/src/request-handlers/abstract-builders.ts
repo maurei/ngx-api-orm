@@ -11,7 +11,7 @@ export namespace Abstract {
 			if (body) {
 				options.body = body;
 			}
-			return this._http.request(method, path, options)
+			return this._http.request(method, path, options);
 		}
 	}
 

@@ -193,7 +193,7 @@ export class Resource<TMode extends AsyncModes = Observables> {
 		const name = Reflect.getMetadata(METAKEYS.PLURAL, this.constructor);
 		const body = this._adapter.save(this);
 		const $request = this._builder.save(name, body, options).pipe(
-			map(this._adapter.parseIncoming),
+			map( (response: Object) => this._adapter.parseIncoming(response)),
 			tap((rawInstance: RawInstanceTemplate<any>) => {
 				this.id = rawInstance.id;
 				this._metaAdd(this);

@@ -196,10 +196,9 @@ describe('Request adapters', () => {
 		});
 		it('can parse a flat JsonApiResponse with a single item', () => {
 			const parsed = adapter.parseIncoming(flatSingle);
-			expect(parsed.length).toBe(1);
-			expect(parsed[0].id).toBe('1');
-			expect(parsed[0].title).toBe('JSON API paints my bikeshed!');
-			expect(Object.getOwnPropertyNames(parsed[0]).length).toBe(4);
+			expect(parsed.id).toBe('1');
+			expect(parsed.title).toBe('JSON API paints my bikeshed!');
+			expect(Object.getOwnPropertyNames(parsed).length).toBe(4);
 		});
 		it('can parse a flat JsonApiResponse with a collection of items', () => {
 			const parsed = adapter.parseIncoming(flatCollection);
@@ -213,14 +212,13 @@ describe('Request adapters', () => {
 		});
 		it('can parse a nested JsonApiResponse with a single item', () => {
 			const parsed = adapter.parseIncoming(nestedSingle);
-			expect(parsed.length).toBe(1);
-			expect(parsed[0].id).toBe('1');
-			expect(parsed[0].title).toBe('JSON API paints my bikeshed!');
-			expect(Object.getOwnPropertyNames(parsed[0]).length).toBe(4);
-			expect(parsed[0].author.id).toBe('9');
-			expect(parsed[0].author.firstName).toBe('Dan');
-			expect(Object.getOwnPropertyNames(parsed[0].author).length).toBe(4);
-			expect(parsed[0].comments.length).toBe(2);
+			expect(parsed.id).toBe('1');
+			expect(parsed.title).toBe('JSON API paints my bikeshed!');
+			expect(Object.getOwnPropertyNames(parsed).length).toBe(4);
+			expect(parsed.author.id).toBe('9');
+			expect(parsed.author.firstName).toBe('Dan');
+			expect(Object.getOwnPropertyNames(parsed.author).length).toBe(4);
+			expect(parsed.comments.length).toBe(2);
 		});
 		it('can parse a nested JsonApiResponse with a collection of items (where some nested items are missing from include)', () => {
 			const parsed = adapter.parseIncoming(nestedCollection);

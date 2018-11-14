@@ -16,17 +16,7 @@
         "module": "commonjs",
         "moduleResolution": "node",
         "rootDir": "../.",
-        "paths": {
-            "@angular/*": [
-                "../../node_modules/@angular/*"
-            ],
-            "@rxjs/*": [
-                "../../node_modules/rxjs/*"
-            ],
-            "@ngx-api-orm/core": [
-                "./core/src"
-            ],
-                
+        "paths": {                
         },
         "sourceMap": true,
         "suppressImplicitAnyIndexErrors": true,

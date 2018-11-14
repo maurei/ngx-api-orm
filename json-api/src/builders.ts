@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AbstractBuilders as Abstract } from '@ngx-api-orm/core';
 import { ResourceModuleConfiguration, HttpClientOptions, HttpVerb } from '@ngx-api-orm/core';
+import { Observable } from 'rxjs';
 
 /** @internal */
 export namespace JsonApiBuilders {
@@ -10,9 +11,9 @@ export namespace JsonApiBuilders {
 		constructor(_http: HttpClient, _config: ResourceModuleConfiguration) {
 			super(_http, _config);
 		}
-		public update(targetNamePlural: string, body: any, options: HttpClientOptions): Promise<any> {
+		public update(targetNamePlural: string, body: any, options: HttpClientOptions): Observable<Object> {
 			const path = options.url || this.buildUrl(targetNamePlural, { id: body.data.id });
-			return this.request(HttpVerb.PATCH, path, options, body).then(() => Promise.resolve());
+			return this.request(HttpVerb.PATCH, path, options, body);
 		}
 	}
 	@Injectable({ providedIn: 'root' })
@@ -20,9 +21,9 @@ export namespace JsonApiBuilders {
 		constructor(_http: HttpClient, _config: ResourceModuleConfiguration) {
 			super(_http, _config);
 		}
-		public remove(targetNameSingular: string, relatedNamePlural: string, body: any, relatedInstance: any, options: HttpClientOptions): Promise<void> {
+		public remove(targetNameSingular: string, relatedNamePlural: string, body: any, relatedInstance: any, options: HttpClientOptions): Observable<void> {
 			const path = options.url || this.buildUrl(targetNameSingular, relatedNamePlural, relatedInstance);
-			return this.request(HttpVerb.PATCH, path, options, body).then(() => Promise.resolve());
+			return this.request(HttpVerb.PATCH, path, options, body);
 		}
 		protected buildUrl(targetNameSingular: string, relatedNamePlural: string, relatedInstance: any): string {
 			const path = (this.config.rootPath || '') + `/${relatedNamePlural}/${relatedInstance.id}/relationships/${targetNameSingular}`;
@@ -38,9 +39,9 @@ export namespace JsonApiBuilders {
 			const path = (this.config.rootPath || '') + `/${relatedNamePlural}/${relatedInstance.id}/relationships/${targetNamePlural}`;
 			return path;
 		}
-		public remove(targetNamePlural: string, relatedNamePlural: string, body: any, relatedInstance: any, options: HttpClientOptions): Promise<void> {
+		public remove(targetNamePlural: string, relatedNamePlural: string, body: any, relatedInstance: any, options: HttpClientOptions): Observable<void> {
 			const path = options.url || this.buildUrl(targetNamePlural, relatedNamePlural, relatedInstance);
-			return this.request(HttpVerb.DELETE, path, options, body).then(() => Promise.resolve());
+			return this.request(HttpVerb.DELETE, path, options, body);
 		}
 	}
 }

@@ -3,7 +3,7 @@ import { Resource } from '../resource.core';
 import { METAKEYS, HttpClientOptions, AsyncModes, AsyncReturnType, Return, returnPromiseOrObservable, Observables } from '../utils';
 import { ToOneBuilder } from '../request-handlers/default-builders';
 import { ToOneAdapter } from '../request-handlers/default-adapters';
-import { Observable, empty } from 'rxjs';
+import { Observable, EMPTY } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
 export class ToOneRelation<THost extends Resource<AsyncModes>, TRelated extends Resource, TMode extends AsyncModes = Observables> {
@@ -63,7 +63,7 @@ export class ToOneRelation<THost extends Resource<AsyncModes>, TRelated extends 
 			const body = this._adapter.remove(this.instance, this._hostInstance);
 			$request = this._builder.remove(relatedName, hostName, body, this._hostInstance, options).pipe(tap(() => (this.instance = null)));
 		} else {
-			$request = empty();
+			$request = EMPTY;
 		}
 		return returnPromiseOrObservable<TMode>($request, this._asyncMode);
 	}
