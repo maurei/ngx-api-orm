@@ -14,6 +14,8 @@ import {
 	Return,
 	Observables,
 	Promises,
+	returnPromiseOrObservable,
+	AsyncReturnType
 } from './utils';
 import { ToManyRelation } from './relations/to-many';
 import { RelationType } from './relations/relation-configuration';
@@ -35,7 +37,7 @@ export class RawInstance {}
 
 // @dynamic
 export class Resource<TMode extends AsyncModes = Observables> {
-	public static asyncMode: PromiseConstructor | typeof Observable;
+	public static _asyncMode: AsyncReturnType = AsyncReturnType.Observables;
 	private _adapter: SimpleAdapter;
 	private _builder: SimpleBuilder;
 	private _toOneAdapter: ToOneAdapter;
@@ -99,10 +101,10 @@ export class Resource<TMode extends AsyncModes = Observables> {
 		const builder = injections[1];
 		const resourceName = Reflect.getMetadata(METAKEYS.PLURAL, this);
 		const $request = builder.fetch(resourceName, options).pipe(
-			map((response: Object) => adapter.parseIncoming(response)),
+			map((response: Object) => adapter.parseIncoming(response) as Object[]),
 			map((rawInstances: Object[]) => this.factory<T>(rawInstances))
 		);
-		return (this.asyncMode === Promise ? $request.toPromise() : $request) as Return<U, T[]>;
+		return returnPromiseOrObservable($request, this._asyncMode);
 	}
 
 	/**
@@ -196,11 +198,11 @@ export class Resource<TMode extends AsyncModes = Observables> {
 				this.id = rawInstance.id;
 				this._metaAdd(this);
 			}),
+			map(() => {})
 			// there is no need to construct anything here, we only need to set the id to the current instance,
 			// and add it to the internal collection, and then return this.
-			map(() => this)
 		);
-		return this._return($request);
+		return returnPromiseOrObservable($request, this.ctor._asyncMode);
 	}
 	/**
 
@@ -213,7 +215,7 @@ export class Resource<TMode extends AsyncModes = Observables> {
 		const affectedKeys = Reflect.getMetadata(METAKEYS.UPDATED, this);
 		const body = this._adapter.update(this, affectedKeys);
 		const $request = this._builder.update(name, body, options);
-		return this._return($request);
+		return returnPromiseOrObservable($request, this.ctor._asyncMode);
 	}
 
 	/**
@@ -223,8 +225,8 @@ export class Resource<TMode extends AsyncModes = Observables> {
 	 */
 	public delete(options: HttpClientOptions = {}): Return<TMode> {
 		const name = Reflect.getMetadata(METAKEYS.PLURAL, this.constructor);
-		const $request = this._builder.delete(name, this, options).pipe(tap(this._metaRemove));
-		return this._return($request);
+		const $request = this._builder.delete(name, this, options).pipe(tap(this._metaRemove.bind(this)));
+		return returnPromiseOrObservable($request, this.ctor._asyncMode);
 	}
 
 	/** @internal */
@@ -264,20 +266,15 @@ export class Resource<TMode extends AsyncModes = Observables> {
 			const config = relations[key];
 			switch (config.type) {
 				case RelationType.ToOne:
-					host[key] = new ToOneRelation(host, config, host._toOneAdapter, host._toOneBuilder);
+					host[key] = new ToOneRelation<this, any, TMode>(host, config, host._toOneAdapter, host._toOneBuilder, this.ctor._asyncMode);
 					break;
 				case RelationType.ToMany:
-					host[key] = new ToManyRelation(host, config, host._toManyAdapter, host._toManyBuilder);
+					host[key] = new ToManyRelation<this, any, TMode>(host, config, host._toManyAdapter, host._toManyBuilder, this.ctor._asyncMode);
 					break;
 				default:
 					throw Error('shouldnt come here');
 			}
 		});
-	}
-
-	/** @internal  ensures the correct return type: promise or observable.*/
-	private _return<T = void>($request: Observable<any>): Return<TMode, T> {
-		return (this.ctor.asyncMode === Promise ? $request.toPromise() : $request) as Return<TMode, T>;
 	}
 
 	/** @internal add instance to the metadata instance list*/

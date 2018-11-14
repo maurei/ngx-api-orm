@@ -1,17 +1,22 @@
 import { RelationConfiguration } from './relation-configuration';
 import { Resource } from '../resource.core';
-import { METAKEYS, HttpClientOptions, AsyncModes } from '../utils';
+import { METAKEYS, HttpClientOptions, AsyncModes, AsyncReturnType, Return, returnPromiseOrObservable, Promises, Observables } from '../utils';
 import { ToManyBuilder } from '../request-handlers/default-builders';
 import { ToManyAdapter } from '../request-handlers/default-adapters';
 import { ToOneRelation } from './to-one';
+import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 // @dynamic
-export class ToManyRelation<THost extends Resource<AsyncModes>, TRelated extends Resource> extends Array<TRelated> {
+export class ToManyRelation<THost extends Resource<AsyncModes>, TRelated extends Resource, TMode extends AsyncModes = Observables> extends Array<
+	TRelated
+> {
 	constructor(
 		private readonly _hostInstance: THost,
 		private readonly _configuration: RelationConfiguration<THost, TRelated>,
 		private readonly _adapter: ToManyAdapter,
-		private readonly _builder: ToManyBuilder
+		private readonly _builder: ToManyBuilder,
+		private readonly _asyncMode: AsyncReturnType
 	) {
 		super();
 		let rawObjects: Array<{}> | null = _hostInstance[_configuration.keyOnInstance];
@@ -49,7 +54,7 @@ export class ToManyRelation<THost extends Resource<AsyncModes>, TRelated extends
 	 * @param  TRelated relatedInstance
 	 * @param  any={} options
 	 */
-	public add = async (relatedInstance: TRelated, options: HttpClientOptions = {}): Promise<void> => {
+	public add = (relatedInstance: TRelated, options: HttpClientOptions = {}): Return<TMode> => {
 		const hostName = Reflect.getMetadata(METAKEYS.PLURAL, this._configuration.HostResource);
 		const relatedName = Reflect.getMetadata(METAKEYS.PLURAL, this._configuration.RelatedResource);
 
@@ -57,8 +62,10 @@ export class ToManyRelation<THost extends Resource<AsyncModes>, TRelated extends
 			throw new TypeError('parameter relatedInstance must be of type ' + relatedName);
 		}
 		const body = this._adapter.add(relatedInstance, this._hostInstance);
-		await this._builder.add(relatedName, hostName, body, this._hostInstance, options);
-		this.push(relatedInstance);
+		const $request = this._builder
+			.add(relatedName, hostName, body, this._hostInstance, options)
+			.pipe(tap(() => this.push(relatedInstance)));
+		return returnPromiseOrObservable<TMode>($request, this._asyncMode);
 	};
 
 	/**
@@ -66,7 +73,7 @@ export class ToManyRelation<THost extends Resource<AsyncModes>, TRelated extends
 	 * @param  TRelated relatedInstance
 	 * @param  any={} options
 	 */
-	public remove = async (relatedInstance: TRelated, options: HttpClientOptions = {}) => {
+	public remove = (relatedInstance: TRelated, options: HttpClientOptions = {}): Return<TMode> => {
 		const hostName = Reflect.getMetadata(METAKEYS.PLURAL, this._configuration.HostResource);
 		const relatedName = Reflect.getMetadata(METAKEYS.PLURAL, this._configuration.RelatedResource);
 
@@ -74,8 +81,10 @@ export class ToManyRelation<THost extends Resource<AsyncModes>, TRelated extends
 			throw new RangeError('parameter relatedInstance not included in this RelatedResourceCollection');
 		}
 		const body = this._adapter.remove(relatedInstance, this._hostInstance);
-		await this._builder.remove(relatedName, hostName, body, this._hostInstance, options);
-		this._removeInstance(relatedInstance);
+		const $request = this._builder
+			.remove(relatedName, hostName, body, this._hostInstance, options)
+			.pipe(tap(() => this._removeInstance(relatedInstance)));
+		return returnPromiseOrObservable<TMode>($request, this._asyncMode);
 	};
 
 	/** @internal */
@@ -89,3 +98,4 @@ export class ToManyRelation<THost extends Resource<AsyncModes>, TRelated extends
 	};
 	/*tslint:enable semicolon*/
 }
+

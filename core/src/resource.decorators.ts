@@ -2,6 +2,7 @@ import { Injectable, Optional } from '@angular/core';
 import { Resource } from './resource.core';
 import { RelationType, RelationConfiguration } from './relations/relation-configuration';
 import { initMetaData, METAKEYS, getPluralAndSingularNames } from './utils';
+import { Observable } from 'rxjs';
 
 /**
  * Options object that can be passed to the {@link Model} when decorating your model. Currently it is only possible to configure `name`, which is used in

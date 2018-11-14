@@ -153,11 +153,11 @@ export type RawInstanceTemplate<T extends any> = Omit<T, keyof Resource>; // nee
 export type ObservableConstructor = typeof Observable;
 
 export interface ResourceType<T> extends Instantiable<T> {
-	asyncMode: PromiseConstructor | ObservableConstructor;
+	_asyncMode: AsyncReturnType;
 	_instances: T[];
 	template<U extends Resource<AsyncModes>>(this: ResourceType<U>): RawInstanceTemplate<U>;
 	collection<U extends Resource<AsyncModes>>(this: ResourceType<U>): U[];
-	fetch<U extends Resource<AsyncModes>>(this: ResourceType<U>, options?: HttpClientOptions): AsyncModes<U[]>;
+	fetch<U extends Resource<L>, L extends AsyncModes>(this: ResourceType<U>, options?: HttpClientOptions): Return<L, U[]>;
 	find<U extends Resource<AsyncModes>>(this: ResourceType<U>, id: number): U | undefined;
 	factory<U extends Resource<AsyncModes>>(this: ResourceType<U>, rawInstance: Array<{}>): Array<U>;
 	factory<U extends Resource<AsyncModes>>(this: ResourceType<U>, rawInstance: {}): U;
@@ -212,4 +212,11 @@ export function updateInterceptProxyFactory<T extends Resource<AsyncModes>>(targ
 
 export type AsyncModes<U = any> = Promise<U> | Observable<U>;
 
-
+export enum AsyncReturnType {
+	Promises,
+	Observables
+}
+/** @internal  ensures the correct return type: promise or observable.*/
+export function returnPromiseOrObservable<TMode extends AsyncModes, T = void>($request: Observable<any>, mode: AsyncReturnType): Return<TMode, T> {
+	return (mode === AsyncReturnType.Promises ? $request.toPromise() : $request) as Return<TMode, T>;
+}

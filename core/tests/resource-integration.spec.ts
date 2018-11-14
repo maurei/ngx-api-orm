@@ -1,7 +1,7 @@
 
 /*tslint:disable:no-non-null-assertion*/
 import { ResourceModule } from '../src/resource.module';
-import { ResourceType } from '../src/utils';
+import { ResourceType, Observables } from '../src/utils';
 import { TestBed, getTestBed, async } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { IHostModel, IOneToOneModel, IOneToManyModel, getModels, TestCase, hostNoRelation, fullTemplateNoMTM, hostNoRelationNoId } from './models';
@@ -45,7 +45,7 @@ describe('Resource class integration', () => {
 		it('a to one resource', async () => {
 			const hostInstance = new Model(hostNoRelation);
 			const toOneInstance = new ToOneModel(toOneWithId);
-			const addPromise = hostInstance.oneToOneModel.set(toOneInstance);
+			const addPromise = hostInstance.oneToOneModel.set(toOneInstance).toPromise();
 			addPromise.then(() => {
 				expect(hostInstance.oneToOneModel.instance).toBe(toOneInstance);
 			});
@@ -56,7 +56,7 @@ describe('Resource class integration', () => {
 		it('a to many resource', async () => {
 			const hostInstance = new Model(hostNoRelation);
 			const toManyInstance = new ToManyModel(toManyWithId);
-			const addPromise = hostInstance.oneToManyModels.add(toManyInstance);
+			const addPromise = hostInstance.oneToManyModels.add(toManyInstance).toPromise();
 			addPromise.then(() => {
 				expect(hostInstance.oneToManyModels[hostInstance.oneToManyModels.length - 1]).toBe(toManyInstance);
 			});
@@ -87,7 +87,7 @@ describe('Resource class integration', () => {
 		});
 		it('a to one resource', async () => {
 			const host = nestedInstance[0];
-			const deletePromise = host.oneToOneModel.remove();
+			const deletePromise = host.oneToOneModel.remove().toPromise();
 			deletePromise.then(() => {
 				expect(host.oneToOneModel.instance).toBeNull();
 			});
@@ -99,7 +99,7 @@ describe('Resource class integration', () => {
 			const host = nestedInstance[1];
 			const target = host.oneToManyModels[0];
 			const preLength = host.oneToManyModels.length;
-			const deletePromise = host.oneToManyModels.remove(target);
+			const deletePromise = host.oneToManyModels.remove(target).toPromise();
 			deletePromise.then(() => {
 				expect(host.oneToManyModels.length).toBe(preLength - 1);
 			});
@@ -116,7 +116,7 @@ describe('Resource class integration', () => {
 			ToManyModel = OneToManyModel;
 		});
 		it('getting nested resources', async () => {
-			const getPromise = Model.fetch<IHostModel, Observable>()
+			const getPromise = Model.fetch<IHostModel, Observables>().toPromise();
 			const mockreq = httpMock.expectOne('/host-models');
 			expect(mockreq.request.method).toBe('GET');
 			mockreq.flush(fullTemplateNoMTM);
@@ -130,7 +130,7 @@ describe('Resource class integration', () => {
 			Model.factory(fullTemplateNoMTM);
 			const related = Model.collection()[0].oneToOneModel.instance!;
 			related.field = 'patched';
-			const putPromise = related.update();
+			const putPromise = related.update().toPromise();
 			const mockreq = httpMock.expectOne(`/one-to-one-models/${related.id}`);
 			expect(mockreq.request.method).toBe('PATCH');
 			const expected = expect(mockreq.request.body).toEqual(patchExpected);

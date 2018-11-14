@@ -18,12 +18,6 @@
         "moduleResolution": "node",
         "rootDir": ".",
         "paths": {
-            "@angular/*": [
-                "../../../node_modules/@angular/*"
-            ],
-            "@rxjs/*": [
-                "../../../node_modules/rxjs/*"
-            ],
         },
         "sourceMap": true,
         "suppressImplicitAnyIndexErrors": true,
