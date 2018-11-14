@@ -8,9 +8,17 @@ export enum RelationType {
 	None = 'none'
 }
 
+export interface IRelationConfiguration {
+	readonly HostResource: ResourceType<any>;
+	readonly keyOnInstance: any;
+	readonly type: RelationType;
+	RelatedResource: ResourceType<any>;
+	readonly relatedResourceString?: string;
+}
+
 // @dynamic
 /** @internal */
-export class RelationConfiguration<THost extends Resource, TRelated extends Resource> {
+export class RelationConfiguration<THost extends Resource, TRelated extends Resource> implements IRelationConfiguration {
 	public circular: RelationConfiguration<TRelated, THost> | undefined;
 	constructor(
 		public readonly HostResource: ResourceType<THost>,

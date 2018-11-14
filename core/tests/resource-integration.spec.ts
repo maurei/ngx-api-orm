@@ -32,7 +32,7 @@ describe('Resource class integration', () => {
 		});
 		it('a new resource', async () => {
 			const unsavedHost = new Model(hostNoRelationNoId);
-			const savePromise = unsavedHost.save();
+			const savePromise = unsavedHost.save().toPromise();
 			const mockreq = httpMock.expectOne(`/host-models`);
 			expect(mockreq.request.method).toBe('POST');
 			const rv = Object.assign({}, hostNoRelation);
@@ -77,7 +77,7 @@ describe('Resource class integration', () => {
 		it('a resource', async () => {
 			expect(Model.collection().length).toBe(2);
 			const host = Model.collection()[0];
-			const deletePromise = host.delete();
+			const deletePromise = host.delete().toPromise();
 			const mockreq = httpMock.expectOne(`/host-models/1`);
 			expect(mockreq.request.method).toBe('DELETE');
 			mockreq.flush(null);
@@ -116,7 +116,7 @@ describe('Resource class integration', () => {
 			ToManyModel = OneToManyModel;
 		});
 		it('getting nested resources', async () => {
-			const getPromise = Model.fetch();
+			const getPromise = Model.fetch<IHostModel, Observable>()
 			const mockreq = httpMock.expectOne('/host-models');
 			expect(mockreq.request.method).toBe('GET');
 			mockreq.flush(fullTemplateNoMTM);

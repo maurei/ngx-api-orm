@@ -14,7 +14,6 @@ import {
 	Return,
 	Observables,
 	Promises,
-	Unpacked
 } from './utils';
 import { ToManyRelation } from './relations/to-many';
 import { RelationType } from './relations/relation-configuration';
@@ -99,8 +98,8 @@ export class Resource<TMode extends AsyncModes = Observables> {
 		const adapter = injections[0];
 		const builder = injections[1];
 		const resourceName = Reflect.getMetadata(METAKEYS.PLURAL, this);
-		const $request = builder.fetch(resourceName, options).pipe<T[]>(
-			map(adapter.parseIncoming),
+		const $request = builder.fetch(resourceName, options).pipe(
+			map((response: Object) => adapter.parseIncoming(response)),
 			map((rawInstances: Object[]) => this.factory<T>(rawInstances))
 		);
 		return (this.asyncMode === Promise ? $request.toPromise() : $request) as Return<U, T[]>;
@@ -145,7 +144,11 @@ export class Resource<TMode extends AsyncModes = Observables> {
 			toManyBuilder
 		];
 
-		/**  The constructor can be called by the Angulars DI framework, or by the user. In the first case, assuming that the user did not manually inject the requestHandlers, only the first parameter will be falsy. In the second case, only the first parameter will be truthy, in which case we will retrieve the injections by getDependencyInjectionEntries (see _handleInjections internal method). */
+		/**  The constructor can be called by the dependency injector or by the user. In the former case,
+		 * assuming that the user did not manually inject the requestHandlers, only the first parameter will be falsy.
+		 *  In the latter case, only the first parameter will be truthy, in which case we will retrieve the injections
+		 *  by getDependencyInjectionEntries (see _handleInjections internal method).
+		 */
 		const instantationByAngularDI = this._handleInjections(requestHandlers);
 		if (instantationByAngularDI && rawInstance === null) {
 			return this;
@@ -232,9 +235,9 @@ export class Resource<TMode extends AsyncModes = Observables> {
 	private _populateFields(rawInstance: any) {
 		const fields = Reflect.getMetadata(METAKEYS.FIELDS, this.constructor) as Array<string>;
 		fields.forEach(field => {
-			const map = Reflect.getMetadata(METAKEYS.MAP, this.constructor, field);
-			if (map && rawInstance.hasOwnProperty(map)) {
-				this[field] = rawInstance[map];
+			const keyMap = Reflect.getMetadata(METAKEYS.MAP, this.constructor, field);
+			if (keyMap && rawInstance.hasOwnProperty(keyMap)) {
+				this[field] = rawInstance[keyMap];
 			} else if (rawInstance.hasOwnProperty(field)) {
 				this[field] = rawInstance[field];
 			} else if (!rawInstance.hasOwnProperty(field)) {
@@ -248,8 +251,7 @@ export class Resource<TMode extends AsyncModes = Observables> {
 							this.constructor
 						)}.
 					 Missing key: ${field}.
-					 Mapped from api response: ${map ? map : 'not mapped'}.
-					 `
+					 Mapped from api response: ${keyMap ? keyMap : 'not mapped'}.`
 					);
 				}
 			}
@@ -315,6 +317,3 @@ export class Resource<TMode extends AsyncModes = Observables> {
 		return instantationByAngularDI;
 	}
 }
-
-
-

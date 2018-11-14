@@ -157,7 +157,7 @@ export interface ResourceType<T> extends Instantiable<T> {
 	_instances: T[];
 	template<U extends Resource<AsyncModes>>(this: ResourceType<U>): RawInstanceTemplate<U>;
 	collection<U extends Resource<AsyncModes>>(this: ResourceType<U>): U[];
-	fetch<U extends Resource<AsyncModes>>(this: ResourceType<U>): AsyncModes<U[]>;
+	fetch<U extends Resource<AsyncModes>>(this: ResourceType<U>, options?: HttpClientOptions): AsyncModes<U[]>;
 	find<U extends Resource<AsyncModes>>(this: ResourceType<U>, id: number): U | undefined;
 	factory<U extends Resource<AsyncModes>>(this: ResourceType<U>, rawInstance: Array<{}>): Array<U>;
 	factory<U extends Resource<AsyncModes>>(this: ResourceType<U>, rawInstance: {}): U;
@@ -212,4 +212,4 @@ export function updateInterceptProxyFactory<T extends Resource<AsyncModes>>(targ
 
 export type AsyncModes<U = any> = Promise<U> | Observable<U>;
 
-export type Unpacked<T> = T extends (infer U)[] ? U : T extends (...args: any[]) => infer U ? U : T extends Promise<infer U> ? U : T;
+
