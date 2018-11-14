@@ -171,7 +171,7 @@ export type RawInstanceTemplate<T extends Resource> = Omit<T, keyof Resource>;
 export interface ResourceType<T> extends Instantiable<T> {
 	_instances: T[];
 	collection<U extends Resource>(this: ResourceType<U>): U[];
-	fetch<U extends Resource>(this: ResourceType<U>, options: HttpClientOptions): Promise<U[]>;
+	fetch<U extends Resource>(this: ResourceType<U>, options?: HttpClientOptions): Promise<U[]>;
 	find<U extends Resource>(this: ResourceType<U>, id: number): U | undefined;
 	template<U extends Resource>(this: ResourceType<U>): RawInstanceTemplate<U>;
 	factory<U extends Resource>(this: ResourceType<U>, rawInstance: Array<{}>): Array<U>;

@@ -133,10 +133,10 @@ export class Resource {
 			toManyBuilder
 		];
 
-		/**  The constructor can be called by the dependency injector or by the user. In the former case, 
+		/**  The constructor can be called by the dependency injector or by the user. In the former case,
 		 * assuming that the user did not manually inject the requestHandlers, only the first parameter will be falsy.
 		 *  In the latter case, only the first parameter will be truthy, in which case we will retrieve the injections
-		 *  by getDependencyInjectionEntries (see _handleInjections internal method). 
+		 *  by getDependencyInjectionEntries (see _handleInjections internal method).
 		 */
 		const instantationByAngularDI = this._handleInjections(requestHandlers);
 		if (instantationByAngularDI && rawInstance === null) {

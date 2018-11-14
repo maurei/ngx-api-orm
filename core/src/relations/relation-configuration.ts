@@ -9,11 +9,11 @@ export enum RelationType {
 }
 
 export interface IRelationConfiguration {
-	readonly HostResource: ResourceType<any>,
-	readonly keyOnInstance: any,
-	readonly type: RelationType,
-	RelatedResource: ResourceType<any>,
-	readonly relatedResourceString?: string
+	readonly HostResource: ResourceType<any>;
+	readonly keyOnInstance: any;
+	readonly type: RelationType;
+	RelatedResource: ResourceType<any>;
+	readonly relatedResourceString?: string;
 }
 
 // @dynamic
