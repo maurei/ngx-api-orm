@@ -1,11 +1,11 @@
-import { Injector, Provider } from '@angular/core';
+import { Injector, Provider, Type } from '@angular/core';
 import { HttpHeaders, HttpParams } from '@angular/common/http';
 // import { Resource } from './resource.core';
 import { RelationConfiguration, RelationType } from './relations/relation-configuration';
 import { ToManyBuilder, ToOneBuilder, SimpleBuilder } from './request-handlers/default-builders';
 import { ToManyAdapter, ToOneAdapter, SimpleAdapter } from './request-handlers/default-adapters';
 import { plural, singular, isSingular } from 'pluralize';
-import { Resource, AsyncModes } from './resource.core';
+import { Resource } from './resource.core';
 import { Observable } from 'rxjs';
 
 export const toPlural = plural;
@@ -106,28 +106,6 @@ export function initMetaData(ctor: any) {
 	}
 }
 
-export type ResourceModeAgnostic = Resource<Promise<any>> | Resource<Observable<any>>;
-export type AsyncModes<T extends any = any> = Promise<T> | Observable<T>;
-export type Return<T extends AsyncModes<U>, U = void> = T extends Promise<U> ? Promise<U> : T extends Observable<U> ? Observable<U> : never;
-export type Observables = Observable<any>;
-export type Promises = Promise<any>;
-
-/** @internal */
-export function updateInterceptProxyFactory(targetInstance: ResourceModeAgnostic) {
-	const attributes = Reflect.getMetadata(METAKEYS.ATTRIBUTES, targetInstance.constructor);
-	return new Proxy(targetInstance, {
-		set(instance: any, key: string, value: any, proxy: any): boolean {
-			if (attributes.indexOf(key) > -1) {
-				const updatedFields = Reflect.getMetadata(METAKEYS.UPDATED, proxy);
-				const map = Reflect.getMetadata(METAKEYS.MAP, instance, key);
-				updatedFields[map || key] = instance[key];
-			}
-			instance[key] = value;
-			return true;
-		}
-	});
-}
-
 /** @internal */
 export function readOnlyArrayProxyFactory(targetArray: Array<any>) {
 	const forbiddenMethods = ['push', 'pop', 'shift', 'unshift'];
@@ -173,15 +151,16 @@ export interface Instantiable<T> {
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export type RawInstanceTemplate<T extends any> = Omit<T, keyof Resource>; // need to get rid of this any here;
 export type ObservableConstructor = typeof Observable;
+
 export interface ResourceType<T> extends Instantiable<T> {
 	asyncMode: PromiseConstructor | ObservableConstructor;
 	_instances: T[];
-	collection<U extends Resource>(this: ResourceType<U>): U[];
-	fetch<U extends Resource>(this: ResourceType<U>): Promise<U[]>;
-	find<U extends Resource>(this: ResourceType<U>, id: number): U | undefined;
-	template<U extends Resource>(this: ResourceType<U>): RawInstanceTemplate<U>;
-	factory<U extends Resource>(this: ResourceType<U>, rawInstance: Array<{}>): Array<U>;
-	factory<U extends Resource>(this: ResourceType<U>, rawInstance: {}): U;
+	template<U extends Resource<AsyncModes>>(this: ResourceType<U>): RawInstanceTemplate<U>;
+	collection<U extends Resource<AsyncModes>>(this: ResourceType<U>): U[];
+	fetch<U extends Resource<AsyncModes>>(this: ResourceType<U>): AsyncModes<U[]>;
+	find<U extends Resource<AsyncModes>>(this: ResourceType<U>, id: number): U | undefined;
+	factory<U extends Resource<AsyncModes>>(this: ResourceType<U>, rawInstance: Array<{}>): Array<U>;
+	factory<U extends Resource<AsyncModes>>(this: ResourceType<U>, rawInstance: {}): U;
 }
 
 export interface HttpClientOptions {
@@ -206,3 +185,31 @@ export type UnresolvedRequestHandlers = [
 	ToManyAdapter | undefined,
 	ToManyBuilder | undefined
 ];
+
+export type Return<T extends AsyncModes<U>, U = void> = T extends Promise<U> ? Promise<U> : T extends Observable<U> ? Observable<U> : never;
+
+export type Filter<T, U> = T extends U ? T : never;
+export type ReturnByFilter<T, U> = Filter<AsyncModes<U>, T>;
+
+export type Observables = Observable<any>;
+export type Promises = Promise<any>;
+
+/** @internal */
+export function updateInterceptProxyFactory<T extends Resource<AsyncModes>>(targetInstance: T) {
+	const attributes = Reflect.getMetadata(METAKEYS.ATTRIBUTES, targetInstance.constructor);
+	return new Proxy(targetInstance, {
+		set(instance: any, key: string, value: any, proxy: any): boolean {
+			if (attributes.indexOf(key) > -1) {
+				const updatedFields = Reflect.getMetadata(METAKEYS.UPDATED, proxy);
+				const map = Reflect.getMetadata(METAKEYS.MAP, instance, key);
+				updatedFields[map || key] = instance[key];
+			}
+			instance[key] = value;
+			return true;
+		}
+	});
+}
+
+export type AsyncModes<U = any> = Promise<U> | Observable<U>;
+
+export type Unpacked<T> = T extends (infer U)[] ? U : T extends (...args: any[]) => infer U ? U : T extends Promise<infer U> ? U : T;

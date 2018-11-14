@@ -1,10 +1,10 @@
 import { RelationConfiguration } from './relation-configuration';
 import { Resource } from '../resource.core';
-import { METAKEYS, HttpClientOptions } from '../utils';
+import { METAKEYS, HttpClientOptions, AsyncModes } from '../utils';
 import { ToOneBuilder } from '../request-handlers/default-builders';
 import { ToOneAdapter } from '../request-handlers/default-adapters';
 
-export class ToOneRelation<THost extends Resource, TRelated extends Resource> {
+export class ToOneRelation<THost extends Resource<AsyncModes>, TRelated extends Resource> {
 	/** The references to the related instance */
 	public instance: TRelated | null;
 	constructor(

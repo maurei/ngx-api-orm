@@ -1,12 +1,12 @@
 import { RelationConfiguration } from './relation-configuration';
 import { Resource } from '../resource.core';
-import { METAKEYS, HttpClientOptions } from '../utils';
+import { METAKEYS, HttpClientOptions, AsyncModes } from '../utils';
 import { ToManyBuilder } from '../request-handlers/default-builders';
 import { ToManyAdapter } from '../request-handlers/default-adapters';
 import { ToOneRelation } from './to-one';
 
 // @dynamic
-export class ToManyRelation<THost extends Resource, TRelated extends Resource> extends Array<TRelated> {
+export class ToManyRelation<THost extends Resource<AsyncModes>, TRelated extends Resource> extends Array<TRelated> {
 	constructor(
 		private readonly _hostInstance: THost,
 		private readonly _configuration: RelationConfiguration<THost, TRelated>,

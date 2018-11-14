@@ -14,7 +14,7 @@ import {
 	Return,
 	Observables,
 	Promises,
-	ResourceModeAgnostic
+	Unpacked
 } from './utils';
 import { ToManyRelation } from './relations/to-many';
 import { RelationType } from './relations/relation-configuration';
@@ -93,16 +93,19 @@ export class Resource<TMode extends AsyncModes = Observables> {
 	 * @param  HttpClientOptions={} options
 	 * @returns Promise<T>
 	 */
-	public static async fetch<T extends Resource>(this: ResourceType<T>, options: HttpClientOptions = {}): Promise<T[]> {
+	// public static async fetch<T extends Resource>(this: ResourceType<T>, options: HttpClientOptions = {}): Promise<T[]> {
+	public static fetch<U extends AsyncModes, T extends Resource<U>>(this: ResourceType<T>, options: HttpClientOptions = {}): Return<U, T[]> {
 		const injections = getDependencyInjectionEntries(this);
 		const adapter = injections[0];
 		const builder = injections[1];
 		const resourceName = Reflect.getMetadata(METAKEYS.PLURAL, this);
-
-		const response = await builder.fetch(resourceName, options);
-		const rawInstances = adapter.parseIncoming(response);
-		return this.factory<T>(rawInstances);
+		const $request = builder.fetch(resourceName, options).pipe<T[]>(
+			map(adapter.parseIncoming),
+			map((rawInstances: Object[]) => this.factory<T>(rawInstances))
+		);
+		return (this.asyncMode === Promise ? $request.toPromise() : $request) as Return<U, T[]>;
 	}
+
 	/**
 	 * Call this method to get an empty template for your model. This can for example be useful to use as a model for forms.
 	 * @returns A raw instance template object.
@@ -142,7 +145,7 @@ export class Resource<TMode extends AsyncModes = Observables> {
 			toManyBuilder
 		];
 
-		/**  The constructor can be called by the dependency injector or by the user. In the former case, assuming that the user did not manually inject the requestHandlers, only the first parameter will be falsy. In the latter case, only the first parameter will be truthy, in which case we will retrieve the injections by getDependencyInjectionEntries (see _handleInjections internal method). */
+		/**  The constructor can be called by the Angulars DI framework, or by the user. In the first case, assuming that the user did not manually inject the requestHandlers, only the first parameter will be falsy. In the second case, only the first parameter will be truthy, in which case we will retrieve the injections by getDependencyInjectionEntries (see _handleInjections internal method). */
 		const instantationByAngularDI = this._handleInjections(requestHandlers);
 		if (instantationByAngularDI && rawInstance === null) {
 			return this;
@@ -159,10 +162,6 @@ export class Resource<TMode extends AsyncModes = Observables> {
 				return alreadyExisting;
 			}
 		}
-
-		let roffel: Resource<Observables>;
-		roffel = this;
-
 		this._populateFields(_rawInstance);
 		const proxyInstance = updateInterceptProxyFactory(this);
 		this._populateRelations(proxyInstance);
@@ -185,7 +184,7 @@ export class Resource<TMode extends AsyncModes = Observables> {
 	 * @param  HttpClientOptions={} options
 	 * @returns Promise<T>
 	 */
-	public save(options: HttpClientOptions = {}): Return<TMode, this> {
+	public save(options: HttpClientOptions = {}): Return<TMode> {
 		const name = Reflect.getMetadata(METAKEYS.PLURAL, this.constructor);
 		const body = this._adapter.save(this);
 		const $request = this._builder.save(name, body, options).pipe(
@@ -198,13 +197,10 @@ export class Resource<TMode extends AsyncModes = Observables> {
 			// and add it to the internal collection, and then return this.
 			map(() => this)
 		);
-		return this.return<this>($request);
-	}
-
-	private return<T = void>($request: Observable<any>): Return<TMode, T> {
-		return (this.ctor.asyncMode === Promise ? $request.toPromise() : $request) as Return<TMode, T>;
+		return this._return($request);
 	}
 	/**
+
 	 * Runs the update pipeline of your model for a single resource using the simple request adapter and builder.
 	 * @param  HttpClientOptions={} options
 	 * @returns Promise<void>
@@ -214,7 +210,7 @@ export class Resource<TMode extends AsyncModes = Observables> {
 		const affectedKeys = Reflect.getMetadata(METAKEYS.UPDATED, this);
 		const body = this._adapter.update(this, affectedKeys);
 		const $request = this._builder.update(name, body, options);
-		return this.return($request);
+		return this._return($request);
 	}
 
 	/**
@@ -222,10 +218,10 @@ export class Resource<TMode extends AsyncModes = Observables> {
 	 * @param  HttpClientOptions={} options
 	 * @returns Promise<void>
 	 */
-	public async delete(options: HttpClientOptions = {}): Promise<void> {
+	public delete(options: HttpClientOptions = {}): Return<TMode> {
 		const name = Reflect.getMetadata(METAKEYS.PLURAL, this.constructor);
-		await this._builder.delete(name, this, options);
-		this._metaRemove();
+		const $request = this._builder.delete(name, this, options).pipe(tap(this._metaRemove));
+		return this._return($request);
 	}
 
 	/** @internal */
@@ -277,6 +273,11 @@ export class Resource<TMode extends AsyncModes = Observables> {
 		});
 	}
 
+	/** @internal  ensures the correct return type: promise or observable.*/
+	private _return<T = void>($request: Observable<any>): Return<TMode, T> {
+		return (this.ctor.asyncMode === Promise ? $request.toPromise() : $request) as Return<TMode, T>;
+	}
+
 	/** @internal add instance to the metadata instance list*/
 	private _metaAdd(instance: this) {
 		if (this.id) {
@@ -315,12 +316,5 @@ export class Resource<TMode extends AsyncModes = Observables> {
 	}
 }
 
-class PoepModel extends Resource {}
 
-const x = new PoepModel();
-const y = x.update();
 
-class KakModel extends Resource<Promises> {}
-
-const u = new KakModel();
-const v = u.update();
