@@ -36,7 +36,7 @@ import { map, tap } from 'rxjs/operators';
 export class RawInstance {}
 
 // @dynamic
-export class Resource<TMode extends AsyncModes = Observables> {
+export class Resource<TMode extends AsyncModes = AsyncModes> {
 	public static _asyncMode: AsyncReturnType = AsyncReturnType.Observables;
 	private _adapter: SimpleAdapter;
 	private _builder: SimpleBuilder;
@@ -193,7 +193,7 @@ export class Resource<TMode extends AsyncModes = Observables> {
 		const name = Reflect.getMetadata(METAKEYS.PLURAL, this.constructor);
 		const body = this._adapter.save(this);
 		const $request = this._builder.save(name, body, options).pipe(
-			map( (response: Object) => this._adapter.parseIncoming(response)),
+			map((response: Object) => this._adapter.parseIncoming(response)),
 			tap((rawInstance: RawInstanceTemplate<any>) => {
 				this.id = rawInstance.id;
 				this._metaAdd(this);
