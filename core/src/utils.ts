@@ -152,12 +152,19 @@ export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export type RawInstanceTemplate<T extends any> = Omit<T, keyof Resource>; // need to get rid of this any here;
 export type ObservableConstructor = typeof Observable;
 
+export type ExtractReturnType<T> = T extends Resource<infer U> ? U : T;
+
+export type ExtractGenericAsyncMode<T> = T extends Resource<infer U> ? U : AsyncModes<any>;
+
 export interface ResourceType<T> extends Instantiable<T> {
 	_asyncMode: AsyncReturnType;
 	_instances: T[];
 	template<U extends Resource<AsyncModes>>(this: ResourceType<U>): RawInstanceTemplate<U>;
 	collection<U extends Resource<AsyncModes>>(this: ResourceType<U>): U[];
-	fetch<U extends Resource<L>, L extends AsyncModes>(this: ResourceType<U>, options?: HttpClientOptions): Return<L, U[]>;
+	fetch<U extends Resource<AsyncModes>, KSTAT extends AsyncModes = ExtractGenericAsyncMode<T>>(
+		this: ResourceType<U>,
+		options?: HttpClientOptions
+	): Return<KSTAT, U[]>;
 	find<U extends Resource<AsyncModes>>(this: ResourceType<U>, id: number): U | undefined;
 	factory<U extends Resource<AsyncModes>>(this: ResourceType<U>, rawInstance: Array<{}>): Array<U>;
 	factory<U extends Resource<AsyncModes>>(this: ResourceType<U>, rawInstance: {}): U;
@@ -217,6 +224,9 @@ export enum AsyncReturnType {
 	Observables
 }
 /** @internal  ensures the correct return type: promise or observable.*/
-export function returnPromiseOrObservable<TMode extends AsyncModes, T = void>($request: Observable<any>, mode: AsyncReturnType): Return<TMode, T> {
+export function returnPromiseOrObservable<TMode extends AsyncModes, T = void>(
+	$request: Observable<any>,
+	mode: AsyncReturnType
+): Return<TMode, T> {
 	return (mode === AsyncReturnType.Promises ? $request.toPromise() : $request) as Return<TMode, T>;
 }

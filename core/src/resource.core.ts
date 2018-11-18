@@ -12,10 +12,10 @@ import {
 	RawInstanceTemplate,
 	AsyncModes,
 	Return,
-	Observables,
-	Promises,
 	returnPromiseOrObservable,
-	AsyncReturnType
+	AsyncReturnType,
+	ExtractGenericAsyncMode,
+	Observables
 } from './utils';
 import { ToManyRelation } from './relations/to-many';
 import { RelationType } from './relations/relation-configuration';
@@ -23,7 +23,6 @@ import { ToOneRelation } from './relations/to-one';
 import { ToManyBuilder, ToOneBuilder, SimpleBuilder } from './request-handlers/default-builders';
 
 import { ToManyAdapter, ToOneAdapter, SimpleAdapter } from './request-handlers/default-adapters';
-import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
 // export type SelectAsyncMode<T extends any, U> = Filter<AsyncMode<T>, U>;
@@ -44,7 +43,9 @@ export class Resource<TMode extends AsyncModes = AsyncModes> {
 	private _toOneBuilder: ToOneBuilder;
 	private _toManyAdapter: ToManyAdapter;
 	private _toManyBuilder: ToManyBuilder;
-
+	private m(_: TMode): void {
+		void 0;
+	}
 	/** Primary key for your model. */
 	public id: string | number;
 
@@ -94,8 +95,10 @@ export class Resource<TMode extends AsyncModes = AsyncModes> {
 	 * @param  HttpClientOptions={} options
 	 * @returns Promise<T>
 	 */
-	// public static async fetch<T extends Resource>(this: ResourceType<T>, options: HttpClientOptions = {}): Promise<T[]> {
-	public static fetch<U extends AsyncModes, T extends Resource<U>>(this: ResourceType<T>, options: HttpClientOptions = {}): Return<U, T[]> {
+	public static fetch<T extends Resource<AsyncModes>, TMode extends AsyncModes = ExtractGenericAsyncMode<T>>(
+		this: ResourceType<T>,
+		options: HttpClientOptions = {}
+	): Return<TMode, T[]> {
 		const injections = getDependencyInjectionEntries(this);
 		const adapter = injections[0];
 		const builder = injections[1];
