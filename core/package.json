@@ -12,7 +12,7 @@
         "build": "node build.js",
         "test": "karma start",
         "test:watch": "karma start karma.conf.js --single-run false",
-        "pack:lib": "npm run build &&  mv $(npm pack ./dist) package.tgz && mv package.tgz ../core.tgz",
+        "pack:lib": "npm run build && sed -i -ie 's/delete(options?: HttpClientOptions): Return<TMode>;/delete(options?: HttpClientOptions): Return<TMode>; private _(_:TMode): void;/g' dist/src/resource.core.d.ts &&  mv $(npm pack ./dist) package.tgz && mv package.tgz ../core.tgz",
         "publish:lib": "npm run build && npm publish ./dist",
         "publish:lib:next": "npm run build && npm publish --tag next ./dist",
         "compodoc": "compodoc --disableInternal -p tsconfig.json -s --includes guides --includesName \"Usage guides\" --theme material --hideGenerator --output ./docs/"

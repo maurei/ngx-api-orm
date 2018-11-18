@@ -24,7 +24,7 @@ import { METAKEYS } from '@ngx-api-orm/core';
  * They do not touch options (headers and stuff).
  */
 	/** @internal */
-	@Injectable({ providedIn: 'root' })
+	@Injectable()
 	export class JsonApiSimpleAdapter extends Abstract.SimpleAdapter {
 		public save(instance: any): JsonApiResponse<JsonApiResource> {
 			const data = this.convertOutgoingToJsonApi(instance);
@@ -108,7 +108,7 @@ import { METAKEYS } from '@ngx-api-orm/core';
 		}
 	}
 	/** @internal */
-	@Injectable({ providedIn: 'root' })
+
 	export class JsonApiToOneAdapter extends Abstract.ToOneAdapter {
 		public add(targetInstance: any, relatedInstance: any): JsonApiResponse<JsonApiResourceIdentifier> {
 			return {
@@ -124,7 +124,7 @@ import { METAKEYS } from '@ngx-api-orm/core';
 	}
 
 	/** @internal */
-	@Injectable({ providedIn: 'root' })
+	@Injectable()
 	export class JsonApiToManyAdapter extends Abstract.ToManyAdapter {
 		public add(targetInstance: any, relatedInstance: any): JsonApiResponse<JsonApiResourceIdentifier> {
 			return {

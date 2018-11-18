@@ -35,7 +35,7 @@ class ResourceModule {
 	static forRoot(options: ResourceModuleConfigurationWithProviders = {}): ModuleWithProviders {
 		return {
 			ngModule: ResourceModule,
-			providers: ([{ provide: ResourceModuleConfiguration, useValue: { rootPath: options.rootPath } }] as Provider[]).concat(
+			providers: ([{ provide: ResourceModuleConfiguration, useValue: { rootPath: options.rootPath || '' } }] as Provider[]).concat(
 				options.requestHandler || []
 			)
 		};
@@ -91,6 +91,7 @@ class ResourceModule {
 		}
 	}
 	constructor(injector: Injector) {
+		// new Resource()._$(void 0 as any); // AOT hack: hinting it not to destroy my fancy types. @TODO make issue at angular about this.
 		InjectorContainer.instance = injector;
 		ResourceModule.processRelationships();
 	}

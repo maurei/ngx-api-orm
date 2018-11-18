@@ -4,17 +4,18 @@ import { AbstractBuilders as Abstract } from '@ngx-api-orm/core';
 import { ResourceModuleConfiguration, HttpClientOptions, HttpVerb } from '@ngx-api-orm/core';
 import { Observable } from 'rxjs';
 
-/** @internal */
-@Injectable({ providedIn: 'root' })
+
+@Injectable({providedIn: 'root'})
 export class JsonApiSimpleBuilder extends Abstract.SimpleBuilder {
 	constructor(_http: HttpClient, _config: ResourceModuleConfiguration) {
 		super(_http, _config);
 	}
-	public update(targetNamePlural: string, body: any, options: HttpClientOptions): Observable<Object> {
+	public update(targetNamePlural: string, body: any, options: HttpClientOptions): Observable<any> {
 		const path = options.url || this.buildUrl(targetNamePlural, { id: body.data.id });
 		return this.request(HttpVerb.PATCH, path, options, body);
 	}
 }
+
 @Injectable({ providedIn: 'root' })
 export class JsonApiToOneBuilder extends Abstract.ToOneBuilder {
 	constructor(_http: HttpClient, _config: ResourceModuleConfiguration) {
@@ -35,6 +36,7 @@ export class JsonApiToOneBuilder extends Abstract.ToOneBuilder {
 		return path;
 	}
 }
+
 @Injectable({ providedIn: 'root' })
 export class JsonApiToManyBuilder extends Abstract.ToManyBuilder {
 	constructor(_http: HttpClient, _config: ResourceModuleConfiguration) {
