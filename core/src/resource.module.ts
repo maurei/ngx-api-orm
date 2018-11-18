@@ -23,6 +23,7 @@ import { ToManyBuilder, ToOneBuilder, SimpleBuilder } from './request-handlers/d
 import { RelationConfiguration, RelationType } from './relations/relation-configuration';
 
 /** @internal */
+// @dynamic
 @NgModule({ imports: [HttpClientModule] })
 export class ResourceRootModule {
 	public static processRelationships() {
@@ -80,13 +81,15 @@ export class ResourceRootModule {
 	}
 }
 
+// @dynamic
 @NgModule({ imports: [HttpClientModule] })
 class ResourceModule {
 	static forRoot(options: ResourceModuleConfigurationWithProviders = {}): ModuleWithProviders {
-		const config: Provider[] = [{ provide: ResourceModuleConfiguration, useValue: { rootPath: options.rootPath } }];
 		return {
 			ngModule: ResourceRootModule,
-			providers: config.concat(options.requestHandler || [])
+			providers: ([{ provide: ResourceModuleConfiguration, useValue: { rootPath: options.rootPath } }] as Provider[]).concat(
+				options.requestHandler || []
+			)
 		};
 	}
 }
