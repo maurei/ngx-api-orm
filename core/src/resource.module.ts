@@ -19,7 +19,9 @@ import {
 	Promises,
 	AsyncReturnType,
 	RawInstanceTemplate,
-	AsyncModes
+	AsyncModes,
+	Return,
+	ExtractGenericAsyncMode
 } from './utils';
 import { Abstract as AbstractAdapters } from './request-handlers/abstract-adapters';
 import { Abstract as AbstractBuilders } from './request-handlers/abstract-builders';
@@ -132,5 +134,7 @@ export {
 	OptionalRelationOptions,
 	OptionalToMany,
 	OptionalField,
-	AsyncModes
+	AsyncModes,
+	Return,
+	ExtractGenericAsyncMode
 };
