@@ -1,7 +1,7 @@
 import { Model, Field, ToMany, ToOne } from '../src/resource.decorators';
 import { Resource } from '../src/resource.core';
 import { METAKEYS } from '../src/utils';
-import { ResourceRootModule } from '../src';
+import { ResourceModule } from '../src';
 
 function fullyDecoratedModel(): typeof Resource {
 	@Model()
@@ -38,9 +38,8 @@ function fullyDecoratedModelWithRelationshipsStrings() {
 	class Host {
 		@ToOne('related')
 		public relatedInstance: any;
-		@ToOne({relatedResource: 'another-related', mapFrom: 'someKey'})
+		@ToOne({ relatedResource: 'another-related', mapFrom: 'someKey' })
 		public anotherRelated: any;
-
 	}
 	return { Host, Related, AnotherRelated };
 }
@@ -55,7 +54,7 @@ describe('Decoraters integration', () => {
 	});
 	it('can be set using strings instead of constructors', () => {
 		const { Host, Related, AnotherRelated } = fullyDecoratedModelWithRelationshipsStrings();
-		ResourceRootModule.processRelationships();
+		ResourceModule.processRelationships();
 		const config = Reflect.getMetadata(METAKEYS.RELATIONS, Host)['relatedInstance'];
 		const anotherConfig = Reflect.getMetadata(METAKEYS.RELATIONS, Host)['anotherRelated'];
 		expect(config).toBeDefined();

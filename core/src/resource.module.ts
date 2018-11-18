@@ -29,10 +29,18 @@ import { ToManyAdapter, ToOneAdapter, SimpleAdapter } from './request-handlers/d
 import { ToManyBuilder, ToOneBuilder, SimpleBuilder } from './request-handlers/default-builders';
 import { RelationConfiguration, RelationType } from './relations/relation-configuration';
 
-/** @internal */
 // @dynamic
 @NgModule({ imports: [HttpClientModule] })
-export class ResourceRootModule {
+class ResourceModule {
+	static forRoot(options: ResourceModuleConfigurationWithProviders = {}): ModuleWithProviders {
+		return {
+			ngModule: ResourceModule,
+			providers: ([{ provide: ResourceModuleConfiguration, useValue: { rootPath: options.rootPath } }] as Provider[]).concat(
+				options.requestHandler || []
+			)
+		};
+	}
+
 	public static processRelationships() {
 		const resources = Reflect.getMetadata(METAKEYS.RESOURCES, Resource);
 		if (!resources) {
@@ -84,20 +92,7 @@ export class ResourceRootModule {
 	}
 	constructor(injector: Injector) {
 		InjectorContainer.instance = injector;
-		ResourceRootModule.processRelationships();
-	}
-}
-
-// @dynamic
-@NgModule({ imports: [HttpClientModule]  })
-class ResourceModule {
-	static forRoot(options: ResourceModuleConfigurationWithProviders = {}): ModuleWithProviders {
-		return {
-			ngModule: ResourceRootModule,
-			providers: ([{ provide: ResourceModuleConfiguration, useValue: { rootPath: options.rootPath } }] as Provider[]).concat(
-				options.requestHandler || []
-			)
-		};
+		ResourceModule.processRelationships();
 	}
 }
 

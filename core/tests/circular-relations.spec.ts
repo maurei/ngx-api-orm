@@ -1,23 +1,25 @@
 /*tslint:disable:no-non-null-assertion*/
-import { ResourceRootModule} from '../src/resource.module';
+import { ResourceModule } from '../src/resource.module';
 import { METAKEYS } from '../src/utils';
-import { 	getModels,
-					IHostModel,
-					IOneToOneModel,
-					IOneToManyModel,
-					IManyToManyModel,
-					oneToOneTemplate,
-					oneToManyTemplate,
-					manyToManyTemplate,
-					TestCase,
-					fullComplexCircularTemplate } from './models';
+import {
+	getModels,
+	IHostModel,
+	IOneToOneModel,
+	IOneToManyModel,
+	IManyToManyModel,
+	oneToOneTemplate,
+	oneToManyTemplate,
+	manyToManyTemplate,
+	TestCase,
+	fullComplexCircularTemplate
+} from './models';
 import { RelationConfiguration } from '../src/relations/relation-configuration';
 import { ToOneRelation } from '../src/relations/to-one';
 
 describe('Circular relationships: X <-> Y', () => {
 	describe('Metadata', () => {
 		const { HostModel, OneToOneModel, OneToManyModel, ManyToManyModel } = getModels(TestCase.Circular);
-		ResourceRootModule.processRelationships();
+		ResourceModule.processRelationships();
 		it('One to one relations', () => {
 			const hostConfig = Reflect.getMetadata(METAKEYS.RELATIONS, HostModel)['oneToOneModel'];
 			const relatedConfig = Reflect.getMetadata(METAKEYS.RELATIONS, OneToOneModel)['host'];
@@ -46,7 +48,7 @@ describe('Circular relationships: X <-> Y', () => {
 	describe('Instantiation', () => {
 		describe('One to one ', () => {
 			const { HostModel, OneToOneModel } = getModels(TestCase.Circular);
-			ResourceRootModule.processRelationships();
+			ResourceModule.processRelationships();
 			let hostInstance: IHostModel;
 			let oneToOneInstance: IOneToOneModel;
 			beforeAll(() => {
@@ -77,7 +79,7 @@ describe('Circular relationships: X <-> Y', () => {
 		});
 		describe('One to many ', () => {
 			const { HostModel, OneToManyModel } = getModels(TestCase.Circular);
-			ResourceRootModule.processRelationships();
+			ResourceModule.processRelationships();
 			let hostInstance: IHostModel;
 			let oneToManyInstances: Array<IOneToManyModel>;
 			beforeAll(() => {
@@ -113,7 +115,7 @@ describe('Circular relationships: X <-> Y', () => {
 		});
 		describe('Many to many ', () => {
 			const { HostModel, ManyToManyModel } = getModels(TestCase.Circular);
-			ResourceRootModule.processRelationships();
+			ResourceModule.processRelationships();
 			let hostInstances: Array<IHostModel>;
 			let manyToManyInstances: Array<IManyToManyModel>;
 			beforeAll(() => {
@@ -179,11 +181,10 @@ describe('Circular relationships: X <-> Y', () => {
 	});
 });
 
-
 describe('Complex circular relationships: X <-> ( Y <-> Z )', () => {
 	describe('Metadata', () => {
 		const { HostModel, OneToOneModel, OneToManyModel, ManyToManyModel } = getModels(TestCase.CircularComplex);
-		ResourceRootModule.processRelationships();
+		ResourceModule.processRelationships();
 		it('Total config count', () => {
 			const hostConfig = Reflect.getMetadata(METAKEYS.RELATIONS, HostModel);
 			const oneToOneModelConfig = Reflect.getMetadata(METAKEYS.RELATIONS, OneToOneModel);
@@ -198,10 +199,10 @@ describe('Complex circular relationships: X <-> ( Y <-> Z )', () => {
 			const oneToManyModelConfigs = Reflect.getMetadata(METAKEYS.RELATIONS, OneToManyModel);
 			const manyToManyModelConfigs = Reflect.getMetadata(METAKEYS.RELATIONS, ManyToManyModel);
 
-			const otmmc = Reflect.ownKeys(oneToManyModelConfigs).map((k) => oneToManyModelConfigs[k] );
-			const mtmmc = Reflect.ownKeys(manyToManyModelConfigs).map((k) => manyToManyModelConfigs[k]);
-			expect(otmmc[0].RelatedResource ).toBe(HostModel);
-			expect(mtmmc[0].RelatedResource ).toBe(HostModel);
+			const otmmc = Reflect.ownKeys(oneToManyModelConfigs).map(k => oneToManyModelConfigs[k]);
+			const mtmmc = Reflect.ownKeys(manyToManyModelConfigs).map(k => manyToManyModelConfigs[k]);
+			expect(otmmc[0].RelatedResource).toBe(HostModel);
+			expect(mtmmc[0].RelatedResource).toBe(HostModel);
 
 			expect(otmmc[1].RelatedResource).toBe(ManyToManyModel);
 			expect(mtmmc[1].RelatedResource).toBe(OneToManyModel);
@@ -210,7 +211,7 @@ describe('Complex circular relationships: X <-> ( Y <-> Z )', () => {
 	describe('Instantiation', () => {
 		describe('full complex circular relation', () => {
 			const { HostModel, OneToOneModel, ManyToManyModel, OneToManyModel } = getModels(TestCase.CircularComplex);
-			ResourceRootModule.processRelationships();
+			ResourceModule.processRelationships();
 			let hostInstances: IHostModel[];
 			let oneToManyInstance: IOneToManyModel;
 			let manyToManyInstance: IManyToManyModel;
@@ -257,7 +258,7 @@ describe('Complex circular relationships: X <-> ( Y <-> Z )', () => {
 	describe('Instantiation with pre existing instances', () => {
 		describe('full complex circular relation', () => {
 			const { HostModel, OneToOneModel, ManyToManyModel, OneToManyModel } = getModels(TestCase.CircularComplex);
-			ResourceRootModule.processRelationships();
+			ResourceModule.processRelationships();
 			beforeEach(() => {
 				OneToManyModel.factory(oneToManyModel);
 			});
@@ -291,27 +292,30 @@ describe('Complex circular relationships: X <-> ( Y <-> Z )', () => {
 	});
 });
 
-
 const oneToManyModel = {
 	id: 30,
 	field: 'one-to-many with id 30',
 	host: null,
-	manyToManyModels: [{
-		id: 40,
-		field: 'many-to-many with id 40',
-		hosts: null,
-	}]
+	manyToManyModels: [
+		{
+			id: 40,
+			field: 'many-to-many with id 40',
+			hosts: null
+		}
+	]
 };
 
 const host = {
 	id: 1,
 	field: 'some field',
 	'another-field': 'mapped field',
-	oneToManyModels: [{
-		id: 30,
-		field: 'one-to-many with id 30',
-		manyToManyModels: null
-	}],
+	oneToManyModels: [
+		{
+			id: 30,
+			field: 'one-to-many with id 30',
+			manyToManyModels: null
+		}
+	],
 	oneToOneModel: null,
 	manyToManyModels: null
 };

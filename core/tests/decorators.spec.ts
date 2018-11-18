@@ -3,7 +3,6 @@ import { Resource } from '../src/resource.core';
 import { METAKEYS, getPluralAndSingularNames as getName } from '../src/utils';
 import { RelationConfiguration } from '../src/relations/relation-configuration';
 import { RelationType } from '../src/relations/relation-configuration';
-import { ResourceRootModule } from '../src/resource.module';
 
 function modelWithResourceDecorator(name?: string): typeof Resource {
 	@Model(name ? { camelCaseFullModelName: name } : undefined)
@@ -14,7 +13,7 @@ function modelWithResourceDecorator(name?: string): typeof Resource {
 function modelWithFieldDecorators(): typeof Resource {
 	class MyDummyResource {
 		public myTestField0: any;
-		@Field({mapFrom: 'test-mapping-field'})
+		@Field({ mapFrom: 'test-mapping-field' })
 		public myTestField1: any;
 		@Field()
 		public myTestField2: any;
@@ -28,9 +27,9 @@ function modelWithOneToManyDecorators(): typeof Resource {
 	class Related {}
 	class AnotherRelated {}
 	class Host {
-		@ToMany({relatedResource: Related})
+		@ToMany({ relatedResource: Related })
 		public relatedInstance: any;
-		@ToMany({relatedResource: AnotherRelated, mapFrom: 'someKey'})
+		@ToMany({ relatedResource: AnotherRelated, mapFrom: 'someKey' })
 		public anotherRelated: any;
 	}
 	return <any>Host;
@@ -40,14 +39,13 @@ function modelWithOneToOneDecorators(): typeof Resource {
 	class Related {}
 	class AnotherRelated {}
 	class Host {
-		@ToOne({relatedResource: Related})
+		@ToOne({ relatedResource: Related })
 		public relatedInstance: any;
-		@ToOne({ relatedResource: AnotherRelated, mapFrom: 'someKey'})
+		@ToOne({ relatedResource: AnotherRelated, mapFrom: 'someKey' })
 		public anotherRelated: any;
 	}
 	return <any>Host;
 }
-
 
 describe('Decorators: metaproperties fields, relations, list, resourceName, requestBuilder', () => {
 	describe('getPluralAndSingularNames', () => {
@@ -215,7 +213,7 @@ describe('Decorators: metaproperties fields, relations, list, resourceName, requ
 	describe('ToMany', () => {
 		it('is defined', () => {
 			expect(ToMany).toBeDefined();
-			expect(ToMany({ relatedResource: new Function()}).constructor.name).toBe('Function');
+			expect(ToMany({ relatedResource: new Function() }).constructor.name).toBe('Function');
 		});
 		it('sets metadata correctly', () => {
 			const host = modelWithOneToManyDecorators();
