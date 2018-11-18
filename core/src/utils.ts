@@ -137,6 +137,7 @@ export class ResourceModuleConfiguration {
 	rootPath?: string;
 }
 
+
 export class ResourceModuleConfigurationWithProviders extends ResourceModuleConfiguration {
 	/** Sets the API root of your app. */
 	rootPath?: string;

@@ -89,7 +89,7 @@ export class ResourceRootModule {
 }
 
 // @dynamic
-@NgModule({ imports: [HttpClientModule] })
+@NgModule({ imports: [HttpClientModule]  })
 class ResourceModule {
 	static forRoot(options: ResourceModuleConfigurationWithProviders = {}): ModuleWithProviders {
 		return {

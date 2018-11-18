@@ -22,4 +22,4 @@ export class HeadersInterceptor implements HttpInterceptor {
 	}
 }
 
-export const jsonApiInterceptor = { provide: HTTP_INTERCEPTORS, useClass: HeadersInterceptor, multi: true };
+export const JsonApiInterceptor = { provide: HTTP_INTERCEPTORS, useClass: HeadersInterceptor, multi: true };
