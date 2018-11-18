@@ -37,15 +37,13 @@ export class RawInstance {}
 // @dynamic
 export class Resource<TMode extends AsyncModes = AsyncModes> {
 	public static _asyncMode: AsyncReturnType = AsyncReturnType.Observables;
+
 	private _adapter: SimpleAdapter;
 	private _builder: SimpleBuilder;
 	private _toOneAdapter: ToOneAdapter;
 	private _toOneBuilder: ToOneBuilder;
 	private _toManyAdapter: ToManyAdapter;
 	private _toManyBuilder: ToManyBuilder;
-	private m(_: TMode): void {
-		void 0;
-	}
 	/** Primary key for your model. */
 	public id: string | number;
 
@@ -316,4 +314,7 @@ export class Resource<TMode extends AsyncModes = AsyncModes> {
 		this._toManyBuilder = filledDependencies[5];
 		return instantationByAngularDI;
 	}
+	/** @internal */
+	private m(_: TMode): void {  }
+
 }

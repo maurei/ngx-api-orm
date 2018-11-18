@@ -3,7 +3,7 @@ import 'reflect-metadata';
 import { NgModule, ModuleWithProviders, Injector, Provider } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { Resource } from './resource.core';
-import { Field, ToMany, ToOne, Model } from './resource.decorators';
+import { Field, ToMany, ToOne, Model, OptionalToOne, OptionalRelationOptions, OptionalToMany, OptionalField } from './resource.decorators';
 import { ToManyRelation } from './relations/to-many';
 import { ToOneRelation } from './relations/to-one';
 import {
@@ -14,7 +14,12 @@ import {
 	toDash,
 	HttpVerb,
 	METAKEYS,
-	ResourceType
+	ResourceType,
+	Observables,
+	Promises,
+	AsyncReturnType,
+	RawInstanceTemplate,
+	AsyncModes
 } from './utils';
 import { Abstract as AbstractAdapters } from './request-handlers/abstract-adapters';
 import { Abstract as AbstractBuilders } from './request-handlers/abstract-builders';
@@ -117,5 +122,15 @@ export {
 	toDash,
 	HttpVerb,
 	METAKEYS,
-	ResourceType
+	ResourceType,
+	Observables,
+	Promises,
+	AsyncReturnType,
+	RelationType,
+	RawInstanceTemplate,
+	OptionalToOne,
+	OptionalRelationOptions,
+	OptionalToMany,
+	OptionalField,
+	AsyncModes
 };
