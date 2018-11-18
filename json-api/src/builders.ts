@@ -5,43 +5,53 @@ import { ResourceModuleConfiguration, HttpClientOptions, HttpVerb } from '@ngx-a
 import { Observable } from 'rxjs';
 
 /** @internal */
-export namespace JsonApiBuilders {
-	@Injectable({ providedIn: 'root' })
-	export class Simple extends Abstract.SimpleBuilder {
-		constructor(_http: HttpClient, _config: ResourceModuleConfiguration) {
-			super(_http, _config);
-		}
-		public update(targetNamePlural: string, body: any, options: HttpClientOptions): Observable<Object> {
-			const path = options.url || this.buildUrl(targetNamePlural, { id: body.data.id });
-			return this.request(HttpVerb.PATCH, path, options, body);
-		}
+@Injectable({ providedIn: 'root' })
+export class JsonApiSimpleBuilder extends Abstract.SimpleBuilder {
+	constructor(_http: HttpClient, _config: ResourceModuleConfiguration) {
+		super(_http, _config);
 	}
-	@Injectable({ providedIn: 'root' })
-	export class ToOne extends Abstract.ToOneBuilder {
-		constructor(_http: HttpClient, _config: ResourceModuleConfiguration) {
-			super(_http, _config);
-		}
-		public remove(targetNameSingular: string, relatedNamePlural: string, body: any, relatedInstance: any, options: HttpClientOptions): Observable<void> {
-			const path = options.url || this.buildUrl(targetNameSingular, relatedNamePlural, relatedInstance);
-			return this.request(HttpVerb.PATCH, path, options, body);
-		}
-		protected buildUrl(targetNameSingular: string, relatedNamePlural: string, relatedInstance: any): string {
-			const path = (this.config.rootPath || '') + `/${relatedNamePlural}/${relatedInstance.id}/relationships/${targetNameSingular}`;
-			return path;
-		}
+	public update(targetNamePlural: string, body: any, options: HttpClientOptions): Observable<Object> {
+		const path = options.url || this.buildUrl(targetNamePlural, { id: body.data.id });
+		return this.request(HttpVerb.PATCH, path, options, body);
 	}
-	@Injectable({ providedIn: 'root' })
-	export class ToMany extends Abstract.ToManyBuilder {
-		constructor(_http: HttpClient, _config: ResourceModuleConfiguration) {
-			super(_http, _config);
-		}
-		protected buildUrl(targetNamePlural: string, relatedNamePlural: string, relatedInstance: any): string {
-			const path = (this.config.rootPath || '') + `/${relatedNamePlural}/${relatedInstance.id}/relationships/${targetNamePlural}`;
-			return path;
-		}
-		public remove(targetNamePlural: string, relatedNamePlural: string, body: any, relatedInstance: any, options: HttpClientOptions): Observable<void> {
-			const path = options.url || this.buildUrl(targetNamePlural, relatedNamePlural, relatedInstance);
-			return this.request(HttpVerb.DELETE, path, options, body);
-		}
+}
+@Injectable({ providedIn: 'root' })
+export class JsonApiToOneBuilder extends Abstract.ToOneBuilder {
+	constructor(_http: HttpClient, _config: ResourceModuleConfiguration) {
+		super(_http, _config);
+	}
+	public remove(
+		targetNameSingular: string,
+		relatedNamePlural: string,
+		body: any,
+		relatedInstance: any,
+		options: HttpClientOptions
+	): Observable<void> {
+		const path = options.url || this.buildUrl(targetNameSingular, relatedNamePlural, relatedInstance);
+		return this.request(HttpVerb.PATCH, path, options, body);
+	}
+	protected buildUrl(targetNameSingular: string, relatedNamePlural: string, relatedInstance: any): string {
+		const path = (this.config.rootPath || '') + `/${relatedNamePlural}/${relatedInstance.id}/relationships/${targetNameSingular}`;
+		return path;
+	}
+}
+@Injectable({ providedIn: 'root' })
+export class JsonApiToManyBuilder extends Abstract.ToManyBuilder {
+	constructor(_http: HttpClient, _config: ResourceModuleConfiguration) {
+		super(_http, _config);
+	}
+	protected buildUrl(targetNamePlural: string, relatedNamePlural: string, relatedInstance: any): string {
+		const path = (this.config.rootPath || '') + `/${relatedNamePlural}/${relatedInstance.id}/relationships/${targetNamePlural}`;
+		return path;
+	}
+	public remove(
+		targetNamePlural: string,
+		relatedNamePlural: string,
+		body: any,
+		relatedInstance: any,
+		options: HttpClientOptions
+	): Observable<void> {
+		const path = options.url || this.buildUrl(targetNamePlural, relatedNamePlural, relatedInstance);
+		return this.request(HttpVerb.DELETE, path, options, body);
 	}
 }

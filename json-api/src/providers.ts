@@ -13,18 +13,18 @@ import {
 	HTTP_INTERCEPTORS
 } from '@angular/common/http';
 
-import { JsonApiAdapters } from './adapters';
-import { JsonApiBuilders } from './builders';
+import { JsonApiSimpleAdapter, JsonApiToOneAdapter, JsonApiToManyAdapter } from './adapters';
+import { JsonApiSimpleBuilder, JsonApiToOneBuilder, JsonApiToManyBuilder } from './builders';
 import { SimpleAdapter, ToOneAdapter, ToManyAdapter } from '@ngx-api-orm/core';
 import { SimpleBuilder, ToOneBuilder, ToManyBuilder } from '@ngx-api-orm/core';
-import { jsonApiInterceptor } from './interceptor';
+import { JsonApiInterceptor } from './interceptor';
 
 export const JsonApi: Provider[] = [
-	{ provide: SimpleAdapter, useClass: JsonApiAdapters.Simple },
-	{ provide: ToOneAdapter, useClass: JsonApiAdapters.ToOne },
-	{ provide: ToManyAdapter, useClass: JsonApiAdapters.ToMany },
-	{ provide: SimpleBuilder, useClass: JsonApiBuilders.Simple },
-	{ provide: ToOneBuilder, useClass: JsonApiBuilders.ToOne },
-	{ provide: ToManyBuilder, useClass: JsonApiBuilders.ToMany },
-	jsonApiInterceptor
+	{ provide: SimpleAdapter, useClass: JsonApiSimpleAdapter },
+	{ provide: ToOneAdapter, useClass: JsonApiToOneAdapter },
+	{ provide: ToManyAdapter, useClass: JsonApiToManyAdapter },
+	{ provide: SimpleBuilder, useClass: JsonApiSimpleBuilder },
+	{ provide: ToOneBuilder, useClass: JsonApiToOneBuilder },
+	{ provide: ToManyBuilder, useClass: JsonApiToManyBuilder },
+	JsonApiInterceptor
 ];

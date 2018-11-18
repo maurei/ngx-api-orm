@@ -13,7 +13,7 @@ import {
 	ToManyAdapter,
 	ResourceModule
 } from '@ngx-api-orm/core';
-import { JsonApiAdapters } from '../src/adapters';
+import { JsonApiSimpleAdapter, JsonApiToOneAdapter, JsonApiToManyAdapter } from '../src/adapters';
 import { flatSingle, flatCollection, nestedSingle, nestedCollection } from './json-api-examples';
 import { TestBed, getTestBed, async } from '@angular/core/testing';
 
@@ -151,26 +151,26 @@ describe('Request adapters', () => {
 	}));
 	describe('Extendability', () => {
 		it('has replaced default handler with JsonApi handler', () => {
-			expect(JsonApiAdapters.Simple).toBeDefined();
-			expect(JsonApiAdapters.ToOne).toBeDefined();
-			expect(JsonApiAdapters.ToMany).toBeDefined();
+			expect(JsonApiSimpleAdapter).toBeDefined();
+			expect(JsonApiToOneAdapter).toBeDefined();
+			expect(JsonApiToManyAdapter).toBeDefined();
 			expect(simpleAdapter).toBeDefined();
 			expect(toOneAdapter).toBeDefined();
 			expect(toManyAdapter).toBeDefined();
-			expect(simpleAdapter instanceof JsonApiAdapters.Simple).toBe(true);
-			expect(toOneAdapter instanceof JsonApiAdapters.ToOne).toBe(true);
-			expect(toManyAdapter instanceof JsonApiAdapters.ToMany).toBe(true);
+			expect(simpleAdapter instanceof JsonApiSimpleAdapter).toBe(true);
+			expect(toOneAdapter instanceof JsonApiToOneAdapter).toBe(true);
+			expect(toManyAdapter instanceof JsonApiToManyAdapter).toBe(true);
 		});
 	});
 	describe('Simple adapter', () => {
 		let instances: any;
-		let adapter: JsonApiAdapters.Simple;
+		let adapter: JsonApiSimpleAdapter;
 		beforeAll(() => {
 			instances = generateInstances();
-			adapter = new JsonApiAdapters.Simple();
+			adapter = new JsonApiSimpleAdapter();
 		});
 		it('is defined', () => {
-			expect(JsonApiAdapters.Simple).toBeDefined();
+			expect(JsonApiSimpleAdapter).toBeDefined();
 		});
 		it('can save', () => {
 			expect(adapter.save).toBeDefined();
@@ -237,13 +237,13 @@ describe('Request adapters', () => {
 	});
 	describe('To One adapter', () => {
 		let instances: any;
-		let adapter: JsonApiAdapters.ToOne;
+		let adapter: JsonApiToOneAdapter;
 		beforeAll(() => {
 			instances = generateInstances();
-			adapter = new JsonApiAdapters.ToOne();
+			adapter = new JsonApiToOneAdapter();
 		});
 		it('is defined', () => {
-			expect(JsonApiAdapters.ToOne).toBeDefined();
+			expect(JsonApiToOneAdapter).toBeDefined();
 		});
 		it('can add', () => {
 			expect(adapter.add).toBeDefined();
@@ -264,13 +264,13 @@ describe('Request adapters', () => {
 	});
 	describe('To Many adapter', () => {
 		let instances: any;
-		let adapter: JsonApiAdapters.ToMany;
+		let adapter: JsonApiToManyAdapter;
 		beforeAll(() => {
 			instances = generateInstances();
-			adapter = new JsonApiAdapters.ToMany();
+			adapter = new JsonApiToManyAdapter();
 		});
 		it('is defined', () => {
-			expect(JsonApiAdapters.ToMany).toBeDefined();
+			expect(JsonApiToManyAdapter).toBeDefined();
 		});
 		it('can add', () => {
 			expect(adapter.add).toBeDefined();

@@ -13,7 +13,7 @@ import {
 	Resource,
 	ResourceModule
 } from '@ngx-api-orm/core';
-import { JsonApiBuilders } from '../src/builders';
+import { JsonApiSimpleBuilder, JsonApiToOneBuilder, JsonApiToManyBuilder } from '../src/builders';
 import { TestBed, getTestBed, async } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { JsonApi} from '../src/providers';
@@ -93,15 +93,15 @@ describe('Request builders', () => {
 	}));
 	describe('Extendability', () => {
 		it('has replaced default handler with JsonApi handler', () => {
-			expect(JsonApiBuilders.Simple).toBeDefined();
-			expect(JsonApiBuilders.ToOne).toBeDefined();
-			expect(JsonApiBuilders.ToMany).toBeDefined();
+			expect(JsonApiSimpleBuilder).toBeDefined();
+			expect(JsonApiToOneBuilder).toBeDefined();
+			expect(JsonApiToManyBuilder).toBeDefined();
 			expect(builder).toBeDefined();
 			expect(toOneBuilder).toBeDefined();
 			expect(toManyBuilder).toBeDefined();
-			expect(builder instanceof JsonApiBuilders.Simple).toBe(true);
-			expect(toOneBuilder instanceof JsonApiBuilders.ToOne).toBe(true);
-			expect(toManyBuilder instanceof JsonApiBuilders.ToMany).toBe(true);
+			expect(builder instanceof JsonApiSimpleBuilder).toBe(true);
+			expect(toOneBuilder instanceof JsonApiToOneBuilder).toBe(true);
+			expect(toManyBuilder instanceof JsonApiToManyBuilder).toBe(true);
 		});
 	});
 	describe('To One builder', () => {

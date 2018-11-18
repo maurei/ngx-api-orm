@@ -1,13 +1,15 @@
-import { JsonApiAdapters } from './adapters';
-import { JsonApiBuilders } from './builders';
-import { jsonApiInterceptor } from './interceptor';
+import { JsonApiSimpleAdapter, JsonApiToOneAdapter, JsonApiToManyAdapter } from './adapters';
+import { JsonApiSimpleBuilder, JsonApiToOneBuilder, JsonApiToManyBuilder } from './builders';
+import { JsonApiInterceptor } from './interceptor';
 import { JsonApi } from './providers';
 
-const SimpleAdapter = JsonApiAdapters.Simple;
-const ToOneAdapter = JsonApiAdapters.ToOne;
-const ToManyAdapter = JsonApiAdapters.ToMany;
-const SimpleBuilder = JsonApiBuilders.Simple;
-const ToOneBuilder = JsonApiBuilders.ToOne;
-const ToManyBuilder = JsonApiBuilders.ToMany;
-
-export { SimpleAdapter, ToOneAdapter, ToManyAdapter, SimpleBuilder, ToOneBuilder, ToManyBuilder, jsonApiInterceptor, JsonApi };
+export {
+	JsonApiSimpleAdapter,
+	JsonApiToOneAdapter,
+	JsonApiToManyAdapter,
+	JsonApiSimpleBuilder,
+	JsonApiToOneBuilder,
+	JsonApiToManyBuilder,
+	JsonApiInterceptor,
+	JsonApi
+};

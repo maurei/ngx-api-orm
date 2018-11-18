@@ -23,11 +23,9 @@ import { METAKEYS } from '@ngx-api-orm/core';
  * request adapters convert incoming bodies and outgoing bodies.
  * They do not touch options (headers and stuff).
  */
-/** @internal */
-export namespace JsonApiAdapters {
 	/** @internal */
 	@Injectable({ providedIn: 'root' })
-	export class Simple extends Abstract.SimpleAdapter {
+	export class JsonApiSimpleAdapter extends Abstract.SimpleAdapter {
 		public save(instance: any): JsonApiResponse<JsonApiResource> {
 			const data = this.convertOutgoingToJsonApi(instance);
 			return { data: data };
@@ -111,7 +109,7 @@ export namespace JsonApiAdapters {
 	}
 	/** @internal */
 	@Injectable({ providedIn: 'root' })
-	export class ToOne extends Abstract.ToOneAdapter {
+	export class JsonApiToOneAdapter extends Abstract.ToOneAdapter {
 		public add(targetInstance: any, relatedInstance: any): JsonApiResponse<JsonApiResourceIdentifier> {
 			return {
 				data: {
@@ -127,7 +125,7 @@ export namespace JsonApiAdapters {
 
 	/** @internal */
 	@Injectable({ providedIn: 'root' })
-	export class ToMany extends Abstract.ToManyAdapter {
+	export class JsonApiToManyAdapter extends Abstract.ToManyAdapter {
 		public add(targetInstance: any, relatedInstance: any): JsonApiResponse<JsonApiResourceIdentifier> {
 			return {
 				data: {
@@ -145,4 +143,4 @@ export namespace JsonApiAdapters {
 			};
 		}
 	}
-}
+
