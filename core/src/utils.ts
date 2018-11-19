@@ -1,4 +1,4 @@
-import { Injector, Provider, Type } from '@angular/core';
+import { Injector, Provider, Type, Injectable } from '@angular/core';
 import { HttpHeaders, HttpParams } from '@angular/common/http';
 // import { Resource } from './resource.core';
 import { RelationConfiguration, RelationType } from './relations/relation-configuration';
@@ -132,7 +132,10 @@ export const METAKEYS = {
 	OPTIONAL_FIELDS: 'nao:optional_fields'
 };
 
-/** @internal */
+// @TODO: investigate if this a bug in angular by making small, reproducable setup.
+// If we remove  '@Injectable({providedIn: 'root'})' and introduce  it for the first time in Resource NgModule. There will be two different x := tokenKey(token)
+// for this one, one within core and one within json-api.
+@Injectable({providedIn: 'root'})
 export class ResourceModuleConfiguration {
 	rootPath?: string;
 }

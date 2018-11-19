@@ -30,7 +30,7 @@ import { ToManyBuilder, ToOneBuilder, SimpleBuilder } from './request-handlers/d
 import { RelationConfiguration, RelationType } from './relations/relation-configuration';
 
 // @dynamic
-@NgModule({ imports: [HttpClientModule] })
+@NgModule({ imports: [HttpClientModule], providers: [{ provide: ResourceModuleConfiguration, useValue: { rootPath: 'test' }}] })
 class ResourceModule {
 	static forRoot(options: ResourceModuleConfigurationWithProviders = {}): ModuleWithProviders {
 		return {

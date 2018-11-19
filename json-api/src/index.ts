@@ -2,7 +2,7 @@ import { JsonApiSimpleAdapter, JsonApiToOneAdapter, JsonApiToManyAdapter } from 
 import { JsonApiSimpleBuilder, JsonApiToOneBuilder, JsonApiToManyBuilder } from './builders';
 import { JsonApiInterceptor } from './interceptor';
 import { JsonApi } from './providers';
-import { JsonApiResourceModule } from './json-api.module';
+import { ResourceJsonApiModule } from './json-api.module';
 
 export {
 	JsonApiSimpleAdapter,
@@ -13,5 +13,5 @@ export {
 	JsonApiToManyBuilder,
 	JsonApiInterceptor,
 	JsonApi,
-	JsonApiResourceModule
+	ResourceJsonApiModule
 };
