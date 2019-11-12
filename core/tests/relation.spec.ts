@@ -1,6 +1,6 @@
-import { ToManyRelation } from '../src/relations/to-many';
-import { RelationConfiguration } from '../src/relations/relation-configuration';
-import { ToOneRelation } from '../src/relations/to-one';
+import { ToManyRelation } from '../src/lib/relations/to-many';
+import { RelationConfiguration } from '../src/lib/relations/relation-configuration';
+import { ToOneRelation } from '../src/lib/relations/to-one';
 
 describe('ToOneRelation, ToManyRelation and RelationConfiguration', () => {
 	it('are defined', () => {

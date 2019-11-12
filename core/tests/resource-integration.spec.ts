@@ -1,7 +1,7 @@
 
 /*tslint:disable:no-non-null-assertion*/
-import { ResourceModule } from '../src/resource.module';
-import { ResourceType, Observables } from '../src/utils';
+import { ResourceModule } from '../src/lib/resource.module';
+import { ResourceType, Observables } from '../src/lib/utils';
 import { TestBed, getTestBed, async } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { IHostModel, IOneToOneModel, IOneToManyModel, getModels, TestCase, hostNoRelation, fullTemplateNoMTM, hostNoRelationNoId } from './models';

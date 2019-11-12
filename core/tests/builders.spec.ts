@@ -1,12 +1,12 @@
 /* tslint:disable: no-non-null-assertion */
 import { HttpParams } from '@angular/common/http';
-import { Abstract } from '../src/request-handlers/abstract-builders';
-import { ToManyBuilder, ToOneBuilder, SimpleBuilder } from '../src/request-handlers/default-builders';
+import { Abstract } from '../src/lib/request-handlers/abstract-builders';
+import { ToManyBuilder, ToOneBuilder, SimpleBuilder } from '../src/lib/request-handlers/default-builders';
 // import { JsonApiBuilders } from '../src/request-handlers/jsonapidotorg/builders';
-import { Model, Field, ToMany, ToOne } from '../src/resource.decorators';
-import { ResourceType } from '../src/utils';
-import { Resource } from '../src/resource.core';
-import { ResourceModule } from '../src/resource.module';
+import { Model, Field, ToMany, ToOne } from '../src/lib/resource.decorators';
+import { ResourceType } from '../src/lib/utils';
+import { Resource } from '../src/lib/resource.core';
+import { ResourceModule } from '../src/lib/resource.module';
 import { TestBed, getTestBed, async } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { Observable } from 'rxjs';

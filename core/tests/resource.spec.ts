@@ -1,4 +1,4 @@
-import { ResourceType } from '../src/utils';
+import { ResourceType } from '../src/lib/utils';
 import {
 	getModels,
 	IHostModel,

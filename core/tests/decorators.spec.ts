@@ -1,8 +1,8 @@
-import { Model, Field, ToMany, ToOne } from '../src/resource.decorators';
-import { Resource } from '../src/resource.core';
-import { METAKEYS, getPluralAndSingularNames as getName } from '../src/utils';
-import { RelationConfiguration } from '../src/relations/relation-configuration';
-import { RelationType } from '../src/relations/relation-configuration';
+import { Model, Field, ToMany, ToOne } from '../src/lib/resource.decorators';
+import { Resource } from '../src/lib/resource.core';
+import { METAKEYS, getPluralAndSingularNames as getName } from '../src/lib/utils';
+import { RelationConfiguration } from '../src/lib/relations/relation-configuration';
+import { RelationType } from '../src/lib/relations/relation-configuration';
 
 function modelWithResourceDecorator(name?: string): typeof Resource {
 	@Model(name ? { camelCaseFullModelName: name } : undefined)

@@ -1,6 +1,6 @@
 /*tslint:disable:no-non-null-assertion*/
-import { ResourceModule } from '../src/resource.module';
-import { METAKEYS } from '../src/utils';
+import { ResourceModule } from '../src/lib/resource.module';
+import { METAKEYS } from '../src/lib/utils';
 import {
 	getModels,
 	IHostModel,
@@ -13,8 +13,8 @@ import {
 	TestCase,
 	fullComplexCircularTemplate
 } from './models';
-import { RelationConfiguration } from '../src/relations/relation-configuration';
-import { ToOneRelation } from '../src/relations/to-one';
+import { RelationConfiguration } from '../src/lib/relations/relation-configuration';
+import { ToOneRelation } from '../src/lib/relations/to-one';
 
 describe('Circular relationships: X <-> Y', () => {
 	describe('Metadata', () => {

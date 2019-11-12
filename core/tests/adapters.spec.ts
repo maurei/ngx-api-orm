@@ -1,12 +1,12 @@
 /* tslint:disable: no-non-null-assertion */
-import { Abstract } from '../src/request-handlers/abstract-adapters';
-import { ToManyAdapter, ToOneAdapter, SimpleAdapter } from '../src/request-handlers/default-adapters';
+import { Abstract } from '../src/lib/request-handlers/abstract-adapters';
+import { ToManyAdapter, ToOneAdapter, SimpleAdapter } from '../src/lib/request-handlers/default-adapters';
 // import { JsonApiAdapters } from '../src/resource/request-handlers/jsonapidotorg/adapters';
 // import { flatSingle, flatCollection, nestedSingle, nestedCollection } from './json-api-examples';
 // import { JsonApiResource } from '../src/resource/request-handlers/jsonapidotorg/declarations';
-import { Model, Field, ToMany, ToOne } from '../src/resource.decorators';
-import { ResourceType, METAKEYS } from '../src/utils';
-import { Resource } from '../src/resource.core';
+import { Model, Field, ToMany, ToOne } from '../src/lib/resource.decorators';
+import { ResourceType, METAKEYS } from '../src/lib/utils';
+import { Resource } from '../src/lib/resource.core';
 
 function getModels() {
 	@Model()
