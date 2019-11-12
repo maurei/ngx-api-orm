@@ -156,21 +156,17 @@ export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export type RawInstanceTemplate<T extends any> = Omit<T, keyof Resource>; // need to get rid of this any here;
 export type ObservableConstructor = typeof Observable;
 
-
-export type ExtractGenericAsyncMode<T> = T extends Resource<infer U> ? U : AsyncModes<any>;
-
 export interface ResourceType<T> extends Instantiable<T> {
-	_asyncMode: AsyncReturnType;
 	_instances: T[];
-	template<U extends Resource<AsyncModes>>(this: ResourceType<U>): RawInstanceTemplate<U>;
-	collection<U extends Resource<AsyncModes>>(this: ResourceType<U>): U[];
-	fetch<U extends Resource<AsyncModes>, K extends AsyncModes = ExtractGenericAsyncMode<T>>(
+	template<U extends Resource>(this: ResourceType<U>): RawInstanceTemplate<U>;
+	collection<U extends Resource>(this: ResourceType<U>): U[];
+	fetch<U extends Resource>(
 		this: ResourceType<U>,
 		options?: HttpClientOptions
-	): Return<K, U[]>;
-	find<U extends Resource<AsyncModes>>(this: ResourceType<U>, id: number): U | undefined;
-	factory<U extends Resource<AsyncModes>>(this: ResourceType<U>, rawInstance: Array<{}>): Array<U>;
-	factory<U extends Resource<AsyncModes>>(this: ResourceType<U>, rawInstance: {}): U;
+	): U[];
+	find<U extends Resource>(this: ResourceType<U>, id: number): U | undefined;
+	factory<U extends Resource>(this: ResourceType<U>, rawInstance: Array<{}>): Array<U>;
+	factory<U extends Resource>(this: ResourceType<U>, rawInstance: {}): U;
 }
 
 export interface HttpClientOptions {
@@ -196,16 +192,8 @@ export type UnresolvedRequestHandlers = [
 	ToManyBuilder | undefined
 ];
 
-export type Return<T extends AsyncModes<U>, U = void> = T extends Promise<U> ? Promise<U> : T extends Observable<U> ? Observable<U> : never;
-
-export type Filter<T, U> = T extends U ? T : never;
-export type ReturnByFilter<T, U> = Filter<AsyncModes<U>, T>;
-
-export type Observables = Observable<any>;
-export type Promises = Promise<any>;
-
 /** @internal */
-export function updateInterceptProxyFactory<T extends Resource<AsyncModes>>(targetInstance: T) {
+export function updateInterceptProxyFactory<T extends Resource>(targetInstance: T) {
 	const attributes = Reflect.getMetadata(METAKEYS.ATTRIBUTES, targetInstance.constructor);
 	return new Proxy(targetInstance, {
 		set(instance: any, key: string, value: any, proxy: any): boolean {
@@ -220,16 +208,3 @@ export function updateInterceptProxyFactory<T extends Resource<AsyncModes>>(targ
 	});
 }
 
-export type AsyncModes<U = any> = Promise<U> | Observable<U>;
-
-export enum AsyncReturnType {
-	Promises,
-	Observables
-}
-/** @internal  ensures the correct return type: promise or observable.*/
-export function returnPromiseOrObservable<TMode extends AsyncModes, T = void>(
-	$request: Observable<any>,
-	mode: AsyncReturnType
-): Return<TMode, T> {
-	return (mode === AsyncReturnType.Promises ? $request.toPromise() : $request) as Return<TMode, T>;
-}

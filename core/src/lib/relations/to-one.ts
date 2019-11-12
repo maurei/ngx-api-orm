@@ -1,20 +1,19 @@
 import { RelationConfiguration } from './relation-configuration';
 import { Resource } from '../resource.core';
-import { METAKEYS, HttpClientOptions, AsyncModes, AsyncReturnType, Return, returnPromiseOrObservable, Observables } from '../utils';
+import { METAKEYS, HttpClientOptions } from '../utils';
 import { ToOneBuilder } from '../request-handlers/default-builders';
 import { ToOneAdapter } from '../request-handlers/default-adapters';
 import { Observable, EMPTY } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
-export class ToOneRelation<THost extends Resource<AsyncModes>, TRelated extends Resource, TMode extends AsyncModes = Observables> {
+export class ToOneRelation<THost extends Resource, TRelated extends Resource> {
 	/** The references to the related instance */
 	public instance: TRelated | null;
 	constructor(
 		private readonly _hostInstance: THost,
 		private readonly _configuration: RelationConfiguration<THost, TRelated>,
 		private readonly _adapter: ToOneAdapter,
-		private readonly _builder: ToOneBuilder,
-		private readonly _asyncMode: AsyncReturnType
+		private readonly _builder: ToOneBuilder
 	) {
 		const rawObject: {} = _hostInstance[_configuration.keyOnInstance] || null;
 
@@ -41,7 +40,7 @@ export class ToOneRelation<THost extends Resource<AsyncModes>, TRelated extends 
 	 * Synchronize the model without using explicitly using `set` or `add`. This way it is possible to update a relation using e.g. DOM interactions without making premature requests.
 	 * @returns Promise<void>
 	 */
-	public sync(): Return<TMode> {
+	public sync(): Observable<void> {
 		if (this.instance === null) {
 			return this.remove();
 		} else {
@@ -55,7 +54,7 @@ export class ToOneRelation<THost extends Resource<AsyncModes>, TRelated extends 
 	 * @param  HttpClientOptions={} options
 	 * @returns Promise
 	 */
-	public remove(options: HttpClientOptions = {}): Return<TMode> {
+	public remove(options: HttpClientOptions = {}): Observable<void> {
 		let $request: Observable<void>;
 		if (this.instance) {
 			const hostName = Reflect.getMetadata(METAKEYS.PLURAL, this._configuration.HostResource);
@@ -65,7 +64,7 @@ export class ToOneRelation<THost extends Resource<AsyncModes>, TRelated extends 
 		} else {
 			$request = EMPTY;
 		}
-		return returnPromiseOrObservable<TMode>($request, this._asyncMode);
+		return $request;
 	}
 	/**
 	 * Runs the add pipeline of your model for a related resource using the To-One request adapter and builder.
@@ -73,13 +72,13 @@ export class ToOneRelation<THost extends Resource<AsyncModes>, TRelated extends 
 	 * @param  HttpClientOptions={} options
 	 * @returns Promise
 	 */
-	public set(targetInstance: TRelated, options: HttpClientOptions = {}): Return<TMode> {
+	public set(targetInstance: TRelated, options: HttpClientOptions = {}): Observable<void> {
 		const hostName = Reflect.getMetadata(METAKEYS.PLURAL, this._configuration.HostResource);
 		const relatedName = Reflect.getMetadata(METAKEYS.SINGULAR, this._configuration.RelatedResource);
 		const body = this._adapter.add(targetInstance, this._hostInstance);
 		const $request = this._builder
 			.add(relatedName, hostName, body, this._hostInstance, options)
 			.pipe(tap(() => (this.instance = targetInstance)));
-		return returnPromiseOrObservable<TMode>($request, this._asyncMode);
+		return $request;
 	}
 }

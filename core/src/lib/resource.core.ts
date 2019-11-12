@@ -9,23 +9,16 @@ import {
 	HttpClientOptions,
 	RequestHandlers,
 	UnresolvedRequestHandlers,
-	RawInstanceTemplate,
-	AsyncModes,
-	Return,
-	returnPromiseOrObservable,
-	AsyncReturnType,
-	ExtractGenericAsyncMode,
-	Observables
+	RawInstanceTemplate
 } from './utils';
 import { ToManyRelation } from './relations/to-many';
 import { RelationType } from './relations/relation-configuration';
 import { ToOneRelation } from './relations/to-one';
 import { ToManyBuilder, ToOneBuilder, SimpleBuilder } from './request-handlers/default-builders';
-
+import 'reflect-metadata';
 import { ToManyAdapter, ToOneAdapter, SimpleAdapter } from './request-handlers/default-adapters';
 import { map, tap } from 'rxjs/operators';
-
-// export type SelectAsyncMode<T extends any, U> = Filter<AsyncMode<T>, U>;
+import { Observable } from 'rxjs';
 
 /** A dummy class required to allow for an optional argument in the constructor of your model while keeping it compatible with Angular's dependency injection.
  * There is no need to use this type anywhere explicitly.
@@ -35,8 +28,7 @@ import { map, tap } from 'rxjs/operators';
 export class RawInstance {}
 
 // @dynamic
-export class Resource<TMode extends AsyncModes = AsyncModes> {
-	public static _asyncMode: AsyncReturnType = AsyncReturnType.Observables;
+export class Resource {
 
 	private _adapter: SimpleAdapter;
 	private _builder: SimpleBuilder;
@@ -93,10 +85,10 @@ export class Resource<TMode extends AsyncModes = AsyncModes> {
 	 * @param  HttpClientOptions={} options
 	 * @returns Promise<T>
 	 */
-	public static fetch<T extends Resource<AsyncModes>, TMode extends AsyncModes = ExtractGenericAsyncMode<T>>(
+	public static fetch<T extends Resource>(
 		this: ResourceType<T>,
 		options: HttpClientOptions = {}
-	): Return<TMode, T[]> {
+	): Observable<T[]> {
 		const injections = getDependencyInjectionEntries(this);
 		const adapter = injections[0];
 		const builder = injections[1];
@@ -105,7 +97,7 @@ export class Resource<TMode extends AsyncModes = AsyncModes> {
 			map((response: Object) => adapter.parseIncoming(response) as Object[]),
 			map((rawInstances: Object[]) => this.factory<T>(rawInstances))
 		);
-		return returnPromiseOrObservable($request, this._asyncMode);
+		return $request;
 	}
 
 	/**
@@ -190,7 +182,7 @@ export class Resource<TMode extends AsyncModes = AsyncModes> {
 	 * @param  HttpClientOptions={} options
 	 * @returns Promise<T>
 	 */
-	public save(options: HttpClientOptions = {}): Return<TMode> {
+	public save(options: HttpClientOptions = {}): Observable<void> {
 		const name = Reflect.getMetadata(METAKEYS.PLURAL, this.constructor);
 		const body = this._adapter.save(this);
 		const $request = this._builder.save(name, body, options).pipe(
@@ -203,7 +195,7 @@ export class Resource<TMode extends AsyncModes = AsyncModes> {
 			// there is no need to construct anything here, we only need to set the id to the current instance,
 			// and add it to the internal collection, and then return this.
 		);
-		return returnPromiseOrObservable($request, this.ctor._asyncMode);
+		return $request;
 	}
 	/**
 
@@ -211,12 +203,12 @@ export class Resource<TMode extends AsyncModes = AsyncModes> {
 	 * @param  HttpClientOptions={} options
 	 * @returns Promise<void>
 	 */
-	public update(options: HttpClientOptions = {}): Return<TMode> {
+	public update(options: HttpClientOptions = {}): Observable<void> {
 		const name = Reflect.getMetadata(METAKEYS.PLURAL, this.constructor);
 		const affectedKeys = Reflect.getMetadata(METAKEYS.UPDATED, this);
 		const body = this._adapter.update(this, affectedKeys);
 		const $request = this._builder.update(name, body, options);
-		return returnPromiseOrObservable($request, this.ctor._asyncMode);
+		return $request.pipe(map(() => {}));
 	}
 
 	/**
@@ -224,10 +216,10 @@ export class Resource<TMode extends AsyncModes = AsyncModes> {
 	 * @param  HttpClientOptions={} options
 	 * @returns Promise<void>
 	 */
-	public delete(options: HttpClientOptions = {}): Return<TMode> {
+	public delete(options: HttpClientOptions = {}): Observable<void> {
 		const name = Reflect.getMetadata(METAKEYS.PLURAL, this.constructor);
 		const $request = this._builder.delete(name, this, options).pipe(tap(this._metaRemove.bind(this)));
-		return returnPromiseOrObservable($request, this.ctor._asyncMode);
+		return $request.pipe(map(() => {}));
 	}
 
 	/** @internal */
@@ -267,10 +259,10 @@ export class Resource<TMode extends AsyncModes = AsyncModes> {
 			const config = relations[key];
 			switch (config.type) {
 				case RelationType.ToOne:
-					host[key] = new ToOneRelation<this, any, TMode>(host, config, host._toOneAdapter, host._toOneBuilder, this.ctor._asyncMode);
+					host[key] = new ToOneRelation<this, any>(host, config, host._toOneAdapter, host._toOneBuilder);
 					break;
 				case RelationType.ToMany:
-					host[key] = new ToManyRelation<this, any, TMode>(host, config, host._toManyAdapter, host._toManyBuilder, this.ctor._asyncMode);
+					host[key] = new ToManyRelation<this, any>(host, config, host._toManyAdapter, host._toManyBuilder);
 					break;
 				default:
 					throw Error('shouldnt come here');
@@ -314,7 +306,4 @@ export class Resource<TMode extends AsyncModes = AsyncModes> {
 		this._toManyBuilder = filledDependencies[5];
 		return instantationByAngularDI;
 	}
-	// /** @internal */
-	private _$(_: TMode): void {  }
-
 }
