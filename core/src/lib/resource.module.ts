@@ -22,7 +22,6 @@ import { Abstract as AbstractBuilders } from './request-handlers/abstract-builde
 import { ToManyAdapter, ToOneAdapter, SimpleAdapter } from './request-handlers/default-adapters';
 import { ToManyBuilder, ToOneBuilder, SimpleBuilder } from './request-handlers/default-builders';
 import { RelationConfiguration, RelationType } from './relations/relation-configuration';
-import * as Pluralize from 'pluralize';
 
 // @dynamic
 @NgModule({ imports: [HttpClientModule], providers: [{ provide: ResourceModuleConfiguration, useValue: { endPoint: 'test' }}] })
@@ -122,5 +121,4 @@ export {
 	OptionalRelationOptions,
 	OptionalToMany,
 	OptionalField,
-	Pluralize
 };
