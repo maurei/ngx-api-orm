@@ -25,12 +25,12 @@ import { RelationConfiguration, RelationType } from './relations/relation-config
 import * as Pluralize from 'pluralize';
 
 // @dynamic
-@NgModule({ imports: [HttpClientModule], providers: [{ provide: ResourceModuleConfiguration, useValue: { rootPath: 'test' }}] })
+@NgModule({ imports: [HttpClientModule], providers: [{ provide: ResourceModuleConfiguration, useValue: { endPoint: 'test' }}] })
 class ResourceModule {
 	static forRoot(options: ResourceModuleConfigurationWithProviders = {}): ModuleWithProviders {
 		return {
 			ngModule: ResourceModule,
-			providers: ([{ provide: ResourceModuleConfiguration, useValue: { rootPath: options.rootPath || '' } }] as Provider[]).concat(
+			providers: ([{ provide: ResourceModuleConfiguration, useValue: { endPoint: options.endPoint || '' } }] as Provider[]).concat(
 				options.requestHandler || []
 			)
 		};

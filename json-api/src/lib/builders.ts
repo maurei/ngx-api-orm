@@ -32,7 +32,7 @@ export class JsonApiToOneBuilder extends Abstract.ToOneBuilder {
 		return this.request(HttpVerb.PATCH, path, options, body);
 	}
 	protected buildUrl(targetNameSingular: string, relatedNamePlural: string, relatedInstance: any): string {
-		const path = (this.config.rootPath || '') + `/${relatedNamePlural}/${relatedInstance.id}/relationships/${targetNameSingular}`;
+		const path = (this.config.endpoint || '') + `/${relatedNamePlural}/${relatedInstance.id}/relationships/${targetNameSingular}`;
 		return path;
 	}
 }
@@ -43,7 +43,7 @@ export class JsonApiToManyBuilder extends Abstract.ToManyBuilder {
 		super(_http, _config);
 	}
 	protected buildUrl(targetNamePlural: string, relatedNamePlural: string, relatedInstance: any): string {
-		const path = (this.config.rootPath || '') + `/${relatedNamePlural}/${relatedInstance.id}/relationships/${targetNamePlural}`;
+		const path = (this.config.endpoint || '') + `/${relatedNamePlural}/${relatedInstance.id}/relationships/${targetNamePlural}`;
 		return path;
 	}
 	public remove(

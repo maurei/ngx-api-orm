@@ -10,5 +10,8 @@
   "license": "ISC",
   "dependencies": {
     "@compodoc/compodoc": "^1.1.5"
+  },
+  "devDependencies": {
+    "reflect-metadata": "^0.1.13"
   }
 }

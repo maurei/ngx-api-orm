@@ -1,0 +1,27 @@
+{
+    "extends": "../../../tsconfig.json",
+    "angularCompilerOptions": {
+        "strictMetadataEmit": true,
+        "annotateForClosureCompiler": true,
+        "skipTemplateCodegen": true,
+        "enableResourceInlining": true,
+    },
+    "compilerOptions": {
+        "declaration": true,
+        "emitDecoratorMetadata": true,
+        "strict": true,
+        "experimentalDecorators": true,
+        "inlineSources": true,
+        "target": "es2015",
+        "outDir": "../../../out-tsc/lib",
+        "types": [],
+        "lib": [
+          "dom",
+          "es2018"
+        ]
+    },
+    "exclude": [
+        "src/test.ts",
+        "**/*.spec.ts"
+    ]
+}

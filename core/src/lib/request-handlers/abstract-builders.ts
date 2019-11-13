@@ -20,7 +20,7 @@ export namespace Abstract {
 			super(_http);
 		}
 		protected buildUrl(targetNamePlural: string, targetInstance?: any): string {
-			let path = (this.config.rootPath || '') + `/${targetNamePlural}/$targetId`;
+			let path = (this.config.endPoint || '') + `/${targetNamePlural}/$targetId`;
 			path = path.replace('/$targetId', targetInstance ? `/${targetInstance.id}` : '');
 			return path;
 		}
@@ -47,7 +47,7 @@ export namespace Abstract {
 			super(_http);
 		}
 		protected buildUrl(targetNameSingular: string, relatedNamePlural: string, relatedInstance: any): string {
-			const path = (this.config.rootPath || '') + `/${relatedNamePlural}/${relatedInstance.id}/${targetNameSingular}`;
+			const path = (this.config.endPoint || '') + `/${relatedNamePlural}/${relatedInstance.id}/${targetNameSingular}`;
 			return path;
 		}
 		public add(
@@ -76,7 +76,7 @@ export namespace Abstract {
 			super(_http);
 		}
 		protected buildUrl(targetNamePlural: string, relatedNamePlural: string, relatedInstance: any): string {
-			const path = (this.config.rootPath || '') + `/${relatedNamePlural}/${relatedInstance.id}/${targetNamePlural}`;
+			const path = (this.config.endPoint || '') + `/${relatedNamePlural}/${relatedInstance.id}/${targetNamePlural}`;
 			return path;
 		}
 		public add(

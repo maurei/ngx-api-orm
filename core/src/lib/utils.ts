@@ -137,13 +137,13 @@ export const METAKEYS = {
 // for this one, one within core and one within json-api.
 @Injectable({providedIn: 'root'})
 export class ResourceModuleConfiguration {
-	rootPath?: string;
+	endPoint?: string;
 }
 
 
 export class ResourceModuleConfigurationWithProviders extends ResourceModuleConfiguration {
-	/** Sets the API root of your app. */
-	rootPath?: string;
+	/** Sets the endpoint of the API. */
+	endPoint?: string;
 	/** Allows to conveniently register a collection of request handlers. See the guide on extendability on how to use this. Can be set to {@link JsonApiDotOrg}. */
 	requestHandler?: Provider[];
 }
@@ -160,10 +160,7 @@ export interface ResourceType<T> extends Instantiable<T> {
 	_instances: T[];
 	template<U extends Resource>(this: ResourceType<U>): RawInstanceTemplate<U>;
 	collection<U extends Resource>(this: ResourceType<U>): U[];
-	fetch<U extends Resource>(
-		this: ResourceType<U>,
-		options?: HttpClientOptions
-	): U[];
+	fetch<U extends Resource>(this: ResourceType<U>, options?: HttpClientOptions): Observable<U[]>;
 	find<U extends Resource>(this: ResourceType<U>, id: number): U | undefined;
 	factory<U extends Resource>(this: ResourceType<U>, rawInstance: Array<{}>): Array<U>;
 	factory<U extends Resource>(this: ResourceType<U>, rawInstance: {}): U;
