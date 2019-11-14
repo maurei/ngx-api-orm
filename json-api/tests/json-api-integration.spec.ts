@@ -12,8 +12,8 @@ import {
 } from '@ngx-api-orm/core';
 import { TestBed, getTestBed, async } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { JsonApiResponse } from '../src/declarations';
-import { JsonApi } from '../src/providers';
+import { JsonApiResponse } from '../src/lib/declarations';
+import { JsonApi } from '../src/lib/providers';
 
 function getModels() {
 	@Model()

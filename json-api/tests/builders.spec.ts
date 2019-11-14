@@ -13,10 +13,10 @@ import {
 	Resource,
 	ResourceModule
 } from '@ngx-api-orm/core';
-import { JsonApiSimpleBuilder, JsonApiToOneBuilder, JsonApiToManyBuilder } from '../src/builders';
+import { JsonApiSimpleBuilder, JsonApiToOneBuilder, JsonApiToManyBuilder } from '../src/lib/builders';
 import { TestBed, getTestBed, async } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { JsonApi} from '../src/providers';
+import { JsonApi} from '../src/lib/providers';
 
 function getModels() {
 	@Model()

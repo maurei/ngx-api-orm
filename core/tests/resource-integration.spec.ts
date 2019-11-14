@@ -1,7 +1,7 @@
 
 /*tslint:disable:no-non-null-assertion*/
 import { ResourceModule } from '../src/lib/resource.module';
-import { ResourceType, Observables } from '../src/lib/utils';
+import { ResourceType } from '../src/lib/utils';
 import { TestBed, getTestBed, async } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { IHostModel, IOneToOneModel, IOneToManyModel, getModels, TestCase, hostNoRelation, fullTemplateNoMTM, hostNoRelationNoId } from './models';
@@ -116,7 +116,7 @@ describe('Resource class integration', () => {
 			ToManyModel = OneToManyModel;
 		});
 		it('getting nested resources', async () => {
-			const getPromise = Model.fetch<IHostModel, Observables>().toPromise();
+			const getPromise = Model.fetch<IHostModel>().toPromise();
 			const mockreq = httpMock.expectOne('/host-models');
 			expect(mockreq.request.method).toBe('GET');
 			mockreq.flush(fullTemplateNoMTM);

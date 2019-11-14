@@ -1,4 +1,4 @@
-import { JsonApiResponse } from '../src/declarations';
+import { JsonApiResponse } from '../src/lib/declarations';
 
 export const dummyModels = {
 	meta: {

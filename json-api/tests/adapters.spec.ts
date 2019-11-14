@@ -13,12 +13,13 @@ import {
 	ToManyAdapter,
 	ResourceModule
 } from '@ngx-api-orm/core';
-import { JsonApiSimpleAdapter, JsonApiToOneAdapter, JsonApiToManyAdapter } from '../src/adapters';
+
 import { flatSingle, flatCollection, nestedSingle, nestedCollection } from './json-api-examples';
 import { TestBed, getTestBed, async } from '@angular/core/testing';
+import { JsonApiSimpleAdapter, JsonApiToOneAdapter, JsonApiToManyAdapter } from '../src/lib';
+import { JsonApiResource } from '../src/lib/declarations';
+import { JsonApi } from '../src/lib/providers';
 
-import { JsonApiResource } from '../src/declarations';
-import { JsonApi } from '../src/providers';
 
 function getModels() {
 	@Model()
