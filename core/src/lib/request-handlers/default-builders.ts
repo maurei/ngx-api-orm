@@ -6,9 +6,6 @@ import { Abstract } from './abstract-builders';
 
 @Injectable({ providedIn: 'root' })
 export class SimpleBuilder extends Abstract.SimpleBuilder {
-	public static foo() {
-		return 'bar';
-	}
 	constructor(_http: HttpClient, _config: ResourceModuleConfiguration) {
 		super(_http, _config);
 	}

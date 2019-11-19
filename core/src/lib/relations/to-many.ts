@@ -84,7 +84,6 @@ export class ToManyRelation<THost extends Resource, TRelated extends Resource> e
 			.remove(relatedName, hostName, body, this._hostInstance, options)
 			.pipe(tap(() => this._removeInstance(relatedInstance)));
 		return $request;
-
 	};
 
 	/** @internal */

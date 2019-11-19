@@ -41,22 +41,19 @@ export function getPluralAndSingularNames(
 		singularName = _singular;
 		pluralName = _plural;
 	} else if (customCtorName) {
-		singularName = toDash(customCtorName);
-		pluralName = toPlural(toDash(customCtorName));
+		singularName = toCamel(customCtorName);
+		pluralName = toPlural(toCamel(customCtorName));
 	} else {
-		singularName = toDash(ctorName);
-		pluralName = toPlural(toDash(ctorName));
+		singularName = toCamel(ctorName);
+		pluralName = toPlural(toCamel(ctorName));
 	}
 	return { singular: singularName, plural: pluralName };
 }
 
-export function toDash(name: string): string {
+export function toCamel(name: string): string {
 	const split = name.split('');
 	split[0] = split[0].toLowerCase();
-	const splitJoin = split.join('');
-	return splitJoin.replace(/([A-Z])/g, $1 => {
-		return '-' + $1.toLowerCase();
-	});
+	return split.join('');
 }
 
 /** @internal */

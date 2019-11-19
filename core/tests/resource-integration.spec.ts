@@ -33,7 +33,7 @@ describe('Resource class integration', () => {
 		it('a new resource', async () => {
 			const unsavedHost = new Model(hostNoRelationNoId);
 			const savePromise = unsavedHost.save().toPromise();
-			const mockreq = httpMock.expectOne(`/host-models`);
+			const mockreq = httpMock.expectOne(`/hostModels`);
 			expect(mockreq.request.method).toBe('POST');
 			const rv = Object.assign({}, hostNoRelation);
 			mockreq.flush(rv);
@@ -49,7 +49,7 @@ describe('Resource class integration', () => {
 			addPromise.then(() => {
 				expect(hostInstance.oneToOneModel.instance).toBe(toOneInstance);
 			});
-			const mockreq = httpMock.expectOne('/host-models/1/one-to-one-model');
+			const mockreq = httpMock.expectOne('/hostModels/1/oneToOneModel');
 			expect(mockreq.request.method).toBe('PATCH');
 			mockreq.flush(null);
 		});
@@ -60,7 +60,7 @@ describe('Resource class integration', () => {
 			addPromise.then(() => {
 				expect(hostInstance.oneToManyModels[hostInstance.oneToManyModels.length - 1]).toBe(toManyInstance);
 			});
-			const mockreq = httpMock.expectOne('/host-models/1/one-to-many-models');
+			const mockreq = httpMock.expectOne('/hostModels/1/oneToManyModels');
 			expect(mockreq.request.method).toBe('POST');
 			mockreq.flush(null);
 		});
@@ -78,7 +78,7 @@ describe('Resource class integration', () => {
 			expect(Model.collection().length).toBe(2);
 			const host = Model.collection()[0];
 			const deletePromise = host.delete().toPromise();
-			const mockreq = httpMock.expectOne(`/host-models/1`);
+			const mockreq = httpMock.expectOne(`/hostModels/1`);
 			expect(mockreq.request.method).toBe('DELETE');
 			mockreq.flush(null);
 			deletePromise.then(() => {
@@ -91,7 +91,7 @@ describe('Resource class integration', () => {
 			deletePromise.then(() => {
 				expect(host.oneToOneModel.instance).toBeNull();
 			});
-			const mockreq = httpMock.expectOne(`/host-models/1/one-to-one-model`);
+			const mockreq = httpMock.expectOne(`/hostModels/1/oneToOneModel`);
 			expect(mockreq.request.method).toBe('DELETE');
 			mockreq.flush(null);
 		});
@@ -103,7 +103,7 @@ describe('Resource class integration', () => {
 			deletePromise.then(() => {
 				expect(host.oneToManyModels.length).toBe(preLength - 1);
 			});
-			const mockreq = httpMock.expectOne(`/host-models/2/one-to-many-models`);
+			const mockreq = httpMock.expectOne(`/hostModels/2/oneToManyModels`);
 			expect(mockreq.request.method).toBe('DELETE');
 			mockreq.flush(null);
 		});
@@ -117,7 +117,7 @@ describe('Resource class integration', () => {
 		});
 		it('getting nested resources', async () => {
 			const getPromise = Model.fetch<IHostModel>().toPromise();
-			const mockreq = httpMock.expectOne('/host-models');
+			const mockreq = httpMock.expectOne('/hostModels');
 			expect(mockreq.request.method).toBe('GET');
 			mockreq.flush(fullTemplateNoMTM);
 			getPromise.then(() => {
@@ -131,7 +131,7 @@ describe('Resource class integration', () => {
 			const related = Model.collection()[0].oneToOneModel.instance!;
 			related.field = 'patched';
 			const putPromise = related.update().toPromise();
-			const mockreq = httpMock.expectOne(`/one-to-one-models/${related.id}`);
+			const mockreq = httpMock.expectOne(`/oneToOneModels/${related.id}`);
 			expect(mockreq.request.method).toBe('PATCH');
 			const expected = expect(mockreq.request.body).toEqual(patchExpected);
 			mockreq.flush(null);

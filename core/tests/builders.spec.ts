@@ -164,16 +164,16 @@ describe('Request builders', () => {
 			});
 			it('can add', () => {
 				expect(toOneBuilder.add).toBeDefined();
-				const req = toOneBuilder.add('to-one-target', 'relateds', {}, instances.relatedWithValues, {}).toPromise();
+				const req = toOneBuilder.add('toOneTarget', 'relateds', {}, instances.relatedWithValues, {}).toPromise();
 				expect(req instanceof Promise).toBe(true);
-				const mock = httpMock.expectOne('/relateds/' + instances.relatedWithValues.id + '/to-one-target');
+				const mock = httpMock.expectOne('/relateds/' + instances.relatedWithValues.id + '/toOneTarget');
 				expect(mock.request.method).toBe('PATCH');
 			});
 			it('can remove', () => {
 				expect(toOneBuilder.remove).toBeDefined();
-				const req = toOneBuilder.remove('to-one-target', 'relateds', {}, instances.relatedWithValues, {}).toPromise();
+				const req = toOneBuilder.remove('toOneTarget', 'relateds', {}, instances.relatedWithValues, {}).toPromise();
 				expect(req instanceof Promise).toBe(true);
-				const mock = httpMock.expectOne('/relateds/' + instances.relatedWithValues.id + '/to-one-target');
+				const mock = httpMock.expectOne('/relateds/' + instances.relatedWithValues.id + '/toOneTarget');
 				expect(mock.request.method).toBe('DELETE');
 			});
 		});
@@ -188,16 +188,16 @@ describe('Request builders', () => {
 			});
 			it('can add', () => {
 				expect(toManyBuilder.add).toBeDefined();
-				const req = toManyBuilder.add('to-many-targets', 'relateds', {}, instances.relatedWithValues, {}).toPromise();
+				const req = toManyBuilder.add('toManyTargets', 'relateds', {}, instances.relatedWithValues, {}).toPromise();
 				expect(req instanceof Promise).toBe(true);
-				const mock = httpMock.expectOne('/relateds/' + instances.relatedWithValues.id + '/to-many-targets');
+				const mock = httpMock.expectOne('/relateds/' + instances.relatedWithValues.id + '/toManyTargets');
 				expect(mock.request.method).toBe('POST');
 			});
 			it('can remove', () => {
 				expect(toManyBuilder.remove).toBeDefined();
-				const req = toManyBuilder.remove('to-many-targets', 'relateds', {}, instances.relatedWithValues, {}).toPromise();
+				const req = toManyBuilder.remove('toManyTargets', 'relateds', {}, instances.relatedWithValues, {}).toPromise();
 				expect(req instanceof Promise).toBe(true);
-				const mock = httpMock.expectOne('/relateds/' + instances.relatedWithValues.id + '/to-many-targets');
+				const mock = httpMock.expectOne('/relateds/' + instances.relatedWithValues.id + '/toManyTargets');
 				expect(mock.request.method).toBe('DELETE');
 			});
 		});
