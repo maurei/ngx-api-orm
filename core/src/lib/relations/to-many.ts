@@ -86,6 +86,21 @@ export class ToManyRelation<THost extends Resource, TRelated extends Resource> e
 		return $request;
 	};
 
+	/**
+	 * Runs the delete pipeline of your model for a related resource using the To-Many request adapter and builder.
+	 * @param  TRelated relatedInstance
+	 * @param  any={} options
+	 */
+	public load = async (options: HttpClientOptions = {}): Promise<Observable<void>> => {
+		const hostName = Reflect.getMetadata(METAKEYS.PLURAL, this._configuration.HostResource);
+		const relatedName = Reflect.getMetadata(METAKEYS.PLURAL, this._configuration.RelatedResource);
+
+		const $request = this._builder
+			.load(relatedName, hostName, null, this._hostInstance, options);
+
+		return $request;
+	};
+
 	/** @internal */
 	private _removeInstance = (relatedInstance: TRelated) => {
 		for (let n = 0; n < this.length; n++) {
