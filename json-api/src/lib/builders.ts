@@ -35,6 +35,17 @@ export class JsonApiToOneBuilder extends Abstract.ToOneBuilder {
 		const path = (this.config.endPoint || '') + `/${relatedNamePlural}/${relatedInstance.id}/relationships/${targetNameSingular}`;
 		return path;
 	}
+
+	public load(
+		navigation: string,
+		relatedNamePlural: string,
+		body: any,
+		relatedInstance: any,
+		options: HttpClientOptions
+	): Observable<Object> {
+		const path = options.url || this.buildUrl(navigation, relatedNamePlural, relatedInstance).replace('/relationships', '');
+		return this.request(HttpVerb.GET, path, options, body);
+	}
 }
 
 @Injectable({ providedIn: 'root' })
@@ -42,10 +53,12 @@ export class JsonApiToManyBuilder extends Abstract.ToManyBuilder {
 	constructor(_http: HttpClient, _config: ResourceModuleConfiguration) {
 		super(_http, _config);
 	}
+
 	protected buildUrl(targetNamePlural: string, relatedNamePlural: string, relatedInstance: any): string {
 		const path = (this.config.endPoint || '') + `/${relatedNamePlural}/${relatedInstance.id}/relationships/${targetNamePlural}`;
 		return path;
 	}
+
 	public remove(
 		targetNamePlural: string,
 		relatedNamePlural: string,
@@ -63,8 +76,8 @@ export class JsonApiToManyBuilder extends Abstract.ToManyBuilder {
 		body: any,
 		relatedInstance: any,
 		options: HttpClientOptions
-	): Observable<void> {
-		const path = options.url || this.buildUrl(targetNamePlural, relatedNamePlural, relatedInstance);
+	): Observable<Object[]> {
+		const path = options.url || this.buildUrl(targetNamePlural, relatedNamePlural, relatedInstance).replace('/relationships', '');
 		return this.request(HttpVerb.GET, path, options, body);
 	}
 }

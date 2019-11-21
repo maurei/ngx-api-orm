@@ -1,16 +1,14 @@
 import { RelationConfiguration } from './relation-configuration';
 import { Resource } from '../resource.core';
-import { METAKEYS, HttpClientOptions } from '../utils';
+import { METAKEYS, HttpClientOptions, RawInstanceTemplate } from '../utils';
 import { ToManyBuilder } from '../request-handlers/default-builders';
 import { ToManyAdapter } from '../request-handlers/default-adapters';
 import { ToOneRelation } from './to-one';
 import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { tap, map } from 'rxjs/operators';
 
 // @dynamic
-export class ToManyRelation<THost extends Resource, TRelated extends Resource> extends Array<
-	TRelated
-> {
+export class ToManyRelation<THost extends Resource, TRelated extends Resource> extends Array<TRelated> {
 	constructor(
 		private readonly _hostInstance: THost,
 		private readonly _configuration: RelationConfiguration<THost, TRelated>,
@@ -87,16 +85,23 @@ export class ToManyRelation<THost extends Resource, TRelated extends Resource> e
 	};
 
 	/**
-	 * Runs the delete pipeline of your model for a related resource using the To-Many request adapter and builder.
+	 * Lazy load
 	 * @param  TRelated relatedInstance
 	 * @param  any={} options
 	 */
-	public load = async (options: HttpClientOptions = {}): Promise<Observable<void>> => {
+	public load = (options: HttpClientOptions = {}): Observable<Array<TRelated>> => {
 		const hostName = Reflect.getMetadata(METAKEYS.PLURAL, this._configuration.HostResource);
 		const relatedName = Reflect.getMetadata(METAKEYS.PLURAL, this._configuration.RelatedResource);
-
+		if (this.length !== 0) {
+			throw new Error('Unable to lazy load when relationship is already populated. This is not allowed for now.');
+		}
 		const $request = this._builder
-			.load(relatedName, hostName, null, this._hostInstance, options);
+			.load(relatedName, hostName, null, this._hostInstance, options)
+			.pipe(
+				map((response: Object) => this._adapter.parseIncoming(response) as Object[]),
+				map((rawInstances: Object[]) => this._configuration.RelatedResource.factory(rawInstances)),
+				tap((relatedInstances: Array<TRelated>) => this.push(...relatedInstances))
+			);
 
 		return $request;
 	};

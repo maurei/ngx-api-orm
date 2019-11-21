@@ -57,11 +57,19 @@ export namespace Abstract {
 			return { id: targetInstance.id };
 		}
 		public remove(targetInstance: any, relatedInstance: any): any {}
+
+		public parseIncoming(rawInstances: Object): Object {
+			return <Object>rawInstances;
+		}
 	}
 	export abstract class ToManyAdapter {
 		public add(targetInstance: any, relatedInstance: any): any {
 			return { id: targetInstance.id };
 		}
 		public remove(targetInstance: any, relatedInstance: any): any {}
+
+		public parseIncoming(rawInstances: Object): Object {
+			return <Object>rawInstances;
+		}
 	}
 }

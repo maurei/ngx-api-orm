@@ -1,10 +1,10 @@
 import { RelationConfiguration } from './relation-configuration';
-import { Resource } from '../resource.core';
-import { METAKEYS, HttpClientOptions } from '../utils';
+import { Resource, RawInstance } from '../resource.core';
+import { METAKEYS, HttpClientOptions, RawInstanceTemplate } from '../utils';
 import { ToOneBuilder } from '../request-handlers/default-builders';
 import { ToOneAdapter } from '../request-handlers/default-adapters';
 import { Observable, EMPTY } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { tap, map } from 'rxjs/operators';
 
 export class ToOneRelation<THost extends Resource, TRelated extends Resource> {
 	/** The references to the related instance */
@@ -79,6 +79,26 @@ export class ToOneRelation<THost extends Resource, TRelated extends Resource> {
 		const $request = this._builder
 			.add(relatedName, hostName, body, this._hostInstance, options)
 			.pipe(tap(() => (this.instance = targetInstance)));
+		return $request;
+	}
+
+		/**
+	 * Lazy load
+	 * @param  TRelated relatedInstance
+	 * @param  any={} options
+	 */
+	public load = (options: HttpClientOptions = {}): Observable<TRelated> => {
+		const hostName = Reflect.getMetadata(METAKEYS.PLURAL, this._configuration.HostResource);
+		const navigation = this._configuration.keyOnInstance;
+
+		const $request = this._builder
+			.load(navigation, hostName, null, this._hostInstance, options)
+			.pipe(
+				map((response: Object) => this._adapter.parseIncoming(response)),
+				map((rawInstance: RawInstanceTemplate<TRelated>) => this._configuration.RelatedResource.factory(rawInstance)),
+				tap((relatedInstance: TRelated) => this.instance = relatedInstance)
+			);
+
 		return $request;
 	}
 }

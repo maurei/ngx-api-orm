@@ -19,43 +19,10 @@ import {
 import { AbstractAdapters as Abstract } from '@ngx-api-orm/core';
 
 import { METAKEYS } from '@ngx-api-orm/core';
+import { RelationConfiguration } from 'dist/nao-core/lib/relations/relation-configuration';
 
-/**
- * request adapters convert incoming bodies and outgoing bodies.
- * They do not touch options (headers and stuff).
- */
-/** @internal */
-@Injectable({ providedIn: 'root' })
-export class JsonApiSimpleAdapter extends Abstract.SimpleAdapter {
-	public save(instance: any): JsonApiResponse<JsonApiResource> {
-		const data = this.convertOutgoingToJsonApi(instance);
-		return { data: data };
-	}
-	public update(instance: any, affectedFields: { [field: string]: string | undefined | null }): JsonApiResponse<JsonApiResource> {
-		const data = this.convertOutgoingToJsonApi(instance, affectedFields);
-		return { data: data };
-	}
 
-	private convertOutgoingToJsonApi(instance: any, affectedFields?: any): any {
-		const raw = super.convertOutgoing(instance);
-		const data = this._dataFactory(instance);
-		if (affectedFields) {
-			Object.keys(affectedFields).forEach(f => {
-				if (f !== 'id') {
-					const map = Reflect.getMetadata(METAKEYS.MAP, instance.constructor, f);
-					data.attributes![map || f] = raw[map || f];
-					delete affectedFields[f];
-				}
-			});
-		} else {
-			(<Array<string>>Reflect.getMetadata(METAKEYS.ATTRIBUTES, instance.constructor)).forEach(attr => {
-				if (attr !== 'id') {
-					data.attributes![attr] = raw[attr];
-				}
-			});
-		}
-		return data;
-	}
+export class JsonApiResponseDeserializer {
 
 	public parseIncoming(response: JsonApiResponse) {
 		const included: JsonApiResource[] | undefined = response.included;
@@ -69,20 +36,11 @@ export class JsonApiSimpleAdapter extends Abstract.SimpleAdapter {
 		return parsed;
 	}
 
-	private _dataFactory(instance: any): JsonApiResource {
-		return {
-			id: instance.id ? instance.id.toString() : undefined,
-			type: Reflect.getMetadata(METAKEYS.PLURAL, instance.constructor),
-			attributes: {}
-		};
-	}
-
 	private _parseResources(data: JsonApiResource, included?: JsonApiResource[]): ParsedJsonApiResource {
 		const instance: ParsedJsonApiResource = { id: data.id! };
 		Object.assign(instance, data.attributes);
 		if (data.relationships) {
 			included = included || [];
-			// if (data.relationships && included) {
 			const relationships = data.relationships;
 			Object.getOwnPropertyNames(data.relationships).forEach(r => {
 				const target = relationships[r].data;
@@ -108,9 +66,90 @@ export class JsonApiSimpleAdapter extends Abstract.SimpleAdapter {
 		return match ? this._parseResources(match!) : null;
 	}
 }
+
+
+/**
+ * request adapters convert incoming bodies and outgoing bodies.
+ * They do not touch options (headers and stuff).
+ */
+/** @internal */
+@Injectable({ providedIn: 'root' })
+export class JsonApiSimpleAdapter extends Abstract.SimpleAdapter {
+
+	private responseDeserializer = new JsonApiResponseDeserializer();
+
+	public save(instance: any): JsonApiResponse<JsonApiResource> {
+		const relationships: RelationConfiguration<any, any>[] = [];
+		const relationshipConfigs = Reflect.getMetadata(METAKEYS.RELATIONS, instance.constructor);
+		for (const [key, value] of Object.entries(relationshipConfigs)) {
+			const config = value as RelationConfiguration<any, any>;
+			const type = config.type;
+			if (type === 'toOne' && instance[key].instance) {
+				relationships.push(config);
+			} else if (instance[key].length) {
+				relationships.push(config);
+			}
+		}
+		const data = this.convertOutgoingToJsonApi(instance, null, relationships);
+		return { data: data };
+	}
+	public update(instance: any, affectedFields: { [field: string]: string | undefined | null }): JsonApiResponse<JsonApiResource> {
+		const data = this.convertOutgoingToJsonApi(instance, affectedFields);
+		return { data: data };
+	}
+
+	public parseIncoming(response: JsonApiResponse) {
+		return this.responseDeserializer.parseIncoming(response);
+	}
+
+	private convertOutgoingToJsonApi(instance: any, affectedFields?: any, relationshipConfigs?: RelationConfiguration<any, any>[]): any {
+		const raw = super.convertOutgoing(instance);
+		const data = this._dataFactory(instance);
+		if (affectedFields) {
+			Object.keys(affectedFields).forEach(f => {
+				if (f !== 'id') {
+					const map = Reflect.getMetadata(METAKEYS.MAP, instance.constructor, f);
+					data.attributes![map || f] = raw[map || f];
+					delete affectedFields[f];
+				}
+			});
+		} else {
+			const attributes = (<Array<string>>Reflect.getMetadata(METAKEYS.ATTRIBUTES, instance.constructor));
+			attributes.forEach(attr => {
+				if (attr !== 'id') {
+					data.attributes![attr] = raw[attr];
+				}
+			});
+			if (relationshipConfigs != null && relationshipConfigs.length) {
+				data.relationships = {};
+				for (const config of relationshipConfigs) {
+					if (config.type === 'toOne') {
+						const id = instance[config.keyOnInstance].instance.id;
+						const type = Reflect.getMetadata(METAKEYS.PLURAL, config.RelatedResource);
+						data.relationships[config.keyOnInstance] = { data: { id, type } };
+					}
+				}
+
+			}
+		}
+		return data;
+	}
+
+	private _dataFactory(instance: any): JsonApiResource {
+		return {
+			id: instance.id ? instance.id.toString() : undefined,
+			type: Reflect.getMetadata(METAKEYS.PLURAL, instance.constructor),
+			attributes: {}
+		};
+	}
+}
+
 /** @internal */
 @Injectable({ providedIn: 'root' })
 export class JsonApiToOneAdapter extends Abstract.ToOneAdapter {
+	/** need to inject this using DI */
+	private responseDeserializer = new JsonApiResponseDeserializer();
+
 	public add(targetInstance: any, relatedInstance: any): JsonApiResponse<JsonApiResourceIdentifier> {
 		return {
 			data: {
@@ -122,11 +161,18 @@ export class JsonApiToOneAdapter extends Abstract.ToOneAdapter {
 	public remove(targetInstance: any, relatedInstance: any): JsonApiResponse<null> {
 		return { data: null };
 	}
+
+	public parseIncoming(response: JsonApiResponse) {
+		return this.responseDeserializer.parseIncoming(response);
+	}
 }
 
 /** @internal */
 @Injectable({ providedIn: 'root' })
 export class JsonApiToManyAdapter extends Abstract.ToManyAdapter {
+	/** need to inject this using DI */
+	private responseDeserializer = new JsonApiResponseDeserializer();
+
 	public add(targetInstance: any, relatedInstance: any): JsonApiResponse<JsonApiResourceIdentifier> {
 		return {
 			data: {
@@ -143,4 +189,9 @@ export class JsonApiToManyAdapter extends Abstract.ToManyAdapter {
 			}
 		};
 	}
+
+	public parseIncoming(response: JsonApiResponse) {
+		return this.responseDeserializer.parseIncoming(response);
+	}
+
 }

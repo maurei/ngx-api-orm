@@ -70,15 +70,28 @@ export namespace Abstract {
 			const path = options.url || this.buildUrl(targetNameSingular, relatedNamePlural, relatedInstance);
 			return this.request(HttpVerb.DELETE, path, options);
 		}
+
+		public load(
+			targetNameSingular: string,
+			relatedNamePlural: string,
+			body: any,
+			relatedInstance: any,
+			options: HttpClientOptions
+		): Observable<Object> {
+			const path = options.url || this.buildUrl(targetNameSingular, relatedNamePlural, relatedInstance);
+			return this.request(HttpVerb.GET, path, options, body);
+		}
 	}
 	export abstract class ToManyBuilder extends BaseBuilder {
 		constructor(protected readonly _http: HttpClient, protected readonly config: ResourceModuleConfiguration) {
 			super(_http);
 		}
+
 		protected buildUrl(targetNamePlural: string, relatedNamePlural: string, relatedInstance: any): string {
 			const path = (this.config.endPoint || '') + `/${relatedNamePlural}/${relatedInstance.id}/${targetNamePlural}`;
 			return path;
 		}
+
 		public add(
 			targetNamePlural: string,
 			relatedNamePlural: string,
@@ -89,6 +102,7 @@ export namespace Abstract {
 			const path = options.url || this.buildUrl(targetNamePlural, relatedNamePlural, relatedInstance);
 			return this.request(HttpVerb.POST, path, options, body);
 		}
+
 		public remove(
 			targetNamePlural: string,
 			relatedNamePlural: string,
@@ -106,7 +120,7 @@ export namespace Abstract {
 			body: any,
 			relatedInstance: any,
 			options: HttpClientOptions
-		): Observable<void> {
+		): Observable<Object[]> {
 			const path = options.url || this.buildUrl(targetNamePlural, relatedNamePlural, relatedInstance);
 			return this.request(HttpVerb.GET, path, options, body);
 		}
