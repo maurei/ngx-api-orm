@@ -5,6 +5,7 @@
         "annotateForClosureCompiler": true,
         "skipTemplateCodegen": true,
         "enableResourceInlining": true,
+        "emitDecoratorMetadata": true
     },
     "compilerOptions": {
         "declaration": true,

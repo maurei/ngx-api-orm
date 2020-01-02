@@ -17,8 +17,9 @@ import { ToOneRelation } from './relations/to-one';
 import { ToManyBuilder, ToOneBuilder, SimpleBuilder } from './request-handlers/default-builders';
 import 'reflect-metadata';
 import { ToManyAdapter, ToOneAdapter, SimpleAdapter } from './request-handlers/default-adapters';
-import { map, tap } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { map, tap, catchError } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
 
 /** A dummy class required to allow for an optional argument in the constructor of your model while keeping it compatible with Angular's dependency injection.
  * There is no need to use this type anywhere explicitly.
@@ -206,6 +207,9 @@ export class Resource {
 	public update(options: HttpClientOptions = {}): Observable<void> {
 		const name = Reflect.getMetadata(METAKEYS.PLURAL, this.constructor);
 		const affectedKeys = Reflect.getMetadata(METAKEYS.UPDATED, this);
+		if (Object.keys(affectedKeys).length === 0) {
+			return of();
+		}
 		const body = this._adapter.update(this, affectedKeys);
 		const $request = this._builder.update(name, body, options);
 		return $request.pipe(map(() => {}));
@@ -232,13 +236,13 @@ export class Resource {
 		fields.forEach(field => {
 			const keyMap = Reflect.getMetadata(METAKEYS.MAP, this.constructor, field);
 			if (keyMap && rawInstance.hasOwnProperty(keyMap)) {
-				this[field] = rawInstance[keyMap];
+				this._instantiateAttributeValue(field, rawInstance[keyMap]);
 			} else if (rawInstance.hasOwnProperty(field)) {
-				this[field] = rawInstance[field];
+				this._instantiateAttributeValue(field, rawInstance[field]);
 			} else if (!rawInstance.hasOwnProperty(field)) {
 				const optionalKeys = Reflect.getMetadata(METAKEYS.OPTIONAL_FIELDS, this.constructor);
 				if (optionalKeys.includes(field)) {
-					this[field] = undefined;
+					this._instantiateAttributeValue(field, undefined);
 				} else {
 					throw Error(
 						`A non-optional key was missing when trying to create an instance of resource ${Reflect.getMetadata(
@@ -251,6 +255,16 @@ export class Resource {
 				}
 			}
 		});
+	}
+
+	/** @internal */
+	private _instantiateAttributeValue(field: any, value: any): any {
+		const typeConstructor = Reflect.getMetadata('design:type', this, field);
+		if (typeConstructor !== String && typeConstructor !== ToOneRelation && typeConstructor !== ToManyRelation ) {
+			this[field] = new typeConstructor(value);
+		} else {
+			this[field] = value;
+		}
 	}
 	/** @internal */
 	private _populateRelations(host: this) {

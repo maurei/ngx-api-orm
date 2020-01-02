@@ -70,7 +70,7 @@ export class ToManyRelation<THost extends Resource, TRelated extends Resource> e
 	 * @param  TRelated relatedInstance
 	 * @param  any={} options
 	 */
-	public remove = (relatedInstance: TRelated, options: HttpClientOptions = {}): Observable<void> => {
+	public remove(relatedInstance: TRelated, options: HttpClientOptions = {}): Observable<void>  {
 		const hostName = Reflect.getMetadata(METAKEYS.PLURAL, this._configuration.HostResource);
 		const relatedName = Reflect.getMetadata(METAKEYS.PLURAL, this._configuration.RelatedResource);
 
@@ -92,15 +92,16 @@ export class ToManyRelation<THost extends Resource, TRelated extends Resource> e
 	public load = (options: HttpClientOptions = {}): Observable<Array<TRelated>> => {
 		const hostName = Reflect.getMetadata(METAKEYS.PLURAL, this._configuration.HostResource);
 		const relatedName = Reflect.getMetadata(METAKEYS.PLURAL, this._configuration.RelatedResource);
-		if (this.length !== 0) {
-			throw new Error('Unable to lazy load when relationship is already populated. This is not allowed for now.');
-		}
+
 		const $request = this._builder
 			.load(relatedName, hostName, null, this._hostInstance, options)
 			.pipe(
 				map((response: Object) => this._adapter.parseIncoming(response) as Object[]),
 				map((rawInstances: Object[]) => this._configuration.RelatedResource.factory(rawInstances)),
-				tap((relatedInstances: Array<TRelated>) => this.push(...relatedInstances))
+				tap((relatedInstances: Array<TRelated>) => {
+					this.length = 0;
+					this.push(...relatedInstances);
+				})
 			);
 
 		return $request;

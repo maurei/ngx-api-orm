@@ -193,6 +193,9 @@ export function updateInterceptProxyFactory<T extends Resource>(targetInstance: 
 		set(instance: any, key: string, value: any, proxy: any): boolean {
 			if (attributes.indexOf(key) > -1) {
 				const updatedFields = Reflect.getMetadata(METAKEYS.UPDATED, proxy);
+				if (updatedFields === undefined) {
+					return true;
+				}
 				const map = Reflect.getMetadata(METAKEYS.MAP, instance, key);
 				updatedFields[map || key] = instance[key];
 			}

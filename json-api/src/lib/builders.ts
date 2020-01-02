@@ -59,6 +59,17 @@ export class JsonApiToManyBuilder extends Abstract.ToManyBuilder {
 		return path;
 	}
 
+	public add(
+		targetNamePlural: string,
+		relatedNamePlural: string,
+		body: any,
+		relatedInstance: any,
+		options: HttpClientOptions
+	): Observable<void> {
+		const path = options.url || this.buildUrl(targetNamePlural, relatedNamePlural, relatedInstance);
+		return this.request(HttpVerb.PATCH, path, options, body);
+	}
+
 	public remove(
 		targetNamePlural: string,
 		relatedNamePlural: string,

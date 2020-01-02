@@ -277,11 +277,11 @@ describe('Request adapters', () => {
 			expect(adapter.add).toBeDefined();
 			const rv = adapter.add(instances.toManyTargetWithValues, instances.related);
 			expect(rv.data).toBeDefined();
-			expect(rv.data.id).toBeDefined();
-			expect(rv.data.type).toBeDefined();
-			expect(rv.data.id).toBe(instances.toManyTargetWithValues.id.toString());
+			expect(rv.data[0].id).toBeDefined();
+			expect(rv.data[0].type).toBeDefined();
+			expect(rv.data[0].id).toBe(instances.toManyTargetWithValues.id.toString());
 			const name = <string>Reflect.getMetadata(METAKEYS.PLURAL, instances.toManyTargetWithValues.constructor);
-			expect(rv.data.type).toBe(name);
+			expect(rv.data[0].type).toBe(name);
 		});
 		it('can remove', () => {
 			expect(adapter.remove).toBeDefined();

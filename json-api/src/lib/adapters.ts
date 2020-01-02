@@ -46,9 +46,11 @@ export class JsonApiResponseDeserializer {
 				const target = relationships[r].data;
 				let related;
 				if (target) {
-					target instanceof Array
-						? (related = target.map(t => this._parseResourceIdentifier(t, included!)).filter(p => !!p))
-						: (related = this._parseResourceIdentifier(target, included!));
+					if (target instanceof Array) {
+						related = target.map(t => this._parseResourceIdentifier(t, included!)).filter(p => !!p);
+					} else {
+						related = this._parseResourceIdentifier(target, included!);
+					}
 				} else {
 					related = null;
 				}
@@ -57,13 +59,14 @@ export class JsonApiResponseDeserializer {
 		}
 		return instance;
 	}
+
 	private _parseResourceIdentifier(target: JsonApiResourceIdentifier, included: JsonApiResource[]): ParsedJsonApiResource | null {
 		/* if we can be sure that the server returns included as a sorted list, we could do a binary search here to be faster. Maybe include an option for this later*/
 		const match = included.find(incl => incl.id === target.id && incl.type === target.type);
 		if (!match) {
 			return null;
 		}
-		return match ? this._parseResources(match!) : null;
+		return match ? this._parseResources(match!, included) : null;
 	}
 }
 
@@ -173,12 +176,14 @@ export class JsonApiToManyAdapter extends Abstract.ToManyAdapter {
 	/** need to inject this using DI */
 	private responseDeserializer = new JsonApiResponseDeserializer();
 
-	public add(targetInstance: any, relatedInstance: any): JsonApiResponse<JsonApiResourceIdentifier> {
+	public add(targetInstance: any, relatedInstance: any): JsonApiResponse<JsonApiResourceIdentifier[]> {
 		return {
-			data: {
-				type: Reflect.getMetadata(METAKEYS.PLURAL, targetInstance.constructor),
-				id: targetInstance.id.toString()
-			}
+			data: [
+				{
+					type: Reflect.getMetadata(METAKEYS.PLURAL, targetInstance.constructor),
+					id: targetInstance.id.toString()
+				}
+			]
 		};
 	}
 	public remove(targetInstance: any, relatedInstance: any) {
