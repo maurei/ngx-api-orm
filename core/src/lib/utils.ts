@@ -137,12 +137,13 @@ export class ResourceModuleConfiguration {
 	endPoint?: string;
 }
 
-
 export class ResourceModuleConfigurationWithProviders extends ResourceModuleConfiguration {
 	/** Sets the endpoint of the API. */
 	endPoint?: string;
 	/** Allows to conveniently register a collection of request handlers. See the guide on extendability on how to use this. Can be set to {@link JsonApiDotOrg}. */
 	requestHandler?: Provider[];
+	/** Need to tell AOT compiler that the resources are injectables. */
+	resources?: any[];
 }
 
 export interface Instantiable<T> {

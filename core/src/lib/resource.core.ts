@@ -17,9 +17,8 @@ import { ToOneRelation } from './relations/to-one';
 import { ToManyBuilder, ToOneBuilder, SimpleBuilder } from './request-handlers/default-builders';
 import 'reflect-metadata';
 import { ToManyAdapter, ToOneAdapter, SimpleAdapter } from './request-handlers/default-adapters';
-import { map, tap, catchError } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
-import { HttpErrorResponse } from '@angular/common/http';
 
 /** A dummy class required to allow for an optional argument in the constructor of your model while keeping it compatible with Angular's dependency injection.
  * There is no need to use this type anywhere explicitly.

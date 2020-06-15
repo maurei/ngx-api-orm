@@ -24,14 +24,16 @@ import { ToManyBuilder, ToOneBuilder, SimpleBuilder } from './request-handlers/d
 import { RelationConfiguration, RelationType } from './relations/relation-configuration';
 
 // @dynamic
-@NgModule({ imports: [HttpClientModule], providers: [{ provide: ResourceModuleConfiguration, useValue: { endPoint: 'test' }}] })
+@NgModule({ imports: [HttpClientModule] })
 class ResourceModule {
 	static forRoot(options: ResourceModuleConfigurationWithProviders = {}): ModuleWithProviders {
 		return {
 			ngModule: ResourceModule,
-			providers: ([{ provide: ResourceModuleConfiguration, useValue: { endPoint: options.endPoint || '' } }] as Provider[]).concat(
-				options.requestHandler || []
-			)
+			providers: [
+				{ provide: ResourceModuleConfiguration, useValue: { endPoint: options.endPoint } },
+				...(options.requestHandler || []),
+				...(options.resources as any || [])
+			],
 		};
 	}
 

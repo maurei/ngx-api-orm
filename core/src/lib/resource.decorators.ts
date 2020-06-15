@@ -73,7 +73,7 @@ export interface OptionalFieldOptions {
  */
 export function Model(options: ModelOptions = {}) {
 	return <T extends Resource>(ctor: any) => {
-		ctor = Injectable({ providedIn: 'root' })(ctor);
+		ctor = Injectable({ providedIn: 'root' })(ctor); // this does not work with @angular-devkut/build-optimizer (ng build --prod)
 		initMetaData(ctor);
 
 		const names = getPluralAndSingularNames(
