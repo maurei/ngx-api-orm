@@ -1,5 +1,7 @@
 # NAO (ngx-api-orm)
-Some links to get you started:
+
+This is an API interpreter with a focus on Json:Api. Some links to get you started:
+
 * [API Documentation](https://maurei.github.io/ngx-api-orm/).
 
 The NPM packages:
