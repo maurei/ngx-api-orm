@@ -1,4 +1,6 @@
-# NAO (ngx-api-orm)
+# DISCLAIMER: This is not maintained nor finished. If you have any interest in this project, contact me.
+
+# ngx-api-orm
 Some links to get you started:
 * [API Documentation](https://maurei.github.io/ngx-api-orm/).
 
